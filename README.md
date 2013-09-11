@@ -4,8 +4,28 @@ Map editor for the upcoming iPad game Imperium. This editor allows you to create
 
 This README is definitely a work in progress and is right now quite useless.
 
+## Compiling
+The editor requires Qt 4.x. Will probably work with Qt 5 too, but the libraries have changed a bit and the .pro file needs to be updated. Should compile ok on any OS that has Qt.
+
+	% qmake ImperiumEditor.pro
+	% make
+
+Or similar. The build ends up in `imperium-editor-build` next to the source tree.
+
 ## Map type
 Maps have a size, title and a description. The size is in meters. The title is used on the scenario selection screen in the game and should thus not be too long. Look at existing names for ideas. The description is shown when a scenario is tapped in the scenario selection screen. It can contain a few lines of text, but not too much. Look at existing scenarios to see what can safely be used. The description should give a short explanation to the player what the scenario is about and what the player's goals are.
+
+Each scenario has a time when it starts. This is given as a normal 24 hour time. The duration is given in seconds (perhaps to be changed to minutes or so later). 1h == 3600s. You don't do much in one hour of game time, but nobody wants to play a scenario that takes 5h real time to complete either.
+
+### Id and depends
+These values give the scenario an unique id. The id is used all over the game. The *depends* value says which scenario must be completed before this one can be played. It's used to make only certain scenarios playable until the player has won enough scenarios.
+
+### AI hint
+This is a hint to the AI code and basically states what kind of battle it is. The AI will adapt its strategy based on the hint.
+
+### Tutorial
+Leave unchecked. Only used for the first few tutorial maps in the game.
+
 
 ## Terrain
 An empty map is always filled with grass, even if you add no other terrain elements. Terrain is made up from closed polygons. When you add terrain just click on the map where you want the terrain to start and then click to add more points to the terrain. All terrain polygons are always closed, but you need to add at least three points to see the terrain polygon.

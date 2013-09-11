@@ -7,7 +7,7 @@
 
 
 void EditorMainWindow::unitAdded (Unit * unit) {
-    if ( unit->m_type == kHeadquarter ) {
+    if ( unit->m_type == kInfantryHeadquarter || unit->m_type == kCavalryHeadquarter ) {
         ui->m_hq->addItem( unit->m_name, unit->m_id );
     }
 
@@ -158,7 +158,7 @@ void EditorMainWindow::refreshHqList () {
     ui->m_hq->addItem( "No HQ", -1 );
 
     foreach ( Unit * unit, allUnits ) {
-        if ( unit->m_owner == selected->m_owner && unit->m_type == kHeadquarter ) {
+        if ( unit->m_owner == selected->m_owner && (unit->m_type == kInfantryHeadquarter || unit->m_type == kCavalryHeadquarter) ) {
             ui->m_hq->addItem( unit->m_name, unit->m_id );
         }
     }

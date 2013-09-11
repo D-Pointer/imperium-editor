@@ -3,12 +3,14 @@
         <file>Icons/Artillery1.png</file>
         <file>Icons/Artillery2.png</file>
         <file>Icons/Cavalry1.png</file>
-        <file>Icons/HQ1.png</file>
-        <file>Icons/HQ2.png</file>
         <file>Icons/Infantry1.png</file>
         <file>Icons/Cavalry2.png</file>
         <file>Icons/Infantry2.png</file>
         <file>Icons/Dot.png</file>
         <file>Icons/Objective.png</file>
+        <file>Icons/CavalryHQ1.png</file>
+        <file>Icons/CavalryHQ2.png</file>
+        <file>Icons/InfantryHQ1.png</file>
+        <file>Icons/InfantryHQ2.png</file>
     </qresource>
 </RCC>

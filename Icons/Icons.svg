@@ -13,7 +13,7 @@
    height="480px"
    id="svg5935"
    version="1.1"
-   inkscape:version="0.48.1 r9760"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="Icons.svg">
   <defs
      id="defs5937" />
@@ -24,18 +24,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.81386"
+     inkscape:zoom="2.02"
      inkscape:cx="112.794"
-     inkscape:cy="450.189"
+     inkscape:cy="410.585"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
      inkscape:snap-global="true"
-     inkscape:window-width="1318"
-     inkscape:window-height="793"
-     inkscape:window-x="163"
-     inkscape:window-y="11"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="1680"
+     inkscape:window-height="1002"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata5940">
     <rdf:RDF>
@@ -195,7 +195,8 @@
        id="g7207"
        inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/HQ1.png"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-ydpi="90"
+       transform="matrix(0.878121,0,0,0.878121,31.6016,11.6644)">
       <g
          id="g7170">
         <g
@@ -224,7 +225,8 @@
        id="g7175"
        inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/HQ2.png"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-ydpi="90"
+       transform="matrix(0.875266,0,0,0.875266,32.2445,18.782)">
       <rect
          y="131.042"
          x="259.195"
@@ -238,6 +240,47 @@
          d="M 258.963,150.12 L 275.979,131.149 L 292.325,149.593 z"
          style="fill:#0000ff;stroke:#ffffff;stroke-width:0.91329;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
          sodipodi:nodetypes="cccc" />
+    </g>
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/Users/chakie/Prog/imperium-editor/Icons/CavalryHQ2.png"
+       id="g3111"
+       transform="matrix(0.598979,0,0,0.673788,236.173,49.8149)">
+      <rect
+         style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:1.261968;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect3113"
+         width="47.9737"
+         height="23.6689"
+         x="115.02"
+         y="126.496" />
+      <path
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="M 114.673,150.316 L 162.637,126.609"
+         id="path3115"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/Users/chakie/Prog/imperium-editor/Icons/CavalryHQ1.png"
+       id="g3117"
+       transform="matrix(0.605518,0,0,0.688333,236.081,30.4345)">
+      <g
+         id="g3119">
+        <rect
+           style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.258105;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           id="rect3121"
+           width="47.9736"
+           height="23.5243"
+           x="116.084"
+           y="71.8741" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path3123"
+           d="M 116.327,95.1846 L 163.739,72.0295"
+           style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      </g>
     </g>
   </g>
 </svg>

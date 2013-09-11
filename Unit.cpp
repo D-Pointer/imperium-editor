@@ -49,8 +49,12 @@ void Unit::setupIcon () {
         setPixmap( m_owner == kPlayer1 ? QPixmap(":/Icons/Artillery1.png") : QPixmap(":/Icons/Artillery2.png") );
         break;
 
-    case kHeadquarter:
-        setPixmap( m_owner == kPlayer1 ? QPixmap(":/Icons/HQ1.png") : QPixmap(":/Icons/HQ2.png") );
+    case kInfantryHeadquarter:
+        setPixmap( m_owner == kPlayer1 ? QPixmap(":/Icons/InfantryHQ1.png") : QPixmap(":/Icons/InfantryHQ2.png") );
+        break;
+
+    case kCavalryHeadquarter:
+        setPixmap( m_owner == kPlayer1 ? QPixmap(":/Icons/CavalryHQ1.png") : QPixmap(":/Icons/CavalryHQ2.png") );
         break;
     }
 }

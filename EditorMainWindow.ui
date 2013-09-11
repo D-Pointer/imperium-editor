@@ -533,7 +533,12 @@
           </item>
           <item>
            <property name="text">
-            <string>HQ</string>
+            <string>Infantry HQ</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Cavalry HQ</string>
            </property>
           </item>
          </widget>

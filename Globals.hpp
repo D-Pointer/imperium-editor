@@ -30,7 +30,8 @@ typedef enum {
     kInfantry,
     kCavalry,
     kArtillery,
-    kHeadquarter
+    kInfantryHeadquarter,
+    kCavalryHeadquarter
 } UnitType;
 
 typedef enum {
