@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="640px"
+   height="480px"
+   id="svg5935"
+   version="1.1"
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="Icons.svg">
+  <defs
+     id="defs5937" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.81386"
+     inkscape:cx="112.794"
+     inkscape:cy="450.189"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:snap-global="true"
+     inkscape:window-width="1318"
+     inkscape:window-height="793"
+     inkscape:window-x="163"
+     inkscape:window-y="11"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5940">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <g
+       id="g7196"
+       inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/Infantry1.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g7157">
+        <g
+           id="g6469"
+           inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/Unit1.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90"
+           transform="matrix(0.615341,0,0,0.61967,13.3239,36.6073)">
+          <rect
+             y="56.9122"
+             x="36.1889"
+             height="37.9626"
+             width="77.9626"
+             id="rect5943"
+             style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:2.037411;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+          <path
+             sodipodi:nodetypes="cccc"
+             inkscape:connector-curvature="0"
+             id="path5945"
+             d="M 35.6383,95.4255 L 76.5958,57.6596 L 114.894,94.3617 z"
+             style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="g7183"
+       inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/Infantry2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:1.261968;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect5953"
+         width="47.9737"
+         height="23.6689"
+         x="34.5287"
+         y="126.496" />
+      <path
+         sodipodi:nodetypes="cccc"
+         style="fill:#0000ff;stroke:#ffffff;stroke-width:1.238795;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="M 34.1899,150.508 L 59.0654,126.63 L 82.9592,149.845 z"
+         id="path5955"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="g7187"
+       inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/Cavalry2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         y="126.496"
+         x="115.02"
+         height="23.6689"
+         width="47.9737"
+         id="rect7119"
+         style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:1.261968;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path7127"
+         d="M 114.673,150.316 L 162.637,126.609"
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g7191"
+       inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/Cavalry1.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g7162">
+        <rect
+           y="71.8741"
+           x="116.084"
+           height="23.5243"
+           width="47.9736"
+           id="rect7113"
+           style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.258105;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+           d="M 116.327,95.1846 L 163.739,72.0295"
+           id="path7131"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       id="g7202"
+       inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/Artillery1.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g7166">
+        <rect
+           style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.258105;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           id="rect7135"
+           width="47.9736"
+           height="23.5243"
+           x="193.474"
+           y="70.4988" />
+        <path
+           sodipodi:type="arc"
+           style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           id="path7143"
+           sodipodi:cx="218.871"
+           sodipodi:cy="82.2288"
+           sodipodi:rx="4.41049"
+           sodipodi:ry="3.03221"
+           d="M 223.281,82.2288 A 4.41049,3.03221 0 1 1 214.461,82.2288 A 4.41049,3.03221 0 1 1 223.281,82.2288 z"
+           transform="matrix(0.712183,0,0,1.0359,61.5843,-2.91985)" />
+      </g>
+    </g>
+    <g
+       id="g7213"
+       inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/Artillery2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g7179">
+        <rect
+           y="125.007"
+           x="193.474"
+           height="23.6689"
+           width="47.9737"
+           id="rect7137"
+           style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:1.261968;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+        <path
+           sodipodi:type="arc"
+           style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           id="path7145"
+           sodipodi:cx="218.871"
+           sodipodi:cy="136.809"
+           sodipodi:rx="4.41049"
+           sodipodi:ry="3.03221"
+           d="M 223.281,136.809 A 4.41049,3.03221 0 1 1 214.461,136.809 A 4.41049,3.03221 0 1 1 223.281,136.809 z"
+           transform="matrix(0.712183,0,0,1.0359,61.5843,-4.87931)" />
+      </g>
+    </g>
+    <g
+       id="g7207"
+       inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/HQ1.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g7170">
+        <g
+           transform="matrix(0.419526,0,0,0.497859,244.792,47.7388)"
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/Unit1.png"
+           id="g7147">
+          <rect
+             style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:2.037411;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+             id="rect7149"
+             width="77.9626"
+             height="37.9626"
+             x="36.1889"
+             y="56.9122" />
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+             d="M 35.6383,95.4255 L 76.5958,57.6596 L 114.894,94.3617 z"
+             id="path7151"
+             inkscape:connector-curvature="0"
+             sodipodi:nodetypes="cccc" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="g7175"
+       inkscape:export-filename="/Users/chakie/Kobold2D/Kobold2D-1.1.0/Triangularizer/Editor/Icons/HQ2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         y="131.042"
+         x="259.195"
+         height="18.8057"
+         width="32.8179"
+         id="rect7153"
+         style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:0.930374;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path7155"
+         d="M 258.963,150.12 L 275.979,131.149 L 292.325,149.593 z"
+         style="fill:#0000ff;stroke:#ffffff;stroke-width:0.91329;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:nodetypes="cccc" />
+    </g>
+  </g>
+</svg>
