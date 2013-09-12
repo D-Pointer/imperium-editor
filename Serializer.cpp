@@ -56,8 +56,8 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
         }
         stream << endl;
 
-        // scattered trees?
-        if ( terrain->m_type == kScatteredTrees ) {
+        // scattered trees or woods?
+        if ( terrain->m_type == kScatteredTrees || terrain->m_type == kWoods ) {
             // generate some random trees
             generateTrees( terrain, stream, height );
         }
@@ -230,8 +230,15 @@ bool Serializer::terrainComparator (const Terrain * t1, const Terrain * t2) {
 void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float mapHeight) {
     stream << "trees";
 
-    for ( int y = terrain->boundingRect().y(); y <= terrain->boundingRect().y() + terrain->boundingRect().height() - 25; y += 25 ) {
-        for ( int x = terrain->boundingRect().x(); x <= terrain->boundingRect().x() + terrain->boundingRect().width() - 25; x += 25 ) {
+    // woods has more trees
+    int delta = terrain->m_type == kWoods ? 15 : 25;
+    int offset = terrain->m_type == kWoods ? 5 : 10;
+
+    // margin to the edge of the polygon
+    int margin = 15;
+
+    for ( int y = terrain->boundingRect().y() + margin; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - margin; y += delta ) {
+        for ( int x = terrain->boundingRect().x() + margin; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - margin; x += delta ) {
             // randomly skip trees
             if ( ((float)rand() / RAND_MAX) < 0.1 ) {
                 continue;
@@ -241,8 +248,8 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
             int tree = rand() % 3;
 
             // offset the positions a bit
-            float treeX = x - 10 + ((float)rand() / RAND_MAX) * 20;
-            float treeY = y - 10 + ((float)rand() / RAND_MAX) * 20;
+            float treeX = x - offset + ((float)rand() / RAND_MAX) * offset * 2;
+            float treeY = y - offset + ((float)rand() / RAND_MAX) * offset * 2;
 
             // is the position inside the polygon?
             if ( ! terrain->contains( QPoint( treeX, treeY ) ) ) {
