@@ -1,6 +1,8 @@
 #ifndef SERIALIZER_HPP
 #define SERIALIZER_HPP
 
+#include <QTextStream>
+
 #include "Map.hpp"
 
 class EditorMainWindow;
@@ -19,6 +21,8 @@ private:
     float toSave (float value, int height);
 
     static bool terrainComparator (const Terrain * t1, const Terrain * t2);
+
+    void generateTrees (Terrain * terrain, QTextStream & stream, float mapHeight);
 };
 
 

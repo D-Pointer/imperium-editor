@@ -1,4 +1,3 @@
-#include <QTextStream>
 #include <QMessageBox>
 #include <QFile>
 #include <QString>
@@ -56,6 +55,12 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
             stream << " " << point_pos.x() << " " << toSave( point_pos.y(), height );
         }
         stream << endl;
+
+        // scattered trees?
+        if ( terrain->m_type == kScatteredTrees ) {
+            // generate some random trees
+            generateTrees( terrain, stream, height );
+        }
     }
 
     foreach ( Objective * objective, allObjectives ) {
@@ -219,4 +224,38 @@ float Serializer::toSave (float value, int height) {
 
 bool Serializer::terrainComparator (const Terrain * t1, const Terrain * t2) {
     return t1->zValue() < t2->zValue();
+}
+
+
+void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float mapHeight) {
+    stream << "trees";
+
+    for ( int y = terrain->boundingRect().y(); y <= terrain->boundingRect().y() + terrain->boundingRect().height() - 25; y += 25 ) {
+        for ( int x = terrain->boundingRect().x(); x <= terrain->boundingRect().x() + terrain->boundingRect().width() - 25; x += 25 ) {
+            // randomly skip trees
+            if ( ((float)rand() / RAND_MAX) < 0.1 ) {
+                continue;
+            }
+
+            // a random tree
+            int tree = rand() % 3;
+
+            // offset the positions a bit
+            float treeX = x - 10 + ((float)rand() / RAND_MAX) * 20;
+            float treeY = y - 10 + ((float)rand() / RAND_MAX) * 20;
+
+            // is the position inside the polygon?
+            if ( ! terrain->contains( QPoint( treeX, treeY ) ) ) {
+                continue;
+            }
+
+            // scale and rotate a bit randomly
+            float scale = 0.2 + ((float)rand() / RAND_MAX) * 0.10;
+            float rotation = 10 + ((float)rand() / RAND_MAX) * 20;
+
+            stream << " " << tree << " " << treeX << " " << toSave( treeY, mapHeight ) << " " << scale << " " << rotation;
+        }
+    }
+
+    stream << endl;
 }

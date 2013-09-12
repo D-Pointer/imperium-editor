@@ -44,7 +44,8 @@ typedef enum {
     kSwamp,
     kRocky,
     kBeach,
-    kFord
+    kFord,
+    kScatteredTrees
 } TerrainType;
 
 typedef enum {
