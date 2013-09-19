@@ -245,7 +245,7 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
             }
 
             // a random tree
-            int tree = rand() % 3;
+            int tree = rand() % 5;
 
             // offset the positions a bit
             float treeX = x - offset + ((float)rand() / RAND_MAX) * offset * 2;
