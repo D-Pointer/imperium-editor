@@ -231,14 +231,17 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
     stream << "trees";
 
     // woods has more trees
-    int delta = terrain->m_type == kWoods ? 15 : 25;
+    int delta = terrain->m_type == kWoods ? 18 : 25;
     int offset = terrain->m_type == kWoods ? 5 : 10;
 
     // margin to the edge of the polygon
-    int margin = 15;
+    int marginLeft = 25;
+    int marginRight = 15;
+    int marginTop = 15;
+    int marginBottom = 25;
 
-    for ( int y = terrain->boundingRect().y() + margin; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - margin; y += delta ) {
-        for ( int x = terrain->boundingRect().x() + margin; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - margin; x += delta ) {
+    for ( int y = terrain->boundingRect().y() + marginBottom; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - marginTop - marginBottom; y += delta ) {
+        for ( int x = terrain->boundingRect().x() + marginLeft; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - marginRight - marginLeft; x += delta ) {
             // randomly skip trees
             if ( ((float)rand() / RAND_MAX) < 0.1 ) {
                 continue;
@@ -257,7 +260,7 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
             }
 
             // scale and rotate a bit randomly
-            float scale = 0.2 + ((float)rand() / RAND_MAX) * 0.10;
+            float scale = 0.08 + ((float)rand() / RAND_MAX) * 0.08;
             float rotation = 10 + ((float)rand() / RAND_MAX) * 20;
 
             stream << " " << tree << " " << treeX << " " << toSave( treeY, mapHeight ) << " " << scale << " " << rotation;
