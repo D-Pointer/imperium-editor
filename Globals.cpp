@@ -3,9 +3,11 @@
 #include "Terrain.hpp"
 #include "Selection.hpp"
 #include "Map.hpp"
+#include "House.hpp"
 
 EditorMode editorMode = kEdit;
 QList<Unit *> allUnits;
+QList<House *> allHouses;
 QList<Terrain *> allTerrains;
 QList<Objective *> allObjectives;
 Selection * selection = new Selection();

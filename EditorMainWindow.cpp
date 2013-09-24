@@ -16,6 +16,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     QActionGroup * group = new QActionGroup( this );
     group->addAction( ui->m_edit_action );
     group->addAction( ui->m_terrain_action );
+    group->addAction( ui->m_house_action );
     group->addAction( ui->m_unit_action );
     group->addAction( ui->m_objective_action );
     group->setExclusive( true );
@@ -28,6 +29,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_edit_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_terrain_action,   SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_unit_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
+    connect( ui->m_house_action,     SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_objective_action, SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_delete_action,    SIGNAL( triggered() ),       SLOT( deleteSelectedItem()) );
     connect( ui->m_deselect_action,  SIGNAL( triggered() ),       SLOT( deselect()) );
@@ -45,6 +47,9 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
 
     connect( ui->m_objective_title,  SIGNAL( textChanged(QString)),    SLOT( objectiveNameChanged(QString)) );
 
+    connect( ui->m_house_rotation,   SIGNAL(valueChanged(int)),        SLOT( houseRotated()) );
+    connect( ui->m_house_type,       SIGNAL(currentIndexChanged(int)), SLOT( houseTypeChanged()) );
+
     connect( ui->m_rotate_left,      SIGNAL( clicked()),          SLOT( rotateTerrain()) );
     connect( ui->m_rotate_right,     SIGNAL( clicked()),          SLOT( rotateTerrain()) );
     connect( ui->m_duplicate,        SIGNAL( clicked()),          SLOT( duplicateTerrain()) );
@@ -56,6 +61,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( selection, SIGNAL( selectedUnitChanged(Unit*)),           SLOT( selectedUnitChanged(Unit*)) );
     connect( selection, SIGNAL( selectedTerrainChanged(Terrain*)),     SLOT( selectedTerrainChanged(Terrain*)) );
     connect( selection, SIGNAL( selectedObjectiveChanged(Objective*)), SLOT( selectedObjectiveChanged(Objective*)) );
+    connect( selection, SIGNAL( selectedHouseChanged(House*)),         SLOT( selectedHouseChanged(House*)) );
 }
 
 
@@ -94,6 +100,7 @@ void EditorMainWindow::newMap () {
     allUnits.clear();
     allTerrains.clear();
     allObjectives.clear();
+    allHouses.clear();
 
     map = new Map;
 
@@ -130,6 +137,8 @@ void EditorMainWindow::openMap () {
     allUnits.clear();
     allTerrains.clear();
     allObjectives.clear();
+    allHouses.clear();
+
     ui->m_tutorial->setChecked( false );
 
     map = Serializer().loadMap( name, this );
@@ -195,6 +204,9 @@ void EditorMainWindow::editModeChanged () {
     else if ( ui->m_terrain_action->isChecked() ) {
         editorMode = kAddTerrain;
     }
+    else if ( ui->m_house_action->isChecked() ) {
+        editorMode = kAddHouse;
+    }
     else if ( ui->m_unit_action->isChecked() ) {
         editorMode = kAddUnit;
     }
@@ -212,6 +224,7 @@ void EditorMainWindow::selectedTerrainChanged (Terrain * terrain) {
         ui->m_unit_tab->setDisabled( true );
         ui->m_terrain_tab->setDisabled( true );
         ui->m_objective_tab->setDisabled( true );
+        ui->m_houses_tab->setDisabled( true );
         ui->m_bound_size->clear();
     }
     else {
@@ -251,6 +264,14 @@ void EditorMainWindow::deleteSelectedItem () {
         allObjectives.removeAll( objective );
         selection->setObjective( 0 );
         delete objective;
+        return;
+    }
+
+    House * house = dynamic_cast<House *>( selected.first() );
+    if ( house ) {
+        allHouses.removeAll( house );
+        selection->setHouse( 0 );
+        delete house;
         return;
     }
 

@@ -8,6 +8,7 @@
 #include "Objective.hpp"
 #include "Globals.hpp"
 #include "Map.hpp"
+#include "House.hpp"
 
 class Selection : public QObject {
     Q_OBJECT
@@ -33,6 +34,11 @@ public:
         emit selectedObjectiveChanged( m_objective );
     }
 
+    void setHouse (House * house) {
+        m_house = house;
+        emit selectedHouseChanged( m_house );
+    }
+
     Unit * getSelectedUnit () {
         return m_unit;
     }
@@ -43,6 +49,10 @@ public:
 
     Objective * getSelectedObjective () {
         return m_objective;
+    }
+
+    House * getSelectedHouse () {
+        return m_house;
     }
 
 
@@ -60,6 +70,10 @@ public:
             setObjective( 0 );
         }
 
+        if ( m_house ) {
+            setHouse( 0 );
+        }
+
         if ( map ) {
             map->clearSelection();
         }
@@ -70,12 +84,14 @@ signals:
     void selectedUnitChanged (Unit * unit);
     void selectedTerrainChanged (Terrain * terrain);
     void selectedObjectiveChanged (Objective * objective);
+    void selectedHouseChanged (House * house);
 
 
 private:
     Unit * m_unit;
     Terrain * m_terrain;
     Objective * m_objective;
+    House * m_house;
 };
 
 #endif // SELECTION_HH

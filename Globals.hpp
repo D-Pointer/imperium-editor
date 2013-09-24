@@ -8,10 +8,12 @@ class Unit;
 class Terrain;
 class Objective;
 class Map;
+class House;
 
 typedef enum {
     kEdit,
     kAddTerrain,
+    kAddHouse,
     kAddUnit,
     kAddObjective
 } EditorMode;
@@ -56,6 +58,7 @@ typedef enum {
 
 
 extern EditorMode editorMode;
+extern QList<House *> allHouses;
 extern QList<Unit *> allUnits;
 extern QList<Objective *> allObjectives;
 extern QList<Terrain *> allTerrains;

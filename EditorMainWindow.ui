@@ -30,7 +30,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="m_map_tab">
        <property name="enabled">
@@ -500,6 +500,110 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="m_houses_tab">
+       <attribute name="title">
+        <string>Houses</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QComboBox" name="m_house_type">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>House 1</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Icons.qrc">
+             <normaloff>:/Icons/House1.png</normaloff>:/Icons/House1.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>House 2</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Icons.qrc">
+             <normaloff>:/Icons/House2.png</normaloff>:/Icons/House2.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>House 3</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Icons.qrc">
+             <normaloff>:/Icons/House3.png</normaloff>:/Icons/House3.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>House 4</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Icons.qrc">
+             <normaloff>:/Icons/House4.png</normaloff>:/Icons/House4.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>House 5</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Icons.qrc">
+             <normaloff>:/Icons/House5.png</normaloff>:/Icons/House5.png</iconset>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QDial" name="m_house_rotation">
+          <property name="maximum">
+           <number>359</number>
+          </property>
+          <property name="wrapping">
+           <bool>true</bool>
+          </property>
+          <property name="notchesVisible">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_13">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>667</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="m_unit_tab">
        <property name="enabled">
         <bool>false</bool>
@@ -881,6 +985,7 @@
    </attribute>
    <addaction name="m_edit_action"/>
    <addaction name="m_terrain_action"/>
+   <addaction name="m_house_action"/>
    <addaction name="m_unit_action"/>
    <addaction name="m_objective_action"/>
    <addaction name="separator"/>
@@ -990,8 +1095,24 @@
     <string>Objective</string>
    </property>
   </action>
+  <action name="m_house_action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>House</string>
+   </property>
+   <property name="toolTip">
+    <string>House</string>
+   </property>
+   <property name="shortcut">
+    <string>H</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

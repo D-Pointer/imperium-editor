@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     Dot.cpp \
     Objective.cpp \
     UnitCallbacks.cpp \
-    ObjectiveCallbacks.cpp
+    ObjectiveCallbacks.cpp \
+    House.cpp \
+    HouseCallbacks.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
@@ -32,7 +34,8 @@ HEADERS  += EditorMainWindow.hpp \
     Serializer.hpp \
     Terrain.hpp \
     Dot.hpp \
-    Objective.hpp
+    Objective.hpp \
+    House.hpp
 
 FORMS    += EditorMainWindow.ui
 

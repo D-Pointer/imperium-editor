@@ -60,6 +60,7 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
     Unit * unit = 0;
     Terrain * terrain = 0;
     Objective * objective = 0;
+    House * house = 0;
 
     switch ( editorMode ) {
     case kEdit:
@@ -119,6 +120,20 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
         selection->setObjective( objective );
         objective->setSelected( true );
         break;
+
+    case kAddHouse:
+        qDebug() << "Map::mousePressEvent: add house";
+        house = new House( event->scenePos(), 0 );
+        addItem( house );
+        allHouses << house;
+
+        clearSelection();
+
+        emit houseAdded( house );
+
+        selection->setHouse( house );
+        house->setSelected( true );
+        break;
     }
 }
 
@@ -150,6 +165,13 @@ void Map::selectedItemsChanged () {
     Objective * objective = dynamic_cast<Objective *>( selected.first() );
     if ( objective ) {
         selection->setObjective( objective );
+        return;
+    }
+
+    // a house?
+    House * house = dynamic_cast<House *>( selected.first() );
+    if ( house ) {
+        selection->setHouse( house );
         return;
     }
 }

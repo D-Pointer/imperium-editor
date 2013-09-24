@@ -70,6 +70,13 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
                << objective->m_title << endl;
     }
 
+    foreach ( House * house, allHouses ) {
+        QPointF house_pos = house->pos() + house->boundingRect().center();
+        stream << "house " << house->getType() << " "
+               << house_pos.x() << " " << toSave( house_pos.y(), height ) << " "
+               << house->rotation() << endl;
+    }
+
     foreach ( Unit * unit, allUnits ) {
         QPointF unit_pos = unit->pos() + unit->boundingRect().center();
         stream << "unit " << unit->m_id << " " << unit->m_owner << " " << unit->m_type << " "
@@ -205,6 +212,22 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
 
             map->addItem( objective );
             allObjectives << objective;
+        }
+
+        else if ( type == "house" ) {
+            int type       = parts.takeFirst().toInt();
+            float x        = parts.takeFirst().toFloat();
+            float y        = fromSave( parts.takeFirst().toFloat(), height );
+            float rotation = parts.takeFirst().toFloat();
+            House * house = new House( QPointF( x, y ), type );
+
+            // fix up the position
+            QPointF new_pos = house->pos() - house->boundingRect().center();
+            house->setPos( new_pos );
+            house->setRotation( rotation );
+
+            map->addItem( house );
+            allHouses << house;
         }
     }
 

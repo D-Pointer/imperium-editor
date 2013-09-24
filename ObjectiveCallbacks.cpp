@@ -6,6 +6,7 @@
 #include "Selection.hpp"
 
 
+
 void EditorMainWindow::selectedObjectiveChanged (Objective * objective) {
     if ( objective == 0 ) {
         ui->m_tabs->setCurrentWidget( ui->m_map_tab );

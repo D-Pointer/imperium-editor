@@ -55,6 +55,10 @@ private slots:
     void selectedObjectiveChanged (Objective * objective);
     void objectiveNameChanged (const QString & name);
 
+    void selectedHouseChanged (House * house);
+    void houseRotated();
+    void houseTypeChanged ();
+
     void zoomIn ();
     void zoomOut ();
     void zoomNormal ();

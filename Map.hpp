@@ -8,9 +8,9 @@
 #include "Unit.hpp"
 #include "Terrain.hpp"
 #include "Objective.hpp"
+#include "House.hpp"
 
-class Map : public QGraphicsScene
-{
+class Map : public QGraphicsScene {
     Q_OBJECT
 public:
     explicit Map(QObject *parent = 0);
@@ -31,6 +31,7 @@ signals:
     void unitAdded (Unit * unit);
     void terrainAdded (Terrain * terrain);
     void objectiveAdded (Objective * objective);
+    void houseAdded (House * house);
 
 
 public slots:

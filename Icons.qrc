@@ -12,5 +12,10 @@
         <file>Icons/CavalryHQ2.png</file>
         <file>Icons/InfantryHQ1.png</file>
         <file>Icons/InfantryHQ2.png</file>
+        <file>Icons/House1.png</file>
+        <file>Icons/House2.png</file>
+        <file>Icons/House3.png</file>
+        <file>Icons/House4.png</file>
+        <file>Icons/House5.png</file>
     </qresource>
 </RCC>

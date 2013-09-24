@@ -56,7 +56,6 @@ void EditorMainWindow::unitRotated() {
         return;
     }
 
-    qDebug() << "EditorMainWindow::rotateUnit: angle:" << ui->m_rotation->value() << selected->rotation();
     selected->setRotation( ui->m_rotation->value() );
 }
 
