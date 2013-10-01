@@ -23,6 +23,7 @@ private:
     static bool terrainComparator (const Terrain * t1, const Terrain * t2);
 
     void generateTrees (Terrain * terrain, QTextStream & stream, float mapHeight);
+    void generateRocks (Terrain * terrain, QTextStream & stream, float mapHeight);
 };
 
 

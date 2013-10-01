@@ -61,6 +61,12 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
             // generate some random trees
             generateTrees( terrain, stream, height );
         }
+
+        // rocks?
+        else if ( terrain->m_type == kRocky ) {
+            // generate some random rocks
+            generateRocks( terrain, stream, height );
+        }
     }
 
     foreach ( Objective * objective, allObjectives ) {
@@ -286,9 +292,49 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
             float scale = 0.08 + ((float)rand() / RAND_MAX) * 0.08;
             float rotation = 10 + ((float)rand() / RAND_MAX) * 20;
 
-            stream << " " << tree << " " << treeX << " " << toSave( treeY, mapHeight ) << " " << scale << " " << rotation;
+            stream << " " << tree << " " << (int)treeX << " " << (int)toSave( treeY, mapHeight ) << " " << scale << " " << (int)rotation;
         }
     }
 
     stream << endl;
 }
+
+
+void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float mapHeight) {
+    stream << "rocks";
+
+    // woods has more trees
+    int delta = 8;
+    int offset = 4;
+
+    // margin to the edge of the polygon
+    int marginLeft = 5;
+    int marginRight = 5;
+    int marginTop = 5;
+    int marginBottom = 5;
+
+    for ( int y = terrain->boundingRect().y() + marginBottom; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - marginTop - marginBottom; y += delta ) {
+        for ( int x = terrain->boundingRect().x() + marginLeft; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - marginRight - marginLeft; x += delta ) {
+             // a random rock
+            int rock = rand() % 6;
+
+            // offset the positions a bit
+            float rockX = x - offset + ((float)rand() / RAND_MAX) * offset * 2;
+            float rockY = y - offset + ((float)rand() / RAND_MAX) * offset * 2;
+
+            // is the position inside the polygon?
+            if ( ! terrain->contains( QPoint( rockX, rockY ) ) ) {
+                continue;
+            }
+
+            // scale and rotate a bit randomly
+            float scale = 0.08;
+            float rotation = 10 + ((float)rand() / RAND_MAX) * 20;
+
+            stream << " " << rock << " " << (int)rockX << " " << (int)toSave( rockY, mapHeight ) << " " << scale << " " << (int)rotation;
+        }
+    }
+
+    stream << endl;
+}
+
