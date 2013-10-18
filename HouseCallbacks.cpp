@@ -42,5 +42,5 @@ void EditorMainWindow::houseTypeChanged () {
         return;
     }
 
-    selected->setType( (UnitType)ui->m_house_type->currentIndex() );
+    selected->setType( ui->m_house_type->currentIndex() );
 }

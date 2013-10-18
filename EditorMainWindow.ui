@@ -558,6 +558,24 @@
              <normaloff>:/Icons/House5.png</normaloff>:/Icons/House5.png</iconset>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>House 6</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Icons.qrc">
+             <normaloff>:/Icons/House6.png</normaloff>:/Icons/House6.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>House 7</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Icons.qrc">
+             <normaloff>:/Icons/House7.png</normaloff>:/Icons/House7.png</iconset>
+           </property>
+          </item>
          </widget>
         </item>
         <item>

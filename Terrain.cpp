@@ -86,7 +86,7 @@ void Terrain::setType (TerrainType type) {
            << Qt::darkGray
            << Qt::darkYellow
            << Qt::blue
-              << QColor(90, 175, 0);
+           << QColor(90, 175, 0);
 
     setBrush( QBrush( colors[ type ]) );
 

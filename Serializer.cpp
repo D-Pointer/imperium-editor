@@ -52,7 +52,7 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
         stream << "terrain " << terrain->m_type;
         foreach ( QPointF point_pos, polygon ) {
             point_pos += terrain_pos;
-            stream << " " << point_pos.x() << " " << toSave( point_pos.y(), height );
+            stream << " " << (int)point_pos.x() << " " << (int)toSave( point_pos.y(), height );
         }
         stream << endl;
 
@@ -72,21 +72,21 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
     foreach ( Objective * objective, allObjectives ) {
         QPointF objective_pos = objective->pos() + objective->boundingRect().center();
         stream << "objective " << objective->m_id << " "
-               << objective_pos.x() << " " << toSave( objective_pos.y(), height ) << " "
+               << (int)objective_pos.x() << " " << (int)toSave( objective_pos.y(), height ) << " "
                << objective->m_title << endl;
     }
 
     foreach ( House * house, allHouses ) {
         QPointF house_pos = house->pos() + house->boundingRect().center();
         stream << "house " << house->getType() << " "
-               << house_pos.x() << " " << toSave( house_pos.y(), height ) << " "
+               << (int)house_pos.x() << " " << (int)toSave( house_pos.y(), height ) << " "
                << house->rotation() << endl;
     }
 
     foreach ( Unit * unit, allUnits ) {
         QPointF unit_pos = unit->pos() + unit->boundingRect().center();
         stream << "unit " << unit->m_id << " " << unit->m_owner << " " << unit->m_type << " "
-               << unit_pos.x() << " " << toSave( unit_pos.y(), height )
+               << (int)unit_pos.x() << " " << (int)toSave( unit_pos.y(), height )
                << " " << unit->rotation()
                << " " << unit->m_hq_id << " " << unit->m_men << " " << unit->m_guns << " " << unit->m_mode << " "
                << unit->m_name << endl;
@@ -261,13 +261,13 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
 
     // woods has more trees
     int delta = terrain->m_type == kWoods ? 18 : 25;
-    int offset = terrain->m_type == kWoods ? 5 : 10;
+    int offset = terrain->m_type == kWoods ? 5 : 5;
 
     // margin to the edge of the polygon
-    int marginLeft = 25;
-    int marginRight = 15;
-    int marginTop = 15;
-    int marginBottom = 25;
+    int marginLeft = 12;
+    int marginRight = 8;
+    int marginTop = 8;
+    int marginBottom = 12;
 
     for ( int y = terrain->boundingRect().y() + marginBottom; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - marginTop - marginBottom; y += delta ) {
         for ( int x = terrain->boundingRect().x() + marginLeft; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - marginRight - marginLeft; x += delta ) {
@@ -304,7 +304,7 @@ void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float map
     stream << "rocks";
 
     // woods has more trees
-    int delta = 8;
+    int delta = 10;
     int offset = 4;
 
     // margin to the edge of the polygon
