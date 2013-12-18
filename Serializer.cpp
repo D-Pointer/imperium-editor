@@ -289,7 +289,7 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
             }
 
             // scale and rotate a bit randomly
-            float scale = 0.08 + ((float)rand() / RAND_MAX) * 0.08;
+            float scale = 0.5 + ((float)rand() / RAND_MAX) * 0.5;
             float rotation = 10 + ((float)rand() / RAND_MAX) * 20;
 
             stream << " " << tree << " " << (int)treeX << " " << (int)toSave( treeY, mapHeight ) << " " << scale << " " << (int)rotation;
@@ -328,7 +328,7 @@ void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float map
             }
 
             // scale and rotate a bit randomly
-            float scale = 0.08;
+            float scale = 0.8 + ((float)rand() / RAND_MAX) * 0.2;
             float rotation = 10 + ((float)rand() / RAND_MAX) * 20;
 
             stream << " " << rock << " " << (int)rockX << " " << (int)toSave( rockY, mapHeight ) << " " << scale << " " << (int)rotation;

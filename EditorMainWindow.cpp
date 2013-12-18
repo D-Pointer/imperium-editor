@@ -127,7 +127,7 @@ void EditorMainWindow::openMap () {
         map = 0;
     }
 
-    QString name = QFileDialog::getOpenFileName( this, "Open Map", "/Users/chakie/Kobold2D/Kobold2D-2.0.4/Triangularizer/Scenarios" );
+    QString name = QFileDialog::getOpenFileName( this, "Open Map", "/Users/chakie/Prog/Triangularizer/Scenarios" );
     if ( name == "" ) {
         return;
     }
