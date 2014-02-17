@@ -30,7 +30,7 @@ private slots:
     void openMap ();
     void saveMap ();
     void saveMapAs ();
-    void sizeChanged ();
+    //void sizeChanged ();
     void editModeChanged ();
     void selectedTerrainChanged (Terrain * terrain);
     void deleteSelectedItem ();

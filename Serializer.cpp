@@ -131,8 +131,8 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
             int width  = parts.takeFirst().toInt();
             height = parts.takeFirst().toInt();
             map->setSize( width, height );
-            editor->ui->m_width->setValue( width );
-            editor->ui->m_height->setValue( height );
+            editor->ui->m_width->setNum( width );
+            editor->ui->m_height->setNum( height );
         }
 
         else if ( type == "id" ) {
@@ -259,40 +259,52 @@ bool Serializer::terrainComparator (const Terrain * t1, const Terrain * t2) {
 void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float mapHeight) {
     stream << "trees";
 
+    float treeX, treeY;
+
     // woods has more trees
     int delta = terrain->m_type == kWoods ? 18 : 25;
     int offset = terrain->m_type == kWoods ? 5 : 5;
 
-    // margin to the edge of the polygon
-    int marginLeft = 12;
-    int marginRight = 8;
-    int marginTop = 8;
-    int marginBottom = 12;
+    // trees are 30 px wide and high
+    const int treeSize = 30;
 
-    for ( int y = terrain->boundingRect().y() + marginBottom; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - marginTop - marginBottom; y += delta ) {
-        for ( int x = terrain->boundingRect().x() + marginLeft; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - marginRight - marginLeft; x += delta ) {
-            // randomly skip trees
-            if ( ((float)rand() / RAND_MAX) < 0.1 ) {
+    float skipValue = terrain->m_type == kWoods ? 0.05 : 0.1;
+
+    for ( int y = terrain->boundingRect().y(); y <= terrain->boundingRect().y() + terrain->boundingRect().height(); y += delta ) {
+        for ( int x = terrain->boundingRect().x(); x <= terrain->boundingRect().x() + terrain->boundingRect().width(); x += delta ) {
+            //for ( int y = terrain->boundingRect().y() + marginBottom; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - marginTop - marginBottom; y += delta ) {
+                //for ( int x = terrain->boundingRect().x() + marginLeft; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - marginRight - marginLeft; x += delta ) {
+             // randomly skip trees
+            if ( ((float)rand() / RAND_MAX) < skipValue ) {
                 continue;
             }
 
-            // a random tree
-            int tree = rand() % 5;
+            // how many times do we try to randomly find a suitable tree?
+            int tries = terrain->m_type == kWoods ? 50 : 5;
 
-            // offset the positions a bit
-            float treeX = x - offset + ((float)rand() / RAND_MAX) * offset * 2;
-            float treeY = y - offset + ((float)rand() / RAND_MAX) * offset * 2;
+            // try harder to find a suitable tree
+            for ( int index = 0; index < tries; ++index ) {
+                // a random tree type
+                int tree = rand() % 5;
 
-            // is the position inside the polygon?
-            if ( ! terrain->contains( QPoint( treeX, treeY ) ) ) {
-                continue;
+                // scale and rotate a bit randomly
+                float scale = 0.3 + ((float)rand() / RAND_MAX) * 0.8;
+                float rotation = 20 + ((float)rand() / RAND_MAX) * 40;
+
+                float radius = (treeSize * scale) / 2.0f;
+
+                // offset the positions a bit
+                treeX = x - offset + ((float)rand() / RAND_MAX) * offset * 2;
+                treeY = y - offset + ((float)rand() / RAND_MAX) * offset * 2;
+
+                // is the position inside the polygon? test 4 positions: above, below, left and right
+                if ( terrain->contains( QPoint( treeX - radius, treeY ) ) && terrain->contains( QPoint( treeX + radius, treeY ) ) &&
+                     terrain->contains( QPoint( treeX, treeY - radius ) ) && terrain->contains( QPoint( treeX, treeY + radius ) ) ) {
+                    // save a tree
+                    stream << " " << tree << " " << (int)treeX << " " << (int)toSave( treeY, mapHeight ) << " " << scale << " " << (int)rotation;
+                    break;
+                }
             }
-
-            // scale and rotate a bit randomly
-            float scale = 0.5 + ((float)rand() / RAND_MAX) * 0.5;
-            float rotation = 10 + ((float)rand() / RAND_MAX) * 20;
-
-            stream << " " << tree << " " << (int)treeX << " " << (int)toSave( treeY, mapHeight ) << " " << scale << " " << (int)rotation;
         }
     }
 

@@ -9,6 +9,7 @@
 #include "ui_EditorMainWindow.h"
 #include "Selection.hpp"
 #include "Serializer.hpp"
+#include "GeneratorDialog.hpp"
 
 EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::EditorMainWindow) {
     ui->setupUi(this);
@@ -17,6 +18,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     group->addAction( ui->m_edit_action );
     group->addAction( ui->m_terrain_action );
     group->addAction( ui->m_house_action );
+    group->addAction( ui->m_road_action );
     group->addAction( ui->m_unit_action );
     group->addAction( ui->m_objective_action );
     group->setExclusive( true );
@@ -30,11 +32,12 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_terrain_action,   SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_unit_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_house_action,     SIGNAL( triggered() ),       SLOT( editModeChanged()) );
+    connect( ui->m_road_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_objective_action, SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_delete_action,    SIGNAL( triggered() ),       SLOT( deleteSelectedItem()) );
     connect( ui->m_deselect_action,  SIGNAL( triggered() ),       SLOT( deselect()) );
-    connect( ui->m_width,            SIGNAL( valueChanged(int) ), SLOT( sizeChanged()) );
-    connect( ui->m_height,           SIGNAL( valueChanged(int) ), SLOT( sizeChanged()) );
+    //connect( ui->m_width,            SIGNAL( valueChanged(int) ), SLOT( sizeChanged()) );
+    //connect( ui->m_height,           SIGNAL( valueChanged(int) ), SLOT( sizeChanged()) );
 
     connect( ui->m_rotation,         SIGNAL(valueChanged(int)),        SLOT( unitRotated()) );
     connect( ui->m_unit_name,        SIGNAL(textChanged(QString)),     SLOT( unitNameChanged(QString)) );
@@ -89,6 +92,13 @@ void EditorMainWindow::newMap () {
         }
     }
 
+    // show the map generation dialog
+    GeneratorDialog generatorDialog;
+    if ( generatorDialog.exec() == QDialog::Rejected ) {
+        qDebug() << "EditorMainWindow::newMap: rejected";
+        return;
+    }
+
     if ( map ) {
         delete map;
         map = 0;
@@ -102,12 +112,13 @@ void EditorMainWindow::newMap () {
     allObjectives.clear();
     allHouses.clear();
 
-    map = new Map;
+    // get the new map
+    map = generatorDialog.getMap();
 
     takeNewMapIntoUse();
 
-    ui->m_width->setValue( map->getWidth() );
-    ui->m_height->setValue( map->getHeight() );
+    ui->m_width->setNum( map->getWidth() );
+    ui->m_height->setNum( map->getHeight() );
     ui->m_time->setTime( QTime( 12, 0 ) );
     ui->m_title->clear();
     ui->m_description->clear();
@@ -127,7 +138,7 @@ void EditorMainWindow::openMap () {
         map = 0;
     }
 
-    QString name = QFileDialog::getOpenFileName( this, "Open Map", "/Users/chakie/Prog/Triangularizer/Scenarios" );
+    QString name = QFileDialog::getOpenFileName( this, "Open Map", "/Users/chakie/Prog/Triangularizer/Scenarios/" );
     if ( name == "" ) {
         return;
     }
@@ -184,7 +195,7 @@ void EditorMainWindow::saveMapAs () {
 }
 
 
-void EditorMainWindow::sizeChanged () {
+/*void EditorMainWindow::sizeChanged () {
     if ( map == 0 ) {
         return;
     }
@@ -194,7 +205,7 @@ void EditorMainWindow::sizeChanged () {
     }
 
     map->setSize( ui->m_width->value(), ui->m_height->value() );
-}
+}*/
 
 
 void EditorMainWindow::editModeChanged () {
@@ -212,6 +223,9 @@ void EditorMainWindow::editModeChanged () {
     }
     else if ( ui->m_objective_action->isChecked() ) {
         editorMode = kAddObjective;
+    }
+    else if ( ui->m_road_action->isChecked() ) {
+        editorMode = kAddRoad;
     }
 
     selection->deselect();

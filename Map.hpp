@@ -43,6 +43,8 @@ protected:
 
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
 
+    void addPointToRoad (Terrain * road, const QPointF & pos);
+
 
 private slots:
 

@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ImperiumEditor
 TEMPLATE = app
-
+ICON = Icons/Icon.icns
 
 SOURCES += main.cpp\
         EditorMainWindow.cpp \
@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     UnitCallbacks.cpp \
     ObjectiveCallbacks.cpp \
     House.cpp \
-    HouseCallbacks.cpp
+    HouseCallbacks.cpp \
+    Perlin.cpp \
+    GeneratorDialog.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
@@ -35,9 +37,12 @@ HEADERS  += EditorMainWindow.hpp \
     Terrain.hpp \
     Dot.hpp \
     Objective.hpp \
-    House.hpp
+    House.hpp \
+    Perlin.hpp \
+    GeneratorDialog.hpp
 
-FORMS    += EditorMainWindow.ui
+FORMS    += EditorMainWindow.ui \
+    GeneratorDialog.ui
 
 RESOURCES += \
     Icons.qrc

@@ -21,9 +21,18 @@ Terrain::Terrain (const QPolygonF & polygon, QGraphicsItem *parent) : QGraphicsP
 }
 
 
-void Terrain::addPoint (const QPointF & position) {
+void Terrain::addPoint (const QPointF & position, int index) {
     QPolygonF m_polygon = polygon();
-    m_polygon << mapFromScene( position );
+
+    // specific position?
+    if ( index == -1 ) {
+        // just append
+        m_polygon << mapFromScene( position );
+    }
+    else {
+        m_polygon.insert( index, mapFromScene( position ) );
+    }
+
     setPolygon( m_polygon );
 
     createDot( mapFromScene( position ) );

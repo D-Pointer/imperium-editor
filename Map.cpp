@@ -71,13 +71,6 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
         // any old terrain?
         terrain = selection->getSelectedTerrain();
 
-//        if ( terrain && terrain->m_polygon.count() < 3 ) {
-//            // not a complete polygon, nuke it
-//            delete selection->getSelectedTerrain();
-//            selection->setTerrain( 0 );
-//            terrain = 0;
-//        }
-
         if ( terrain == 0 ) {
             terrain = new Terrain;
             addItem( terrain );
@@ -86,6 +79,25 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
 
         // add the clicked position
         terrain->addPoint( event->scenePos() );
+        clearSelection();
+
+        emit terrainAdded( terrain );
+        terrain->setSelected( true );
+        selection->setTerrain( terrain );
+        break;
+
+    case kAddRoad:
+        terrain = selection->getSelectedTerrain();
+
+        if ( terrain == 0 ) {
+            terrain = new Terrain;
+            terrain->setType( kRoad );
+            addItem( terrain );
+            allTerrains << terrain;
+        }
+
+        // add the clicked position
+        addPointToRoad( terrain, event->scenePos() );
         clearSelection();
 
         emit terrainAdded( terrain );
@@ -137,6 +149,43 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
         selection->setHouse( house );
         house->setSelected( true );
         break;
+     }
+}
+
+
+void Map::addPointToRoad (Terrain * road, const QPointF & pos) {
+    Q_ASSERT( road->m_type == kRoad );
+
+    QPolygonF polygon = road->polygon();
+
+    // road width
+    const float roadWidth = 10;
+
+    // how many points does it have now?
+    if ( polygon.size() == 0 ) {
+        // add the first point
+        road->addPoint( QPointF( pos.x(), pos.y() + roadWidth ) );
+        road->addPoint( pos );
+    }
+    else {
+        // add in two points, first append the clicked position
+        road->addPoint( pos );
+
+        // get back the now changed polygon
+        polygon = road->polygon();
+
+        // now create a line from the two last positions to get an angle
+        QLineF line( road->mapToScene( polygon[ polygon.size() -2 ] ),
+                     road->mapToScene( polygon.last() ));
+
+        // get a normal vector
+        QLineF normal = line.normalVector().unitVector();
+
+        // make it as tall as the road is wide
+        QPointF delta = (normal.p1() - normal.p2()) * roadWidth;
+
+        // add it first. the polygon expands at the end and at the beginning
+        road->addPoint( pos + delta, 0 );
     }
 }
 

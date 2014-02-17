@@ -15,7 +15,7 @@ public:
     Terrain (QGraphicsItem * parent=0);
     Terrain (const QPolygonF & polygon, QGraphicsItem *parent=0);
 
-    void addPoint (const QPointF & position);
+    void addPoint (const QPointF & position, int index=-1);
 
     void addPointAfter (Dot * dot);
     void removeDot (Dot * dot);
@@ -25,7 +25,6 @@ public:
     void dotMoved (Dot * dot);
 
     TerrainType m_type;
-    //QPolygonF m_polygon;
 
     QList<Dot *> m_dots;
 
