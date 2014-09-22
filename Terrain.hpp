@@ -24,6 +24,9 @@ public:
 
     void dotMoved (Dot * dot);
 
+    void flipHorizontally ();
+    void flipVertically ();
+
     TerrainType m_type;
 
     QList<Dot *> m_dots;

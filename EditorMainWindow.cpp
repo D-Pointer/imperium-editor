@@ -47,6 +47,8 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_hq,               SIGNAL(currentIndexChanged(int)), SLOT( unitHQChanged()) );
     connect( ui->m_men,              SIGNAL(valueChanged(int)),        SLOT( unitMenChanged()) );
     connect( ui->m_guns,             SIGNAL(valueChanged(int)),        SLOT( unitGunsChanged()) );
+    connect( ui->m_weapon,           SIGNAL(currentIndexChanged(int)), SLOT( unitWeaponChanged()) );
+    connect( ui->m_experience,       SIGNAL(currentIndexChanged(int)), SLOT( unitExperienceChanged()) );
 
     connect( ui->m_objective_title,  SIGNAL( textChanged(QString)),    SLOT( objectiveNameChanged(QString)) );
 
@@ -56,10 +58,13 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_rotate_left,      SIGNAL( clicked()),          SLOT( rotateTerrain()) );
     connect( ui->m_rotate_right,     SIGNAL( clicked()),          SLOT( rotateTerrain()) );
     connect( ui->m_duplicate,        SIGNAL( clicked()),          SLOT( duplicateTerrain()) );
+    connect( ui->m_flipHorizontal,   SIGNAL( clicked()),          SLOT( flipMapHorizontally()) );
+    connect( ui->m_flipVertical,     SIGNAL( clicked()),          SLOT( flipMapVertically()) );
     connect( ui->m_add_point,        SIGNAL( clicked()),          SLOT( addPoint()) );
     connect( ui->m_zoom_in,          SIGNAL( clicked()),          SLOT( zoomIn()) );
     connect( ui->m_zoom_out,         SIGNAL( clicked()),          SLOT( zoomOut()) );
     connect( ui->m_zoom_normal,      SIGNAL( clicked()),          SLOT( zoomNormal()) );
+    connect( ui->m_generate,         SIGNAL( clicked()),          SLOT( generateNavigation()) );
     connect( ui->m_terrain_type,     SIGNAL(currentIndexChanged(int)), SLOT(terrainTypeChanged()) );
     connect( selection, SIGNAL( selectedUnitChanged(Unit*)),           SLOT( selectedUnitChanged(Unit*)) );
     connect( selection, SIGNAL( selectedTerrainChanged(Terrain*)),     SLOT( selectedTerrainChanged(Terrain*)) );
@@ -112,6 +117,11 @@ void EditorMainWindow::newMap () {
     allObjectives.clear();
     allHouses.clear();
 
+    if ( navigationGrid ) {
+        delete [] navigationGrid;
+        navigationGrid = 0;
+    }
+
     // get the new map
     map = generatorDialog.getMap();
 
@@ -149,6 +159,11 @@ void EditorMainWindow::openMap () {
     allTerrains.clear();
     allObjectives.clear();
     allHouses.clear();
+
+    if ( navigationGrid ) {
+        delete [] navigationGrid;
+        navigationGrid = 0;
+    }
 
     ui->m_tutorial->setChecked( false );
 
@@ -239,6 +254,7 @@ void EditorMainWindow::selectedTerrainChanged (Terrain * terrain) {
         ui->m_terrain_tab->setDisabled( true );
         ui->m_objective_tab->setDisabled( true );
         ui->m_houses_tab->setDisabled( true );
+        ui->m_navigation_tab->setDisabled( true );
         ui->m_bound_size->clear();
     }
     else {
@@ -363,6 +379,59 @@ void EditorMainWindow::duplicateTerrain () {
 }
 
 
+void EditorMainWindow::flipMapHorizontally () {
+    foreach (Terrain * terrain, allTerrains ) {
+        terrain->flipHorizontally();
+    }
+
+    foreach (Objective * objective, allObjectives ) {
+        objective->setPos( map->getWidth() - objective->pos().x() - objective->boundingRect().width(), objective->pos().y() );
+    }
+
+    foreach (House * house, allHouses ) {
+        house->setPos( map->getWidth() - house->pos().x() - house->boundingRect().width(), house->pos().y() );
+        float old = house->rotation();
+        float rotation = 180 + house->rotation();
+        if ( rotation > 360 ) {
+            rotation -= 360;
+        }
+        else if ( rotation < 0 ) {
+            rotation += 360;
+        }
+        house->setTransform(QTransform::fromScale(-1, 1), true );//setRotation( rotation );
+        qDebug() << old << "->" << rotation;
+    }
+}
+
+
+void EditorMainWindow::flipMapVertically () {
+    foreach (Terrain * terrain, allTerrains ) {
+        terrain->flipVertically();
+    }
+
+    foreach (Objective * objective, allObjectives ) {
+        objective->setPos( objective->pos().x(), map->getHeight() - objective->pos().y() - objective->boundingRect().height() );
+    }
+
+    foreach (House * house, allHouses ) {
+        house->setPos( house->pos().x(), map->getHeight() - house->pos().y() - house->boundingRect().height() );
+        float old = house->rotation();
+        float rotation = 180 - house->rotation();
+        if ( rotation > 360 ) {
+            rotation -= 360;
+        }
+        else if ( rotation < 0 ) {
+            rotation += 360;
+        }
+
+        house->setTransform(QTransform::fromScale(1, -1), true );//setRotation( rotation );
+        qDebug() << old << "->" << rotation;
+    }
+
+
+}
+
+
 void EditorMainWindow::zoomIn () {
     ui->m_view->scale( 1.1, 1.1 );
 }
@@ -406,6 +475,7 @@ void EditorMainWindow::takeNewMapIntoUse () {
     ui->m_zoom_in->setEnabled( true );
     ui->m_zoom_normal->setEnabled( true );
     ui->m_zoom_out->setEnabled( true );
+    ui->m_navigation_tab->setEnabled( true );
 
     ui->m_hq->clear();
     ui->m_hq->addItem( "No HQ", -1 );

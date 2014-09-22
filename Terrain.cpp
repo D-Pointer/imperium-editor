@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 
 #include "Terrain.hpp"
+#include "Map.hpp"
 
 Terrain::Terrain (QGraphicsItem *parent) : QGraphicsPolygonItem(parent) {
     setType( kWoods );
@@ -100,7 +101,7 @@ void Terrain::setType (TerrainType type) {
     setBrush( QBrush( colors[ type ]) );
 
     QList<qreal> zOrders;
-    zOrders << 50  // woods
+    zOrders << 55  // woods
             << 50  // field
             << 0   // grass
             << 100 // road
@@ -122,48 +123,94 @@ void Terrain::dotMoved (Dot * dot) {
         qWarning() << "Terrain::dotMoved: dot not found";
         return;
     }
-    QPolygonF m_polygon = polygon();
+    QPolygonF poly = polygon();
 
-    m_polygon[ index ] = dot->pos() + dot->boundingRect().center();
-    setPolygon( m_polygon );
+    poly[ index ] = dot->pos() + dot->boundingRect().center();
+    setPolygon( poly );
+}
+
+
+void Terrain::flipHorizontally () {
+    float width = map->getWidth();
+
+    QPolygonF poly = polygon();
+
+    // loop all points and flip them
+    for ( int index = 0; index < poly.size(); ++index ) {
+        QPointF & point( poly[index] );
+        point.setX( width - point.x() );
+    }
+
+    setPolygon( poly );
+
+    // get rif of all dots and recreate them
+    qDeleteAll( m_dots );
+    m_dots.clear();
+
+    foreach ( const QPointF & pos, poly ) {
+        createDot( pos );
+    }
+}
+
+
+void Terrain::flipVertically () {
+    float height = map->getHeight();
+
+    QPolygonF poly = polygon();
+
+    // loop all points and flip them
+    for ( int index = 0; index < poly.size(); ++index ) {
+        QPointF & point( poly[index] );
+        point.setY( height - point.y() );
+    }
+
+    setPolygon( poly );
+
+    // get rif of all dots and recreate them
+    qDeleteAll( m_dots );
+    m_dots.clear();
+
+    foreach ( const QPointF & pos, poly ) {
+        createDot( pos );
+    }
 }
 
 
 QVariant Terrain::itemChange (GraphicsItemChange change, const QVariant &value) {
     if (change == ItemSelectedHasChanged && scene()) {
-//        foreach ( Dot * dot, m_dots ) {
-//            dot->setVisible( isSelected() );
-//        }
+        //        foreach ( Dot * dot, m_dots ) {
+        //            dot->setVisible( isSelected() );
+        //        }
 
         return QVariant();
     }
 
     else if (change == ItemPositionChange && scene() ) {
-         // value is the new position.
-         QPointF newPos = value.toPointF();
+        // value is the new position.
+        QPointF newPos = value.toPointF();
 
-         QPointF delta = newPos - pos();
-         QPolygonF m_polygon = polygon();
-         //m_polygon.translate( delta );
-         //setPolygon( m_polygon );
-         //qDebug() << delta << pos() << polygon();
+        QPointF delta = newPos - pos();
+        QPolygonF m_polygon = polygon();
+        //m_polygon.translate( delta );
+        //setPolygon( m_polygon );
+        //qDebug() << delta << pos() << polygon();
 
-//         foreach (Dot * dot, m_dots ) {
-//             dot->translate( delta.x(), delta.y() );
-//         }
+        //         foreach (Dot * dot, m_dots ) {
+        //             dot->translate( delta.x(), delta.y() );
+        //         }
 
-         //return QPointF(0, 0);
-         return value;
+        //return QPointF(0, 0);
+        return value;
     }
     else if (change == ItemPositionHasChanged && scene() ) {
-//         // value is the new position.
-//         QPolygonF m_polygon = polygon();
-//         m_polygon.translate( pos() );
-//         setPolygon( m_polygon );
-//         qDebug() << pos() << polygon();
+        //         // value is the new position.
+        //         QPolygonF m_polygon = polygon();
+        //         m_polygon.translate( pos() );
+        //         setPolygon( m_polygon );
+        //         qDebug() << pos() << polygon();
 
-//         //return QPointF(0, 0);
-//         return value;
+        //         //return QPointF(0, 0);
+        //         return value;
     }
 
     else if ( change == ItemSceneHasChanged ) {

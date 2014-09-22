@@ -12,6 +12,8 @@ TARGET = ImperiumEditor
 TEMPLATE = app
 ICON = Icons/Icon.icns
 
+QMAKE_MAC_SDK = macosx10.9
+
 SOURCES += main.cpp\
         EditorMainWindow.cpp \
     Map.cpp \
@@ -26,7 +28,8 @@ SOURCES += main.cpp\
     House.cpp \
     HouseCallbacks.cpp \
     Perlin.cpp \
-    GeneratorDialog.cpp
+    GeneratorDialog.cpp \
+    NavigationCallbacks.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \

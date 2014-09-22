@@ -33,6 +33,8 @@ void EditorMainWindow::selectedUnitChanged (Unit * unit) {
         ui->m_unit_id->setNum( unit->m_id );
         ui->m_men->setValue( unit->m_men );
         ui->m_guns->setValue( unit->m_guns );
+        ui->m_weapon->setCurrentIndex( unit->m_weapon );
+        ui->m_experience->setCurrentIndex( unit->m_experience );
         ui->m_mode->setCurrentIndex( unit->m_mode );
         ui->m_owner->setCurrentIndex( unit->m_owner );
         ui->m_rotation->setValue( (int)unit->rotation() );
@@ -142,6 +144,31 @@ void EditorMainWindow::unitGunsChanged () {
 
     updateUnitStats();
 }
+
+
+void EditorMainWindow::unitWeaponChanged () {
+    Unit * selected = selection->getSelectedUnit();
+    if ( ! selected ) {
+        return;
+    }
+
+    selected->m_weapon = (WeaponType)ui->m_weapon->currentIndex();
+
+    updateUnitStats();
+}
+
+
+void EditorMainWindow::unitExperienceChanged () {
+    Unit * selected = selection->getSelectedUnit();
+    if ( ! selected ) {
+        return;
+    }
+
+    selected->m_experience = (ExperienceType)ui->m_experience->currentIndex();
+
+    updateUnitStats();
+}
+
 
 
 void EditorMainWindow::refreshHqList () {

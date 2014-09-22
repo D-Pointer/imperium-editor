@@ -10,8 +10,9 @@
 #include "Selection.hpp"
 
 Map::Map(QObject *parent) : QGraphicsScene(parent), m_background(0) {
-    m_background = new QGraphicsRectItem( 0, 0, 1024, 768, 0, this );
+    m_background = new QGraphicsRectItem( 0, 0, 1024, 768, 0 );
     m_background->setBrush( QBrush( Qt::green ) );
+    addItem( m_background );
 
     m_name = "";
 

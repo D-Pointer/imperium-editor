@@ -11,6 +11,8 @@ Unit::Unit (const QPointF & pos, QGraphicsItem * parent) : QGraphicsPixmapItem(p
     m_mode  = kFormation;
     m_owner = kPlayer1;
     m_type  = kInfantry;
+    m_weapon = kRifle;
+    m_experience = kRegular;
 
     setupIcon();
 

@@ -16,11 +16,13 @@ public:
     QString m_name;
     int m_men;
     int m_guns;
+    WeaponType m_weapon;
     int m_id;
     int m_hq_id;
     UnitMode m_mode;
     Player m_owner;
     UnitType m_type;
+    ExperienceType m_experience;
 
     static int m_next_id;
 };

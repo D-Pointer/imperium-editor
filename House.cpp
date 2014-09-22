@@ -16,7 +16,7 @@ House::House (const QPointF & pos, int type, QGraphicsItem * parent) : QGraphics
 void House::setType (int type) {
     m_type = type;
 
-    qDebug() << "House::setType: new type:" << m_type;
+    //qDebug() << "House::setType: new type:" << m_type;
 
     // new pixmap
     setPixmap( QPixmap(":/Icons/House" + QString::number( type + 1 ) + ".png") );

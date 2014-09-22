@@ -10,6 +10,14 @@ class Objective;
 class Map;
 class House;
 
+// battle size for multiplayer games
+typedef enum {
+    kSmallBattle,
+    kMediumBattle,
+    kLargeBattle,
+    kNotIncluded,
+} BattleSizeType;
+
 typedef enum {
     kEdit,
     kAddTerrain,
@@ -38,6 +46,22 @@ typedef enum {
 } UnitType;
 
 typedef enum {
+    kRifle,
+    kLightCannon,
+    kHeavyCannon,
+    kMachineGun,
+    kFlamethrower
+} WeaponType;
+
+
+typedef enum {
+    kGreen,
+    kRegular,
+    kVeteran,
+    kElite,
+} ExperienceType;
+
+typedef enum {
     kWoods = 0,
     kField,
     kGrass,
@@ -58,11 +82,14 @@ typedef enum {
 } AIHint;
 
 
+static const int navigationTileSize = 10;
+
 extern EditorMode editorMode;
 extern QList<House *> allHouses;
 extern QList<Unit *> allUnits;
 extern QList<Objective *> allObjectives;
 extern QList<Terrain *> allTerrains;
+extern Terrain ** navigationGrid;
 extern Selection * selection;
 extern Map * map;
 

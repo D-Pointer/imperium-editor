@@ -15,12 +15,14 @@
 void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
     qDebug() << "Serializer::saveMap: saving to:" << map->m_name;
 
-    QFile file( map->m_name );
+   QFile file( map->m_name );
     if ( ! file.open( QIODevice::WriteOnly |QIODevice::Truncate ) ) {
         // failed
         QMessageBox::warning( 0, "Save Failed", "Failed to save the map: " + file.errorString(), QMessageBox::Ok );
         return;
     }
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     QTextStream stream( &file );
 
@@ -34,6 +36,7 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
            << "length "   << editor->ui->m_length->value() << endl
            << "tutorial " << (editor->ui->m_tutorial->isChecked() ? "1" : "0") << endl
            << "aihint "   << editor->ui->m_aiHint->currentIndex() << endl
+           << "battlesize " << editor->ui->m_battleSize->currentIndex() << endl
            << "title "    << editor->ui->m_title->text() << endl
            << "desc "     << editor->ui->m_description->toPlainText().replace( "\n", "|") << endl;
 
@@ -88,9 +91,16 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
         stream << "unit " << unit->m_id << " " << unit->m_owner << " " << unit->m_type << " "
                << (int)unit_pos.x() << " " << (int)toSave( unit_pos.y(), height )
                << " " << unit->rotation()
-               << " " << unit->m_hq_id << " " << unit->m_men << " " << unit->m_guns << " " << unit->m_mode << " "
+               << " " << unit->m_hq_id << " " << unit->m_men << " " << unit->m_guns << " " << unit->m_weapon << " " << unit->m_mode << " " << unit->m_experience << " "
                << unit->m_name << endl;
     }
+
+    // finally do we have navigation data?
+    if ( navigationGrid ) {
+        saveNavigationGrid();
+    }
+
+    QApplication::restoreOverrideCursor();
 }
 
 
@@ -109,6 +119,7 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
 
     // set some defaults
     editor->ui->m_aiHint->setCurrentIndex( kMeeting );
+    editor->ui->m_battleSize->setCurrentIndex( kMediumBattle );
 
     // create a new map
     Map * map = new Map;
@@ -161,6 +172,10 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
             editor->ui->m_aiHint->setCurrentIndex( parts.takeFirst().toInt() );
         }
 
+        else if ( type == "battlesize" ) {
+            editor->ui->m_battleSize->setCurrentIndex( parts.takeFirst().toInt() );
+        }
+
         else if ( type == "title" ) {
             editor->ui->m_title->setText( parts.join( " " ) );
         }
@@ -194,11 +209,13 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
 
             unit->setRotation( rotation );
 
-            unit->m_hq_id    = parts.takeFirst().toInt();
-            unit->m_men      = parts.takeFirst().toInt();
-            unit->m_guns     = parts.takeFirst().toInt();
-            unit->m_mode     = (UnitMode)parts.takeFirst().toInt();
-            unit->m_name     = parts.join( " " );
+            unit->m_hq_id      = parts.takeFirst().toInt();
+            unit->m_men        = parts.takeFirst().toInt();
+            unit->m_guns       = parts.takeFirst().toInt();
+            unit->m_weapon     = (WeaponType)parts.takeFirst().toInt();
+            unit->m_mode       = (UnitMode)parts.takeFirst().toInt();
+            unit->m_experience = (ExperienceType)parts.takeFirst().toInt();
+            unit->m_name       = parts.join( " " );
 
             unit->setupIcon();
             map->addItem( unit );
@@ -272,8 +289,6 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
 
     for ( int y = terrain->boundingRect().y(); y <= terrain->boundingRect().y() + terrain->boundingRect().height(); y += delta ) {
         for ( int x = terrain->boundingRect().x(); x <= terrain->boundingRect().x() + terrain->boundingRect().width(); x += delta ) {
-            //for ( int y = terrain->boundingRect().y() + marginBottom; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - marginTop - marginBottom; y += delta ) {
-                //for ( int x = terrain->boundingRect().x() + marginLeft; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - marginRight - marginLeft; x += delta ) {
              // randomly skip trees
             if ( ((float)rand() / RAND_MAX) < skipValue ) {
                 continue;
@@ -291,15 +306,16 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
                 float scale = 0.3 + ((float)rand() / RAND_MAX) * 0.8;
                 float rotation = 20 + ((float)rand() / RAND_MAX) * 40;
 
-                float radius = (treeSize * scale) / 2.0f;
+                //float radius = (treeSize * scale) / 2.0f;
 
                 // offset the positions a bit
                 treeX = x - offset + ((float)rand() / RAND_MAX) * offset * 2;
                 treeY = y - offset + ((float)rand() / RAND_MAX) * offset * 2;
 
                 // is the position inside the polygon? test 4 positions: above, below, left and right
-                if ( terrain->contains( QPoint( treeX - radius, treeY ) ) && terrain->contains( QPoint( treeX + radius, treeY ) ) &&
-                     terrain->contains( QPoint( treeX, treeY - radius ) ) && terrain->contains( QPoint( treeX, treeY + radius ) ) ) {
+                if ( terrain->contains( QPoint( treeX, treeY ) ) ) {
+//                    if ( terrain->contains( QPoint( treeX - radius, treeY ) ) && terrain->contains( QPoint( treeX + radius, treeY ) ) &&
+//                         terrain->contains( QPoint( treeX, treeY - radius ) ) && terrain->contains( QPoint( treeX, treeY + radius ) ) ) {
                     // save a tree
                     stream << " " << tree << " " << (int)treeX << " " << (int)toSave( treeY, mapHeight ) << " " << scale << " " << (int)rotation;
                     break;
@@ -348,5 +364,45 @@ void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float map
     }
 
     stream << endl;
+}
+
+
+void Serializer::saveNavigationGrid () {
+    // change the extension for the navigation grid
+    QString filename = map->m_name;
+    filename.replace( ".map", ".nav" );
+
+    qDebug() << "Serializer::saveNavigationGrid: saving to:" << filename;
+
+    if ( filename == map->m_name ) {
+        QMessageBox::warning( 0, "Save Failed", "Failed to save the navigation grid: same name", QMessageBox::Ok );
+        return;
+    }
+
+    QFile file( filename );
+    if ( ! file.open( QIODevice::WriteOnly |QIODevice::Truncate ) ) {
+        // failed
+        QMessageBox::warning( 0, "Save Failed", "Failed to save the navigation grid: " + file.errorString(), QMessageBox::Ok );
+        return;
+    }
+
+    int gridWidth = map->getWidth() / navigationTileSize;
+    int gridHeight = map->getHeight() / navigationTileSize;
+
+    unsigned char data[ gridWidth * gridHeight ];
+
+    // loop the entire map
+    for ( int index = 0; index < gridWidth * gridHeight; ++index ) {
+        if ( navigationGrid[ index ] != 0 ) {
+            data[ index ] = (unsigned char)navigationGrid[ index ]->m_type;
+        }
+        else {
+            data[ index ] = (unsigned char)kGrass;
+        }
+    }
+
+    // save it all
+    file.write( (const char *)data, gridWidth * gridHeight );
+    file.close();
 }
 

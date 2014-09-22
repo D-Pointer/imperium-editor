@@ -39,6 +39,10 @@ private slots:
     void rotateTerrain ();
     void duplicateTerrain ();
 
+    void flipMapHorizontally ();
+    void flipMapVertically ();
+
+
     void unitAdded (Unit * unit);
     void selectedUnitChanged (Unit * unit);
     void unitRotated ();
@@ -49,6 +53,8 @@ private slots:
     void unitModeChanged ();
     void unitMenChanged ();
     void unitGunsChanged ();
+    void unitWeaponChanged ();
+    void unitExperienceChanged ();
     void refreshHqList ();
     void updateUnitStats ();
 
@@ -64,6 +70,8 @@ private slots:
     void zoomNormal ();
 
     void deselect ();
+
+    void generateNavigation ();
 
 
 private:

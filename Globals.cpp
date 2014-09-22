@@ -9,6 +9,7 @@ EditorMode editorMode = kEdit;
 QList<Unit *> allUnits;
 QList<House *> allHouses;
 QList<Terrain *> allTerrains;
+Terrain ** navigationGrid = 0;
 QList<Objective *> allObjectives;
 Selection * selection = new Selection();
 Map * map = 0;
