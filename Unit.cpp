@@ -7,7 +7,8 @@ Unit::Unit (const QPointF & pos, QGraphicsItem * parent) : QGraphicsPixmapItem(p
     m_id    = Unit::m_next_id++;
     m_hq_id = -1;
     m_men   = 100;
-    m_guns  = 0;
+    m_ammo  = 50;
+    //m_guns  = 0;
     m_mode  = kFormation;
     m_owner = kPlayer1;
     m_type  = kInfantry;

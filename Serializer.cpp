@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QString>
 #include <QMatrix>
+#include <QImage>
 #include <QtAlgorithms>
 #include <QDebug>
 
@@ -47,6 +48,12 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
         QPointF terrain_pos = terrain->pos();
         QPolygonF polygon = terrain->polygon();
 
+        // is the terrain valid?
+        if ( polygon.size() == 0 ) {
+            qWarning() << "Serializer::saveMap: terrain with no points, skipping it";
+            continue;
+        }
+
         QPointF pos = polygon.boundingRect().center();
         polygon.translate( -pos );
         polygon = QMatrix().rotate( terrain->rotation() ).map( polygon );
@@ -91,14 +98,21 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
         stream << "unit " << unit->m_id << " " << unit->m_owner << " " << unit->m_type << " "
                << (int)unit_pos.x() << " " << (int)toSave( unit_pos.y(), height )
                << " " << unit->rotation()
-               << " " << unit->m_hq_id << " " << unit->m_men << " " << unit->m_guns << " " << unit->m_weapon << " " << unit->m_mode << " " << unit->m_experience << " "
-               << unit->m_name << endl;
+               << " " << unit->m_hq_id
+               << " " << unit->m_men
+               << " " << unit->m_weapon
+               << " " << unit->m_mode
+               << " " << unit->m_experience
+               << " " << unit->m_ammo
+               << " " << unit->m_name << endl;
     }
 
     // finally do we have navigation data?
     if ( navigationGrid ) {
         saveNavigationGrid();
     }
+
+//    saveHeightmap();
 
     QApplication::restoreOverrideCursor();
 }
@@ -211,10 +225,10 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
 
             unit->m_hq_id      = parts.takeFirst().toInt();
             unit->m_men        = parts.takeFirst().toInt();
-            unit->m_guns       = parts.takeFirst().toInt();
             unit->m_weapon     = (WeaponType)parts.takeFirst().toInt();
             unit->m_mode       = (UnitMode)parts.takeFirst().toInt();
             unit->m_experience = (ExperienceType)parts.takeFirst().toInt();
+            unit->m_ammo       = parts.takeFirst().toInt();
             unit->m_name       = parts.join( " " );
 
             unit->setupIcon();
@@ -283,9 +297,11 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
     int offset = terrain->m_type == kWoods ? 5 : 5;
 
     // trees are 30 px wide and high
-    const int treeSize = 30;
+    //const int treeSize = 30;
 
     float skipValue = terrain->m_type == kWoods ? 0.05 : 0.1;
+
+    int generated = 0;
 
     for ( int y = terrain->boundingRect().y(); y <= terrain->boundingRect().y() + terrain->boundingRect().height(); y += delta ) {
         for ( int x = terrain->boundingRect().x(); x <= terrain->boundingRect().x() + terrain->boundingRect().width(); x += delta ) {
@@ -318,10 +334,28 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
 //                         terrain->contains( QPoint( treeX, treeY - radius ) ) && terrain->contains( QPoint( treeX, treeY + radius ) ) ) {
                     // save a tree
                     stream << " " << tree << " " << (int)treeX << " " << (int)toSave( treeY, mapHeight ) << " " << scale << " " << (int)rotation;
+                    generated++;
                     break;
                 }
             }
         }
+    }
+
+    // did we generate at least a single tree?
+    if ( generated == 0 ) {
+        qWarning() << "Serializer::generateTrees: terrain polygon contains no trees, adding one at the middle";
+
+        // no, so add one at the center of the polygon
+        QPointF center = terrain->boundingRect().center();
+
+        // a random tree type
+        int tree = rand() % 5;
+
+        // scale and rotate a bit randomly
+        float scale = 0.3 + ((float)rand() / RAND_MAX) * 0.8;
+        float rotation = 20 + ((float)rand() / RAND_MAX) * 40;
+
+        stream << " " << tree << " " << (int)center.x() << " " << (int)toSave( center.y(), mapHeight ) << " " << scale << " " << (int)rotation;
     }
 
     stream << endl;
@@ -340,6 +374,8 @@ void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float map
     int marginRight = 5;
     int marginTop = 5;
     int marginBottom = 5;
+
+    int generated = 0;
 
     for ( int y = terrain->boundingRect().y() + marginBottom; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - marginTop - marginBottom; y += delta ) {
         for ( int x = terrain->boundingRect().x() + marginLeft; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - marginRight - marginLeft; x += delta ) {
@@ -361,6 +397,23 @@ void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float map
 
             stream << " " << rock << " " << (int)rockX << " " << (int)toSave( rockY, mapHeight ) << " " << scale << " " << (int)rotation;
         }
+    }
+
+    // did we generate at least a single rock?
+    if ( generated == 0 ) {
+        qWarning() << "Serializer::generateRocks: terrain polygon contains no rocks, adding one at the middle";
+
+        // no, so add one at the center of the polygon
+        QPointF center = terrain->boundingRect().center();
+
+        // a random rock
+       int rock = rand() % 6;
+
+        // scale and rotate a bit randomly
+        float scale = 0.8 + ((float)rand() / RAND_MAX) * 0.2;
+        float rotation = 10 + ((float)rand() / RAND_MAX) * 20;
+
+        stream << " " << rock << " " << (int)center.x() << " " << (int)toSave( center.y(), mapHeight ) << " " << scale << " " << (int)rotation;
     }
 
     stream << endl;
@@ -406,3 +459,78 @@ void Serializer::saveNavigationGrid () {
     file.close();
 }
 
+
+void Serializer::saveHeightmap () {
+    // change the extension for the height map
+    QString filename = map->m_name;
+    filename.replace( ".map", "-default.png" );
+    qDebug() << "Serializer::saveNavigationGrid: saving to:" << filename;
+
+    QFile file( filename );
+    if ( ! file.open( QIODevice::WriteOnly |QIODevice::Truncate ) ) {
+        // failed
+        QMessageBox::warning( 0, "Save Failed", "Failed to save the heightmap: " + file.errorString(), QMessageBox::Ok );
+        return;
+    }
+
+    // heightma filled with a default height
+    QImage heightmap( QSize( map->getWidth() / 2, map->getHeight() / 2 ), QImage::Format_Indexed8 );
+    heightmap.fill( 128 );
+
+    // set a grayscale indexed color table
+    QVector<QRgb> table( 256 );
+    for( int i = 0; i < 256; ++i ) {
+        table[i] = qRgb(i,i,i);
+    }
+    heightmap.setColorTable( table );
+
+    // hide all items
+    foreach ( QGraphicsItem * item, map->items() ) {
+        item->hide();
+    }
+
+    // hide all terrains that are not water
+    foreach ( Terrain * terrain, allTerrains ) {
+        if ( terrain->m_type == kRiver ) {
+            terrain->show();
+
+            foreach ( Dot * dot, terrain->m_dots ) {
+                dot->hide();
+            }
+        }
+    }
+
+    // grab an lower resolution screenshot
+    QImage source( QSize( map->getWidth() / 2, map->getHeight() / 2 ), QImage::Format_RGB888 );
+    QPainter painter( &source );
+    map->render( &painter, source.rect(), QRectF( 0, 0, map->getWidth(), map->getHeight() ) );
+
+    // color for the water
+    QRgb waterColor = Terrain::getColor( kRiver ).rgb();
+
+    // what to save in the heightmap for water
+    int waterHeight = qGray( qRgb( 0, 0, 0) );
+
+    for(int i = 0; i < source.width(); i++) {
+        for(int j = 0; j< source.height(); j++) {
+            if ( source.pixel( i,j ) == waterColor ) {
+                heightmap.setPixel( i,j, waterHeight ); //qGray( source.pixel(i,j) ));
+            }
+        }
+    }
+
+    heightmap.save( &file, "PNG" );
+
+    // show all terrain again
+    foreach ( Terrain * terrain, allTerrains ) {
+        terrain->show();
+
+        foreach ( Dot * dot, terrain->m_dots ) {
+            dot->show();
+        }
+    }
+
+    foreach ( QGraphicsItem * item, map->items() ) {
+        item->show();
+    }
+}

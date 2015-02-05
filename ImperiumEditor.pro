@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     HouseCallbacks.cpp \
     Perlin.cpp \
     GeneratorDialog.cpp \
-    NavigationCallbacks.cpp
+    NavigationCallbacks.cpp \
+    NormalMapCallbacks.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \

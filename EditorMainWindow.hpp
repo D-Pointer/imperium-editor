@@ -1,6 +1,8 @@
 #ifndef EDITORMAINWINDOW_HPP
 #define EDITORMAINWINDOW_HPP
 
+class QActionGroup;
+
 #include <QMainWindow>
 
 #include "Map.hpp"
@@ -30,11 +32,13 @@ private slots:
     void openMap ();
     void saveMap ();
     void saveMapAs ();
-    //void sizeChanged ();
+    void updateNormalMap ();
+
     void editModeChanged ();
     void selectedTerrainChanged (Terrain * terrain);
     void deleteSelectedItem ();
     void terrainTypeChanged ();
+    void terrainDone ();
     void addPoint ();
     void rotateTerrain ();
     void duplicateTerrain ();
@@ -52,11 +56,12 @@ private slots:
     void unitHQChanged ();
     void unitModeChanged ();
     void unitMenChanged ();
-    void unitGunsChanged ();
+    void unitAmmoChanged ();
     void unitWeaponChanged ();
     void unitExperienceChanged ();
     void refreshHqList ();
     void updateUnitStats ();
+    void updateUnitWeaponCount ();
 
     void selectedObjectiveChanged (Objective * objective);
     void objectiveNameChanged (const QString & name);
@@ -80,7 +85,17 @@ private:
 
     void takeNewMapIntoUse ();
 
+    QActionGroup * m_actionGroup;
+
     Ui::EditorMainWindow *ui;
+
+    enum StackPage {
+        ScenarioPage,
+        TerrainPage,
+        HousePage,
+        UnitPage,
+        ObjectivePage
+    };
 };
 
 #endif // EDITORMAINWINDOW_HPP

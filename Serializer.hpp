@@ -26,6 +26,7 @@ private:
     void generateRocks (Terrain * terrain, QTextStream & stream, float mapHeight);
 
     void saveNavigationGrid ();
+    void saveHeightmap ();
 };
 
 

@@ -15,7 +15,7 @@ public:
 
     QString m_name;
     int m_men;
-    int m_guns;
+    int m_ammo;
     WeaponType m_weapon;
     int m_id;
     int m_hq_id;

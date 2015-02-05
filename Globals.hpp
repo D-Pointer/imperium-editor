@@ -50,7 +50,10 @@ typedef enum {
     kLightCannon,
     kHeavyCannon,
     kMachineGun,
-    kFlamethrower
+    kFlamethrower,
+    kRifleMk2,
+    kSubmachineGun,
+    kMortar
 } WeaponType;
 
 

@@ -17,22 +17,24 @@ void EditorMainWindow::unitAdded (Unit * unit) {
 
 void EditorMainWindow::selectedUnitChanged (Unit * unit) {
     if ( unit == 0 ) {
-        ui->m_tabs->setCurrentWidget( ui->m_map_tab );
-        ui->m_unit_tab->setDisabled( true );
-        ui->m_terrain_tab->setDisabled( true );
-        ui->m_objective_tab->setDisabled( true );
+        ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
+        //ui->m_tabs->setCurrentWidget( ui->m_map_tab );
+        //ui->m_unit_tab->setDisabled( true );
+        //ui->m_terrain_tab->setDisabled( true );
+        //ui->m_objective_tab->setDisabled( true );
 
         ui->m_unit_name->clear();
         ui->m_unit_id->clear();
     }
     else {
-        ui->m_tabs->setCurrentWidget( ui->m_unit_tab );
-        ui->m_unit_tab->setEnabled( true );
+        ui->m_stack->setCurrentIndex( EditorMainWindow::UnitPage );
+        //ui->m_tabs->setCurrentWidget( ui->m_unit_tab );
+        //ui->m_unit_tab->setEnabled( true );
 
         ui->m_unit_name->setText( unit->m_name );
         ui->m_unit_id->setNum( unit->m_id );
         ui->m_men->setValue( unit->m_men );
-        ui->m_guns->setValue( unit->m_guns );
+        ui->m_ammo->setValue( unit->m_ammo );
         ui->m_weapon->setCurrentIndex( unit->m_weapon );
         ui->m_experience->setCurrentIndex( unit->m_experience );
         ui->m_mode->setCurrentIndex( unit->m_mode );
@@ -47,6 +49,8 @@ void EditorMainWindow::selectedUnitChanged (Unit * unit) {
         else {
             ui->m_hq->setCurrentIndex( 0 );
         }
+
+        updateUnitWeaponCount();
     }
 }
 
@@ -131,16 +135,18 @@ void EditorMainWindow::unitMenChanged () {
     selected->m_men = ui->m_men->value();
 
     updateUnitStats();
+
+    updateUnitWeaponCount();
 }
 
 
-void EditorMainWindow::unitGunsChanged () {
+void EditorMainWindow::unitAmmoChanged() {
     Unit * selected = selection->getSelectedUnit();
     if ( ! selected ) {
         return;
     }
 
-    selected->m_guns  = ui->m_guns->value();
+    selected->m_ammo = ui->m_ammo->value();
 
     updateUnitStats();
 }
@@ -155,6 +161,8 @@ void EditorMainWindow::unitWeaponChanged () {
     selected->m_weapon = (WeaponType)ui->m_weapon->currentIndex();
 
     updateUnitStats();
+
+    updateUnitWeaponCount();
 }
 
 
@@ -204,14 +212,50 @@ void EditorMainWindow::refreshHqList () {
 void EditorMainWindow::updateUnitStats () {
     int units[2] = {0, 0 };
     int men[2] = {0, 0 };
-    int guns[2] = {0, 0 };
 
     foreach ( Unit * unit, allUnits ) {
         units[ unit->m_owner]++;
         men[ unit->m_owner] += unit->m_men;
-        guns[ unit->m_owner] += unit->m_guns;
+        //guns[ unit->m_owner] += unit->m_guns;
     }
 
-    ui->m_unit_stats1->setText( QString("%1 units, %2 men, %3 guns").arg(units[kPlayer1]).arg(men[kPlayer1]).arg(guns[kPlayer1]) );
-    ui->m_unit_stats2->setText( QString("%1 units, %2 men, %3 guns").arg(units[kPlayer2]).arg(men[kPlayer2]).arg(guns[kPlayer2]) );
+    ui->m_unit_stats1->setText( QString("%1 units, %2 men").arg(units[kPlayer1]).arg(men[kPlayer1]) );
+    ui->m_unit_stats2->setText( QString("%1 units, %2 men").arg(units[kPlayer2]).arg(men[kPlayer2]) );
+}
+
+
+void EditorMainWindow::updateUnitWeaponCount () {
+    Unit * selected = selection->getSelectedUnit();
+    if ( ! selected ) {
+        return;
+    }
+
+    switch ( selected->m_weapon ) {
+        case kRifle:
+        case kRifleMk2:
+        case kSubmachineGun:
+            ui->m_weapon_count->setNum( selected->m_men );
+            break;
+
+        case kMachineGun:
+            ui->m_weapon_count->setNum( selected->m_men / 3 );
+            break;
+
+        case kLightCannon:
+            ui->m_weapon_count->setNum( selected->m_men / 5 );
+            break;
+
+        case kHeavyCannon:
+            ui->m_weapon_count->setNum( selected->m_men / 6 );
+            break;
+
+        case kMortar:
+            ui->m_weapon_count->setNum( selected->m_men / 3 );
+            break;
+
+        case kFlamethrower:
+            ui->m_weapon_count->setNum( selected->m_men / 2 );
+            break;
+    }
+
 }

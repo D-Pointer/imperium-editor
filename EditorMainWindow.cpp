@@ -14,20 +14,22 @@
 EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::EditorMainWindow) {
     ui->setupUi(this);
 
-    QActionGroup * group = new QActionGroup( this );
-    group->addAction( ui->m_edit_action );
-    group->addAction( ui->m_terrain_action );
-    group->addAction( ui->m_house_action );
-    group->addAction( ui->m_road_action );
-    group->addAction( ui->m_unit_action );
-    group->addAction( ui->m_objective_action );
-    group->setExclusive( true );
+    m_actionGroup = new QActionGroup( this );
+    m_actionGroup->addAction( ui->m_edit_action );
+    m_actionGroup->addAction( ui->m_terrain_action );
+    m_actionGroup->addAction( ui->m_house_action );
+    m_actionGroup->addAction( ui->m_road_action );
+    m_actionGroup->addAction( ui->m_unit_action );
+    m_actionGroup->addAction( ui->m_objective_action );
+    m_actionGroup->setExclusive( true );
 
     connect( ui->m_open_action,      SIGNAL( triggered() ),       SLOT( openMap()) );
     connect( ui->m_new_action,       SIGNAL( triggered() ),       SLOT( newMap()) );
     connect( ui->m_save_action,      SIGNAL( triggered() ),       SLOT( saveMap()) );
     connect( ui->m_save_as_action,   SIGNAL( triggered() ),       SLOT( saveMapAs()) );
     connect( ui->m_quit_action,      SIGNAL( triggered() ),       SLOT( close()) );
+    connect( ui->m_navigation_map,   SIGNAL( triggered()),        SLOT( generateNavigation()) );
+
     connect( ui->m_edit_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_terrain_action,   SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_unit_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
@@ -36,8 +38,6 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_objective_action, SIGNAL( triggered() ),       SLOT( editModeChanged()) );
     connect( ui->m_delete_action,    SIGNAL( triggered() ),       SLOT( deleteSelectedItem()) );
     connect( ui->m_deselect_action,  SIGNAL( triggered() ),       SLOT( deselect()) );
-    //connect( ui->m_width,            SIGNAL( valueChanged(int) ), SLOT( sizeChanged()) );
-    //connect( ui->m_height,           SIGNAL( valueChanged(int) ), SLOT( sizeChanged()) );
 
     connect( ui->m_rotation,         SIGNAL(valueChanged(int)),        SLOT( unitRotated()) );
     connect( ui->m_unit_name,        SIGNAL(textChanged(QString)),     SLOT( unitNameChanged(QString)) );
@@ -46,7 +46,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_mode,             SIGNAL(currentIndexChanged(int)), SLOT( unitModeChanged()) );
     connect( ui->m_hq,               SIGNAL(currentIndexChanged(int)), SLOT( unitHQChanged()) );
     connect( ui->m_men,              SIGNAL(valueChanged(int)),        SLOT( unitMenChanged()) );
-    connect( ui->m_guns,             SIGNAL(valueChanged(int)),        SLOT( unitGunsChanged()) );
+    connect( ui->m_ammo,             SIGNAL(valueChanged(int)),        SLOT( unitAmmoChanged()) );
     connect( ui->m_weapon,           SIGNAL(currentIndexChanged(int)), SLOT( unitWeaponChanged()) );
     connect( ui->m_experience,       SIGNAL(currentIndexChanged(int)), SLOT( unitExperienceChanged()) );
 
@@ -60,11 +60,11 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_duplicate,        SIGNAL( clicked()),          SLOT( duplicateTerrain()) );
     connect( ui->m_flipHorizontal,   SIGNAL( clicked()),          SLOT( flipMapHorizontally()) );
     connect( ui->m_flipVertical,     SIGNAL( clicked()),          SLOT( flipMapVertically()) );
+    connect( ui->m_done,             SIGNAL( clicked()),          SLOT( terrainDone()) );
     connect( ui->m_add_point,        SIGNAL( clicked()),          SLOT( addPoint()) );
     connect( ui->m_zoom_in,          SIGNAL( clicked()),          SLOT( zoomIn()) );
     connect( ui->m_zoom_out,         SIGNAL( clicked()),          SLOT( zoomOut()) );
     connect( ui->m_zoom_normal,      SIGNAL( clicked()),          SLOT( zoomNormal()) );
-    connect( ui->m_generate,         SIGNAL( clicked()),          SLOT( generateNavigation()) );
     connect( ui->m_terrain_type,     SIGNAL(currentIndexChanged(int)), SLOT(terrainTypeChanged()) );
     connect( selection, SIGNAL( selectedUnitChanged(Unit*)),           SLOT( selectedUnitChanged(Unit*)) );
     connect( selection, SIGNAL( selectedTerrainChanged(Terrain*)),     SLOT( selectedTerrainChanged(Terrain*)) );
@@ -210,37 +210,32 @@ void EditorMainWindow::saveMapAs () {
 }
 
 
-/*void EditorMainWindow::sizeChanged () {
-    if ( map == 0 ) {
-        return;
-    }
-
-    if ( map->getWidth() == ui->m_width->value() && map->getHeight() == ui->m_height->value() ) {
-        return;
-    }
-
-    map->setSize( ui->m_width->value(), ui->m_height->value() );
-}*/
-
-
 void EditorMainWindow::editModeChanged () {
     if ( ui->m_edit_action->isChecked() ) {
         editorMode = kEdit;
+        ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
     }
     else if ( ui->m_terrain_action->isChecked() ) {
         editorMode = kAddTerrain;
+        statusBar()->showMessage( "Click points to create terrain, click Done or hit [Esc] to finish", 5000 );
+        ui->m_stack->setCurrentIndex( EditorMainWindow::TerrainPage );
     }
     else if ( ui->m_house_action->isChecked() ) {
         editorMode = kAddHouse;
+        ui->m_stack->setCurrentIndex( EditorMainWindow::HousePage );
     }
     else if ( ui->m_unit_action->isChecked() ) {
         editorMode = kAddUnit;
+        ui->m_stack->setCurrentIndex( EditorMainWindow::UnitPage );
     }
     else if ( ui->m_objective_action->isChecked() ) {
         editorMode = kAddObjective;
+        ui->m_stack->setCurrentIndex( EditorMainWindow::ObjectivePage );
     }
     else if ( ui->m_road_action->isChecked() ) {
         editorMode = kAddRoad;
+        statusBar()->showMessage( "Click points to create road, [Esc] to finish", 5000 );
+        ui->m_stack->setCurrentIndex( EditorMainWindow::TerrainPage );
     }
 
     selection->deselect();
@@ -249,17 +244,11 @@ void EditorMainWindow::editModeChanged () {
 
 void EditorMainWindow::selectedTerrainChanged (Terrain * terrain) {
     if ( terrain == 0 ) {
-        ui->m_tabs->setCurrentWidget( ui->m_map_tab );
-        ui->m_unit_tab->setDisabled( true );
-        ui->m_terrain_tab->setDisabled( true );
-        ui->m_objective_tab->setDisabled( true );
-        ui->m_houses_tab->setDisabled( true );
-        ui->m_navigation_tab->setDisabled( true );
+        ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
         ui->m_bound_size->clear();
     }
     else {
-        ui->m_tabs->setCurrentWidget( ui->m_terrain_tab );
-        ui->m_terrain_tab->setEnabled( true );
+        ui->m_stack->setCurrentIndex( EditorMainWindow::TerrainPage );
         ui->m_terrain_type->setCurrentIndex( terrain->m_type );
         ui->m_bound_size->setText( QString( "%1 x %2 m").arg( terrain->boundingRect().size().width()).arg( terrain->boundingRect().size().height()) );
     }
@@ -322,6 +311,12 @@ void EditorMainWindow::terrainTypeChanged () {
     }
 
     selected->setType( (TerrainType)ui->m_terrain_type->currentIndex() );
+}
+
+
+void EditorMainWindow::terrainDone () {
+    selection->deselect();
+    map->clearSelection();
 }
 
 
@@ -450,6 +445,11 @@ void EditorMainWindow::zoomNormal () {
 void EditorMainWindow::deselect () {
     selection->deselect();
     map->clearSelection();
+
+    editorMode = kEdit;
+    ui->m_edit_action->setChecked( true );
+
+    ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
 }
 
 
@@ -463,7 +463,7 @@ void EditorMainWindow::takeNewMapIntoUse () {
     ui->m_save_as_action->setEnabled( true );
 
     // enable toolbar and tab
-    ui->m_map_tab->setEnabled( true );
+    ui->m_stack->setEnabled( true );
     ui->m_toolbar->setEnabled( true );
 
     ui->m_width->setEnabled( true );
@@ -475,7 +475,6 @@ void EditorMainWindow::takeNewMapIntoUse () {
     ui->m_zoom_in->setEnabled( true );
     ui->m_zoom_normal->setEnabled( true );
     ui->m_zoom_out->setEnabled( true );
-    ui->m_navigation_tab->setEnabled( true );
 
     ui->m_hq->clear();
     ui->m_hq->addItem( "No HQ", -1 );

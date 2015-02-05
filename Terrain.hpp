@@ -27,6 +27,8 @@ public:
     void flipHorizontally ();
     void flipVertically ();
 
+    static QColor getColor (TerrainType type);
+
     TerrainType m_type;
 
     QList<Dot *> m_dots;

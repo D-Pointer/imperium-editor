@@ -85,20 +85,7 @@ void Terrain::removeDot (Dot * dot) {
 
 void Terrain::setType (TerrainType type) {
     m_type = type;
-    QList<QColor> colors;
-    colors << Qt::darkGreen
-           << QColor( 218, 181, 71 )
-           << Qt::green
-           << Qt::darkRed
-           << QColor( 0, 255, 255 )
-           << Qt::gray
-           << Qt::darkMagenta
-           << Qt::darkGray
-           << Qt::darkYellow
-           << Qt::blue
-           << QColor(90, 175, 0);
-
-    setBrush( QBrush( colors[ type ]) );
+    setBrush( QBrush( getColor( type ) ) );
 
     QList<qreal> zOrders;
     zOrders << 55  // woods
@@ -173,6 +160,24 @@ void Terrain::flipVertically () {
     foreach ( const QPointF & pos, poly ) {
         createDot( pos );
     }
+}
+
+
+QColor Terrain::getColor (TerrainType type) {
+    QList<QColor> colors;
+    colors << Qt::darkGreen
+           << QColor( 218, 181, 71 )
+           << Qt::green
+           << Qt::darkRed
+           << QColor( 0, 255, 255 )
+           << Qt::gray
+           << Qt::darkMagenta
+           << Qt::darkGray
+           << Qt::darkYellow
+           << Qt::blue
+           << QColor(90, 175, 0);
+
+    return colors[ type ];
 }
 
 

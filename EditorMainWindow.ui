@@ -6,103 +6,37 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1175</width>
-    <height>636</height>
+    <width>1178</width>
+    <height>703</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Imperium Scenario Editor</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
-    <property name="leftMargin">
-     <number>5</number>
-    </property>
-    <property name="topMargin">
-     <number>5</number>
-    </property>
-    <property name="rightMargin">
-     <number>5</number>
-    </property>
-    <property name="bottomMargin">
-     <number>5</number>
-    </property>
+   <layout class="QGridLayout" name="gridLayout_3">
     <item row="0" column="0" colspan="4">
-     <widget class="QTabWidget" name="m_tabs">
+     <widget class="QStackedWidget" name="m_stack">
       <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+       <bool>false</bool>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="m_map_tab">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <attribute name="title">
-        <string>Map</string>
-       </attribute>
+      <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="3">
-         <widget class="QPushButton" name="m_flipHorizontal">
-          <property name="text">
-           <string>Flip</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QPushButton" name="m_flipVertical">
-          <property name="text">
-           <string>Flip</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="8">
-         <widget class="QLabel" name="label_22">
-          <property name="text">
-           <string>AI Hint:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="15" colspan="3">
-         <widget class="QPlainTextEdit" name="m_description">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>50</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="11">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Length:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Maximum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
         <item row="0" column="11">
          <widget class="QLabel" name="label_3">
           <property name="text">
@@ -110,37 +44,49 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="17">
-         <widget class="QSpinBox" name="m_depends">
-          <property name="minimum">
-           <number>-1</number>
+        <item row="1" column="1">
+         <widget class="QLabel" name="m_height">
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
           </property>
-          <property name="value">
-           <number>-1</number>
+          <property name="text">
+           <string>0</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="5" colspan="2">
-         <widget class="QCheckBox" name="m_tutorial">
-          <property name="text">
-           <string>Tutorial</string>
+        <item row="1" column="13">
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>17</width>
+            <height>17</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="6">
+         <widget class="QLineEdit" name="m_title">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
           </property>
          </widget>
         </item>
-        <item row="1" column="16">
-         <widget class="QLabel" name="label_18">
+        <item row="0" column="5">
+         <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Depends:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="15">
-         <widget class="QSpinBox" name="m_id"/>
-        </item>
-        <item row="1" column="14">
-         <widget class="QLabel" name="label_17">
-          <property name="text">
-           <string>Id:</string>
+           <string>Title:</string>
           </property>
          </widget>
         </item>
@@ -160,178 +106,8 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Width:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="12">
-         <widget class="QSpinBox" name="m_length">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="minimum">
-           <number>300</number>
-          </property>
-          <property name="maximum">
-           <number>36000</number>
-          </property>
-          <property name="value">
-           <number>3600</number>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="12">
-         <widget class="QTimeEdit" name="m_time">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="6">
-         <widget class="QLineEdit" name="m_title">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="14">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Description:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Height:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Title:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="7">
-         <spacer name="horizontalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="13">
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="13">
-         <spacer name="horizontalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>17</width>
-            <height>17</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="7">
-         <spacer name="horizontalSpacer_6">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="9">
-         <widget class="QComboBox" name="m_aiHint">
-          <item>
-           <property name="text">
-            <string>Player 1 attacks</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Meeting engagement</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Player 2 attacks</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="0" column="10">
-         <spacer name="horizontalSpacer_11">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
         <item row="0" column="1">
          <widget class="QLabel" name="m_width">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="m_height">
           <property name="minimumSize">
            <size>
             <width>50</width>
@@ -359,13 +135,13 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="4">
-         <spacer name="horizontalSpacer_15">
+        <item row="0" column="13">
+         <spacer name="horizontalSpacer_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
           <property name="sizeType">
-           <enum>QSizePolicy::Minimum</enum>
+           <enum>QSizePolicy::Fixed</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -375,10 +151,40 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="8">
-         <widget class="QLabel" name="label_24">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>Battle size:</string>
+           <string>Width:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="7">
+         <spacer name="horizontalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="5" colspan="2">
+         <widget class="QCheckBox" name="m_tutorial">
+          <property name="text">
+           <string>Tutorial</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QPushButton" name="m_flipHorizontal">
+          <property name="text">
+           <string>Flip</string>
           </property>
          </widget>
         </item>
@@ -406,17 +212,218 @@
           </item>
          </widget>
         </item>
+        <item row="0" column="8">
+         <widget class="QLabel" name="label_22">
+          <property name="text">
+           <string>AI Hint:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="14">
+         <widget class="QLabel" name="label_17">
+          <property name="text">
+           <string>Id:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="16">
+         <widget class="QLabel" name="label_18">
+          <property name="text">
+           <string>Depends:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="12">
+         <widget class="QTimeEdit" name="m_time">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="12">
+         <widget class="QSpinBox" name="m_length">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="minimum">
+           <number>300</number>
+          </property>
+          <property name="maximum">
+           <number>36000</number>
+          </property>
+          <property name="value">
+           <number>3600</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="9">
+         <widget class="QComboBox" name="m_aiHint">
+          <item>
+           <property name="text">
+            <string>Player 1 attacks</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Meeting engagement</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Player 2 attacks</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Height:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="15" colspan="3">
+         <widget class="QPlainTextEdit" name="m_description">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="15">
+         <widget class="QSpinBox" name="m_id"/>
+        </item>
+        <item row="0" column="7">
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="8">
+         <widget class="QLabel" name="label_24">
+          <property name="text">
+           <string>Battle size:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="14">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Description:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="17">
+         <widget class="QSpinBox" name="m_depends">
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="10">
+         <spacer name="horizontalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Maximum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="3">
+         <widget class="QPushButton" name="m_flipVertical">
+          <property name="text">
+           <string>Flip</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <spacer name="horizontalSpacer_15">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Minimum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="11">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Length:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="9">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="m_terrain_tab">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <attribute name="title">
-        <string>Terrain</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_4">
-        <item row="1" column="2">
+      <widget class="QWidget" name="page_2">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
+        <item row="0" column="2">
          <spacer name="horizontalSpacer_7">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -429,14 +436,14 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="7">
-         <widget class="QToolButton" name="m_rotate_right">
+        <item row="0" column="4">
+         <widget class="QPushButton" name="m_add_point">
           <property name="text">
-           <string>-&gt;</string>
+           <string>Add Point</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="5">
+        <item row="0" column="6">
          <spacer name="horizontalSpacer_8">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -452,14 +459,14 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_16">
+        <item row="0" column="7">
+         <widget class="QToolButton" name="m_rotate_left">
           <property name="text">
-           <string>Terrain type:</string>
+           <string>&lt;-</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="2" column="1">
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -475,14 +482,45 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="6">
-         <widget class="QToolButton" name="m_rotate_left">
+        <item row="1" column="1">
+         <widget class="QLabel" name="m_bound_size">
           <property name="text">
-           <string>&lt;-</string>
+           <string>-</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="0" column="8">
+         <widget class="QToolButton" name="m_rotate_right">
+          <property name="text">
+           <string>-&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QPushButton" name="m_duplicate">
+          <property name="text">
+           <string>Duplicate</string>
+          </property>
+          <property name="shortcut">
+           <string>Ctrl+D</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>Bounding box size:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_16">
+          <property name="text">
+           <string>Terrain type:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
          <widget class="QComboBox" name="m_terrain_type">
           <property name="minimumSize">
            <size>
@@ -547,45 +585,30 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="4">
-         <widget class="QPushButton" name="m_duplicate">
+        <item row="0" column="3">
+         <widget class="QPushButton" name="m_done">
           <property name="text">
-           <string>Duplicate</string>
-          </property>
-          <property name="shortcut">
-           <string>Ctrl+D</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QPushButton" name="m_add_point">
-          <property name="text">
-           <string>Add Point</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_20">
-          <property name="text">
-           <string>Bounding box size:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="m_bound_size">
-          <property name="text">
-           <string>-</string>
+           <string>Done</string>
           </property>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="m_houses_tab">
-       <attribute name="title">
-        <string>Houses</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
+      <widget class="QWidget" name="page_3">
+       <layout class="QGridLayout" name="gridLayout_6">
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
+        <item row="0" column="0">
          <widget class="QComboBox" name="m_house_type">
           <property name="minimumSize">
            <size>
@@ -658,7 +681,7 @@
           </item>
          </widget>
         </item>
-        <item>
+        <item row="0" column="1">
          <spacer name="horizontalSpacer_12">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -674,7 +697,7 @@
           </property>
          </spacer>
         </item>
-        <item>
+        <item row="0" column="2">
          <widget class="QDial" name="m_house_rotation">
           <property name="maximum">
            <number>359</number>
@@ -687,14 +710,14 @@
           </property>
          </widget>
         </item>
-        <item>
+        <item row="0" column="3">
          <spacer name="horizontalSpacer_13">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>667</width>
+            <width>760</width>
             <height>20</height>
            </size>
           </property>
@@ -702,14 +725,8 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="m_unit_tab">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <attribute name="title">
-        <string>Unit</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_3">
+      <widget class="QWidget" name="page_4">
+       <layout class="QGridLayout" name="gridLayout_7">
         <property name="leftMargin">
          <number>5</number>
         </property>
@@ -722,9 +739,166 @@
         <property name="bottomMargin">
          <number>5</number>
         </property>
-        <property name="spacing">
-         <number>5</number>
-        </property>
+        <item row="0" column="3">
+         <widget class="QLabel" name="m_unit_id">
+          <property name="text">
+           <string>N/A</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="m_unit_stats2">
+          <property name="text">
+           <string>YYY</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="7">
+         <widget class="QLabel" name="m_weapon_count">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="8" rowspan="4">
+         <widget class="QDial" name="m_rotation">
+          <property name="maximum">
+           <number>359</number>
+          </property>
+          <property name="wrapping">
+           <bool>true</bool>
+          </property>
+          <property name="notchesVisible">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="6">
+         <widget class="QLabel" name="label_26">
+          <property name="text">
+           <string>Ammo:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <widget class="QLabel" name="label_23">
+          <property name="text">
+           <string>Weapon:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QComboBox" name="m_experience">
+          <item>
+           <property name="text">
+            <string>Green</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Regular</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Veteran</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Elite</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Mode:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QComboBox" name="m_owner">
+          <item>
+           <property name="text">
+            <string>Player 1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Player 2</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QComboBox" name="m_hq">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>No HQ</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_21">
+          <property name="text">
+           <string>Player 2:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>HQ:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="m_unit_name"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>Player 1:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Owner:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="6">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Guns:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="m_unit_stats1">
+          <property name="text">
+           <string>XXX</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="QComboBox" name="m_type">
           <item>
@@ -754,184 +928,17 @@
           </item>
          </widget>
         </item>
-        <item row="0" column="7">
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>Men:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Id:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="8">
-         <widget class="QSpinBox" name="m_men">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>500</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="7">
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string>Guns:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="6">
-         <widget class="QComboBox" name="m_owner">
-          <item>
-           <property name="text">
-            <string>Player 1</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Player 2</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Owner:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5">
-         <widget class="QLabel" name="label_11">
-          <property name="text">
-           <string>Mode:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Name:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="6">
-         <widget class="QComboBox" name="m_mode">
-          <item>
-           <property name="text">
-            <string>Formation</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Column</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_14">
-          <property name="text">
-           <string>Player 1:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_21">
-          <property name="text">
-           <string>Player 2:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="m_unit_stats2">
-          <property name="text">
-           <string>YYY</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="m_unit_name"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_15">
-          <property name="text">
-           <string>Type:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="m_unit_stats1">
-          <property name="text">
-           <string>XXX</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>HQ:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="8">
-         <widget class="QSpinBox" name="m_guns">
-          <property name="minimum">
-           <number>0</number>
-          </property>
+        <item row="2" column="7">
+         <widget class="QSpinBox" name="m_ammo">
           <property name="maximum">
            <number>100</number>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QLabel" name="m_unit_id">
-          <property name="text">
-           <string>N/A</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QComboBox" name="m_hq">
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>0</height>
-           </size>
-          </property>
-          <item>
-           <property name="text">
-            <string>No HQ</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="0" column="9" rowspan="4">
-         <widget class="QDial" name="m_rotation">
-          <property name="maximum">
-           <number>359</number>
-          </property>
-          <property name="wrapping">
-           <bool>true</bool>
-          </property>
-          <property name="notchesVisible">
-           <bool>false</bool>
+          <property name="value">
+           <number>50</number>
           </property>
          </widget>
         </item>
         <item row="2" column="5">
-         <widget class="QLabel" name="label_23">
-          <property name="text">
-           <string>Weapon:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="6">
          <widget class="QComboBox" name="m_weapon">
           <item>
            <property name="text">
@@ -958,62 +965,104 @@
             <string>Flamethrower</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>Rifle MK2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Submachinegun</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Mortar</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="2" column="3">
+        <item row="1" column="5">
+         <widget class="QComboBox" name="m_mode">
+          <item>
+           <property name="text">
+            <string>Formation</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Column</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="2">
          <widget class="QLabel" name="label_25">
           <property name="text">
            <string>Experience:</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="4">
-         <widget class="QComboBox" name="m_experience">
-          <item>
-           <property name="text">
-            <string>Green</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Regular</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Veteran</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Elite</string>
-           </property>
-          </item>
+        <item row="0" column="6">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Men:</string>
+          </property>
          </widget>
         </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="m_objective_tab">
-       <attribute name="title">
-        <string>Objective</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_5">
-        <item row="1" column="1">
-         <spacer name="verticalSpacer_2">
+        <item row="0" column="7">
+         <widget class="QSpinBox" name="m_men">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>500</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Id:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_15">
+          <property name="text">
+           <string>Type:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>30</height>
+            <height>40</height>
            </size>
           </property>
          </spacer>
         </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_5">
+       <layout class="QGridLayout" name="gridLayout_8">
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="label_19">
           <property name="text">
@@ -1047,54 +1096,18 @@
           </property>
          </spacer>
         </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="m_navigation_tab">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <attribute name="title">
-        <string>Navigation</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_6">
-        <property name="leftMargin">
-         <number>12</number>
-        </property>
-        <property name="rightMargin">
-         <number>12</number>
-        </property>
-        <property name="bottomMargin">
-         <number>12</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QPushButton" name="m_generate">
-          <property name="text">
-           <string>Generate</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <spacer name="horizontalSpacer_16">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>1031</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="0">
-         <spacer name="verticalSpacer_3">
+        <item row="1" column="1">
+         <spacer name="verticalSpacer_2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>67</height>
+            <height>130</height>
            </size>
           </property>
          </spacer>
@@ -1178,7 +1191,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1175</width>
+     <width>1178</width>
      <height>22</height>
     </rect>
    </property>
@@ -1193,7 +1206,14 @@
     <addaction name="separator"/>
     <addaction name="m_quit_action"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="m_navigation_map"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QStatusBar" name="m_statusbar"/>
   <widget class="QToolBar" name="m_toolbar">
@@ -1321,6 +1341,9 @@
    <property name="text">
     <string>Objective</string>
    </property>
+   <property name="statusTip">
+    <string>Test</string>
+   </property>
   </action>
   <action name="m_house_action">
    <property name="checkable">
@@ -1348,6 +1371,11 @@
    </property>
    <property name="shortcut">
     <string>R</string>
+   </property>
+  </action>
+  <action name="m_navigation_map">
+   <property name="text">
+    <string>Navigation map</string>
    </property>
   </action>
  </widget>
