@@ -8,6 +8,8 @@
 void EditorMainWindow::generateNavigation () {
     qDebug() << "EditorMainWindow::generateNavigation: generating navigation mesh";
 
+    statusBar()->showMessage( "Generating navigation grid..." );
+
     QList<QPolygonF> terrains;
 
     // first make a list of all polygons for all terrains, they need to be offset with their positions
@@ -20,16 +22,20 @@ void EditorMainWindow::generateNavigation () {
     }
 
     // fill the result array with nothing
-    if ( navigationGrid ) {
-        delete [] navigationGrid;
-    }
+//    if ( navigationGrid ) {
+//        delete [] navigationGrid;
+//    }
 
     int gridWidth = map->getWidth() / navigationTileSize;
     int gridHeight = map->getHeight() / navigationTileSize;
 
-    navigationGrid = new Terrain*[ gridWidth * gridHeight ];
+    // set up an empty navigation grid
+    navigationGrid.reserve( gridWidth * gridHeight ); //= new Terrain*[ gridWidth * gridHeight ];
+    for ( int index = 0; index < gridWidth * gridHeight; ++index ) {
+        navigationGrid << 0;
+    }
 
-    qDebug() << "EditorMainWindow::generateNavigation: grid size:" << gridWidth << "x" << gridHeight;
+    qDebug() << "EditorMainWindow::generateNavigation: grid size:" << gridWidth << "x" << gridHeight << "=" << navigationGrid.size();
 
     // number of terrains found that are not open
     int foundCount = 0;
@@ -66,16 +72,20 @@ void EditorMainWindow::generateNavigation () {
                 }
             }
 
-            if ( navigationGrid[ position ] ) {
-                QGraphicsEllipseItem * marker = new QGraphicsEllipseItem( QRectF( x, y, navigationTileSize, navigationTileSize ) );
-                marker->setBrush( navigationGrid[ position ]->brush() );
-                marker->setPen( QPen( Qt::black ));
-                marker->setZValue( 255 );
-                map->addItem( marker );
-                foundCount++;
-            }
+            // show debugging balls
+//            if ( navigationGrid[ position ] ) {
+//                QGraphicsEllipseItem * marker = new QGraphicsEllipseItem( QRectF( x, y, navigationTileSize, navigationTileSize ) );
+//                marker->setBrush( navigationGrid[ position ]->brush() );
+//                marker->setPen( QPen( Qt::black ));
+//                marker->setZValue( 255 );
+//                map->addItem( marker );
+//                foundCount++;
+//            }
         }
     }
+
+    // we now have a navigation map
+    statusBar()->showMessage( "Navigation grid done", 3000 );
 
     qDebug() << "EditorMainWindow::generateNavigation: found:" << foundCount << "non open terrains";
 }

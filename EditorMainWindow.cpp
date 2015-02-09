@@ -10,6 +10,7 @@
 #include "Selection.hpp"
 #include "Serializer.hpp"
 #include "GeneratorDialog.hpp"
+#include "NetworkServer.hpp"
 
 EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::EditorMainWindow) {
     ui->setupUi(this);
@@ -23,53 +24,56 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     m_actionGroup->addAction( ui->m_objective_action );
     m_actionGroup->setExclusive( true );
 
-    connect( ui->m_open_action,      SIGNAL( triggered() ),       SLOT( openMap()) );
-    connect( ui->m_new_action,       SIGNAL( triggered() ),       SLOT( newMap()) );
-    connect( ui->m_save_action,      SIGNAL( triggered() ),       SLOT( saveMap()) );
-    connect( ui->m_save_as_action,   SIGNAL( triggered() ),       SLOT( saveMapAs()) );
-    connect( ui->m_quit_action,      SIGNAL( triggered() ),       SLOT( close()) );
-    connect( ui->m_navigation_map,   SIGNAL( triggered()),        SLOT( generateNavigation()) );
+    connect( ui->m_open_action,        SIGNAL( triggered() ),       SLOT( openMap()) );
+    connect( ui->m_new_action,         SIGNAL( triggered() ),       SLOT( newMap()) );
+    connect( ui->m_save_action,        SIGNAL( triggered() ),       SLOT( saveMap()) );
+    connect( ui->m_save_as_action,     SIGNAL( triggered() ),       SLOT( saveMapAs()) );
+    connect( ui->m_quit_action,        SIGNAL( triggered() ),       SLOT( close()) );
 
-    connect( ui->m_edit_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_terrain_action,   SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_unit_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_house_action,     SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_road_action,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_objective_action, SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_delete_action,    SIGNAL( triggered() ),       SLOT( deleteSelectedItem()) );
-    connect( ui->m_deselect_action,  SIGNAL( triggered() ),       SLOT( deselect()) );
+    connect( ui->m_edit_action,        SIGNAL( triggered() ),       SLOT( editModeChanged()) );
+    connect( ui->m_terrain_action,     SIGNAL( triggered() ),       SLOT( editModeChanged()) );
+    connect( ui->m_unit_action,        SIGNAL( triggered() ),       SLOT( editModeChanged()) );
+    connect( ui->m_house_action,       SIGNAL( triggered() ),       SLOT( editModeChanged()) );
+    connect( ui->m_road_action  ,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
+    connect( ui->m_objective_action,   SIGNAL( triggered() ),       SLOT( editModeChanged()) );
+    connect( ui->m_delete_action,      SIGNAL( triggered() ),       SLOT( deleteSelectedItem()) );
+    connect( ui->m_deselect_action,    SIGNAL( triggered() ),       SLOT( deselect()) );
 
-    connect( ui->m_rotation,         SIGNAL(valueChanged(int)),        SLOT( unitRotated()) );
-    connect( ui->m_unit_name,        SIGNAL(textChanged(QString)),     SLOT( unitNameChanged(QString)) );
-    connect( ui->m_owner,            SIGNAL(currentIndexChanged(int)), SLOT( unitOwnerChanged()) );
-    connect( ui->m_type,             SIGNAL(currentIndexChanged(int)), SLOT( unitTypeChanged()) );
-    connect( ui->m_mode,             SIGNAL(currentIndexChanged(int)), SLOT( unitModeChanged()) );
-    connect( ui->m_hq,               SIGNAL(currentIndexChanged(int)), SLOT( unitHQChanged()) );
-    connect( ui->m_men,              SIGNAL(valueChanged(int)),        SLOT( unitMenChanged()) );
-    connect( ui->m_ammo,             SIGNAL(valueChanged(int)),        SLOT( unitAmmoChanged()) );
-    connect( ui->m_weapon,           SIGNAL(currentIndexChanged(int)), SLOT( unitWeaponChanged()) );
-    connect( ui->m_experience,       SIGNAL(currentIndexChanged(int)), SLOT( unitExperienceChanged()) );
+    connect( ui->m_rotation,           SIGNAL(valueChanged(int)),        SLOT( unitRotated()) );
+    connect( ui->m_unit_name,          SIGNAL(textChanged(QString)),     SLOT( unitNameChanged(QString)) );
+    connect( ui->m_owner,              SIGNAL(currentIndexChanged(int)), SLOT( unitOwnerChanged()) );
+    connect( ui->m_type,               SIGNAL(currentIndexChanged(int)), SLOT( unitTypeChanged()) );
+    connect( ui->m_mode,               SIGNAL(currentIndexChanged(int)), SLOT( unitModeChanged()) );
+    connect( ui->m_hq,                 SIGNAL(currentIndexChanged(int)), SLOT( unitHQChanged()) );
+    connect( ui->m_men,                SIGNAL(valueChanged(int)),        SLOT( unitMenChanged()) );
+    connect( ui->m_ammo,               SIGNAL(valueChanged(int)),        SLOT( unitAmmoChanged()) );
+    connect( ui->m_weapon,             SIGNAL(currentIndexChanged(int)), SLOT( unitWeaponChanged()) );
+    connect( ui->m_experience,         SIGNAL(currentIndexChanged(int)), SLOT( unitExperienceChanged()) );
 
-    connect( ui->m_objective_title,  SIGNAL( textChanged(QString)),    SLOT( objectiveNameChanged(QString)) );
+    connect( ui->m_objective_title,    SIGNAL( textChanged(QString)),    SLOT( objectiveNameChanged(QString)) );
 
-    connect( ui->m_house_rotation,   SIGNAL(valueChanged(int)),        SLOT( houseRotated()) );
-    connect( ui->m_house_type,       SIGNAL(currentIndexChanged(int)), SLOT( houseTypeChanged()) );
+    connect( ui->m_house_rotation,     SIGNAL(valueChanged(int)),        SLOT( houseRotated()) );
+    connect( ui->m_house_type,         SIGNAL(currentIndexChanged(int)), SLOT( houseTypeChanged()) );
 
-    connect( ui->m_rotate_left,      SIGNAL( clicked()),          SLOT( rotateTerrain()) );
-    connect( ui->m_rotate_right,     SIGNAL( clicked()),          SLOT( rotateTerrain()) );
-    connect( ui->m_duplicate,        SIGNAL( clicked()),          SLOT( duplicateTerrain()) );
-    connect( ui->m_flipHorizontal,   SIGNAL( clicked()),          SLOT( flipMapHorizontally()) );
-    connect( ui->m_flipVertical,     SIGNAL( clicked()),          SLOT( flipMapVertically()) );
-    connect( ui->m_done,             SIGNAL( clicked()),          SLOT( terrainDone()) );
-    connect( ui->m_add_point,        SIGNAL( clicked()),          SLOT( addPoint()) );
-    connect( ui->m_zoom_in,          SIGNAL( clicked()),          SLOT( zoomIn()) );
-    connect( ui->m_zoom_out,         SIGNAL( clicked()),          SLOT( zoomOut()) );
-    connect( ui->m_zoom_normal,      SIGNAL( clicked()),          SLOT( zoomNormal()) );
-    connect( ui->m_terrain_type,     SIGNAL(currentIndexChanged(int)), SLOT(terrainTypeChanged()) );
-    connect( selection, SIGNAL( selectedUnitChanged(Unit*)),           SLOT( selectedUnitChanged(Unit*)) );
-    connect( selection, SIGNAL( selectedTerrainChanged(Terrain*)),     SLOT( selectedTerrainChanged(Terrain*)) );
-    connect( selection, SIGNAL( selectedObjectiveChanged(Objective*)), SLOT( selectedObjectiveChanged(Objective*)) );
-    connect( selection, SIGNAL( selectedHouseChanged(House*)),         SLOT( selectedHouseChanged(House*)) );
+    connect( ui->m_rotate_left,        SIGNAL( clicked()),             SLOT( rotateTerrain()) );
+    connect( ui->m_rotate_right,       SIGNAL( clicked()),             SLOT( rotateTerrain()) );
+    connect( ui->m_duplicate,          SIGNAL( clicked()),             SLOT( duplicateTerrain()) );
+    connect( ui->m_flipHorizontal,     SIGNAL( clicked()),             SLOT( flipMapHorizontally()) );
+    connect( ui->m_flipVertical,       SIGNAL( clicked()),             SLOT( flipMapVertically()) );
+    connect( ui->m_done,               SIGNAL( clicked()),             SLOT( terrainDone()) );
+    connect( ui->m_add_point,          SIGNAL( clicked()),             SLOT( addPoint()) );
+    connect( ui->m_zoom_in,            SIGNAL( clicked()),             SLOT( zoomIn()) );
+    connect( ui->m_zoom_out,           SIGNAL( clicked()),             SLOT( zoomOut()) );
+    connect( ui->m_zoom_normal,        SIGNAL( clicked()),             SLOT( zoomNormal()) );
+    connect( ui->m_terrain_type,       SIGNAL(currentIndexChanged(int)), SLOT(terrainTypeChanged()) );
+    connect( selection, SIGNAL( selectedUnitChanged(Unit*)),             SLOT( selectedUnitChanged(Unit*)) );
+    connect( selection, SIGNAL( selectedTerrainChanged(Terrain*)),       SLOT( selectedTerrainChanged(Terrain*)) );
+    connect( selection, SIGNAL( selectedObjectiveChanged(Objective*)),   SLOT( selectedObjectiveChanged(Objective*)) );
+    connect( selection, SIGNAL( selectedHouseChanged(House*)),           SLOT( selectedHouseChanged(House*)) );
+
+    // create the network server
+    m_server = new NetworkServer( this );
+    connect( m_server, SIGNAL(sendMapToIpad(QTcpSocket*)), SLOT(sendMapToIpad(QTcpSocket*)) );
 }
 
 
@@ -117,10 +121,11 @@ void EditorMainWindow::newMap () {
     allObjectives.clear();
     allHouses.clear();
 
-    if ( navigationGrid ) {
-        delete [] navigationGrid;
-        navigationGrid = 0;
-    }
+    navigationGrid.clear();
+//    if ( navigationGrid ) {
+//        delete [] navigationGrid;
+//        navigationGrid = 0;
+//    }
 
     // get the new map
     map = generatorDialog.getMap();
@@ -135,6 +140,11 @@ void EditorMainWindow::newMap () {
     ui->m_tutorial->setChecked( false );
 
     statusBar()->showMessage( "Created a new map", 3000 );
+
+    // start the server if needed
+    if ( ! m_server->isStarted() ) {
+        m_server->start( 45001 );
+    }
 }
 
 
@@ -160,10 +170,7 @@ void EditorMainWindow::openMap () {
     allObjectives.clear();
     allHouses.clear();
 
-    if ( navigationGrid ) {
-        delete [] navigationGrid;
-        navigationGrid = 0;
-    }
+    navigationGrid.clear();
 
     ui->m_tutorial->setChecked( false );
 
@@ -174,6 +181,11 @@ void EditorMainWindow::openMap () {
     }
 
     takeNewMapIntoUse();
+
+    // start the server if needed
+    if ( ! m_server->isStarted() ) {
+        m_server->start( 45001 );
+    }
 
     statusBar()->showMessage( QString("Loaded map: ") + map->m_name, 3000 );
 }
@@ -188,6 +200,9 @@ void EditorMainWindow::saveMap () {
         saveMapAs();
     }
     else {
+        // first generate the navigation grid
+        generateNavigation();
+
         Serializer().saveMap( map, this );
         statusBar()->showMessage( QString("Saved map: ") + map->m_name, 3000 );
     }
@@ -206,7 +221,19 @@ void EditorMainWindow::saveMapAs () {
 
     map->m_name = name;
 
+    // first generate the navigation grid
+    generateNavigation();
+
     Serializer().saveMap( map, this );
+}
+
+
+void EditorMainWindow::sendMapToIpad (QTcpSocket * ipad) {
+    // first generate the navigation grid
+    generateNavigation();
+
+    // serialize to the ipad
+    Serializer().sendMapToIpad( ipad, this );
 }
 
 

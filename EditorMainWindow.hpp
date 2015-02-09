@@ -2,6 +2,8 @@
 #define EDITORMAINWINDOW_HPP
 
 class QActionGroup;
+class NetworkServer;
+class QTcpSocket;
 
 #include <QMainWindow>
 
@@ -32,6 +34,7 @@ private slots:
     void openMap ();
     void saveMap ();
     void saveMapAs ();
+    void sendMapToIpad (QTcpSocket * ipad);
     void updateNormalMap ();
 
     void editModeChanged ();
@@ -96,6 +99,9 @@ private:
         UnitPage,
         ObjectivePage
     };
+
+    // server for sharing scenarios with the iPad game
+    NetworkServer * m_server;
 };
 
 #endif // EDITORMAINWINDOW_HPP

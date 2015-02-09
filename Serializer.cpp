@@ -4,6 +4,7 @@
 #include <QMatrix>
 #include <QImage>
 #include <QtAlgorithms>
+#include <QTcpSocket>
 #include <QDebug>
 
 #include "Serializer.hpp"
@@ -25,8 +26,24 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+    // save the real map to a stream
     QTextStream stream( &file );
+    saveMapToStream( stream, editor );
+}
 
+
+void Serializer::sendMapToIpad (QTcpSocket * ipad, EditorMainWindow * editor) {
+    qDebug() << "Serializer::sendMapToIpad: saving to socket";
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    // save the real map to a stream
+    QTextStream stream( ipad );
+    saveMapToStream( stream, editor );
+}
+
+
+void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * editor) {
     float height = map->getHeight();
 
     // map metadata
@@ -50,7 +67,7 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
 
         // is the terrain valid?
         if ( polygon.size() == 0 ) {
-            qWarning() << "Serializer::saveMap: terrain with no points, skipping it";
+            qWarning() << "Serializer::saveMapToStream: terrain with no points, skipping it";
             continue;
         }
 
@@ -107,12 +124,24 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
                << " " << unit->m_name << endl;
     }
 
-    // finally do we have navigation data?
-    if ( navigationGrid ) {
-        saveNavigationGrid();
+    // the navigation grid is saved as one single long line
+    stream << "navgrid";
+
+    // loop the entire map
+    for ( int index = 0; index < navigationGrid.size(); ++index ) {
+        stream << " ";
+        if ( navigationGrid[ index ] != 0 ) {
+            stream << navigationGrid[ index ]->m_type;
+        }
+        else {
+            stream << kGrass;
+        }
     }
 
-//    saveHeightmap();
+    stream << endl;
+
+    // write the final "end"
+    stream << "end" << endl;
 
     QApplication::restoreOverrideCursor();
 }
@@ -265,6 +294,13 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
 
             map->addItem( house );
             allHouses << house;
+        }
+
+        else if ( type == "navgrid" ) {
+            qDebug() << "Serializer::loadMap: ignoring navigation grid";
+        }
+        else if ( type == "end" ) {
+            qDebug() << "Serializer::loadMap: ignoring navigation grid";
         }
     }
 
@@ -420,47 +456,47 @@ void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float map
 }
 
 
-void Serializer::saveNavigationGrid () {
-    // change the extension for the navigation grid
-    QString filename = map->m_name;
-    filename.replace( ".map", ".nav" );
+//void Serializer::saveNavigationGrid () {
+//    // change the extension for the navigation grid
+//    QString filename = map->m_name;
+//    filename.replace( ".map", ".nav" );
 
-    qDebug() << "Serializer::saveNavigationGrid: saving to:" << filename;
+//    qDebug() << "Serializer::saveNavigationGrid: saving to:" << filename;
 
-    if ( filename == map->m_name ) {
-        QMessageBox::warning( 0, "Save Failed", "Failed to save the navigation grid: same name", QMessageBox::Ok );
-        return;
-    }
+//    if ( filename == map->m_name ) {
+//        QMessageBox::warning( 0, "Save Failed", "Failed to save the navigation grid: same name", QMessageBox::Ok );
+//        return;
+//    }
 
-    QFile file( filename );
-    if ( ! file.open( QIODevice::WriteOnly |QIODevice::Truncate ) ) {
-        // failed
-        QMessageBox::warning( 0, "Save Failed", "Failed to save the navigation grid: " + file.errorString(), QMessageBox::Ok );
-        return;
-    }
+//    QFile file( filename );
+//    if ( ! file.open( QIODevice::WriteOnly |QIODevice::Truncate ) ) {
+//        // failed
+//        QMessageBox::warning( 0, "Save Failed", "Failed to save the navigation grid: " + file.errorString(), QMessageBox::Ok );
+//        return;
+//    }
 
-    int gridWidth = map->getWidth() / navigationTileSize;
-    int gridHeight = map->getHeight() / navigationTileSize;
+//    int gridWidth = map->getWidth() / navigationTileSize;
+//    int gridHeight = map->getHeight() / navigationTileSize;
 
-    unsigned char data[ gridWidth * gridHeight ];
+//    unsigned char data[ gridWidth * gridHeight ];
 
-    // loop the entire map
-    for ( int index = 0; index < gridWidth * gridHeight; ++index ) {
-        if ( navigationGrid[ index ] != 0 ) {
-            data[ index ] = (unsigned char)navigationGrid[ index ]->m_type;
-        }
-        else {
-            data[ index ] = (unsigned char)kGrass;
-        }
-    }
+//    // loop the entire map
+//    for ( int index = 0; index < gridWidth * gridHeight; ++index ) {
+//        if ( navigationGrid[ index ] != 0 ) {
+//            data[ index ] = (unsigned char)navigationGrid[ index ]->m_type;
+//        }
+//        else {
+//            data[ index ] = (unsigned char)kGrass;
+//        }
+//    }
 
-    // save it all
-    file.write( (const char *)data, gridWidth * gridHeight );
-    file.close();
-}
+//    // save it all
+//    file.write( (const char *)data, gridWidth * gridHeight );
+//    file.close();
+//}
 
 
-void Serializer::saveHeightmap () {
+/*void Serializer::saveHeightmap () {
     // change the extension for the height map
     QString filename = map->m_name;
     filename.replace( ".map", "-default.png" );
@@ -533,4 +569,4 @@ void Serializer::saveHeightmap () {
     foreach ( QGraphicsItem * item, map->items() ) {
         item->show();
     }
-}
+}*/

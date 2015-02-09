@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     Perlin.cpp \
     GeneratorDialog.cpp \
     NavigationCallbacks.cpp \
-    NormalMapCallbacks.cpp
+    NormalMapCallbacks.cpp \
+    NetworkServer.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
@@ -43,7 +44,8 @@ HEADERS  += EditorMainWindow.hpp \
     Objective.hpp \
     House.hpp \
     Perlin.hpp \
-    GeneratorDialog.hpp
+    GeneratorDialog.hpp \
+    NetworkServer.hpp
 
 FORMS    += EditorMainWindow.ui \
     GeneratorDialog.ui
