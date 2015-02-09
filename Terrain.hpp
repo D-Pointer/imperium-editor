@@ -41,7 +41,7 @@ protected:
 
 private:
 
-    void createDot (const QPointF & scene_pos);
+    void createDot (const QPointF & scene_pos, int index=-1);
 };
 
 #endif // TERRAIN_HPP

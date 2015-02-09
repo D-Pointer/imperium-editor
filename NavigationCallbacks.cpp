@@ -41,21 +41,21 @@ void EditorMainWindow::generateNavigation () {
     int foundCount = 0;
 
     // loop the entire map
-    for ( int y = 0; y < map->getHeight(); y += navigationTileSize ) {
-        for ( int x = 0; x < map->getWidth(); x += navigationTileSize ) {
-            QPoint p1( x, y );
-            QPoint p2( x + navigationTileSize, y );
-            QPoint p3( x, y + navigationTileSize );
-            QPoint p4( x + navigationTileSize, y + navigationTileSize );
+    for ( int y = 0; y < gridHeight; ++y ) { //map->getHeight(); y += navigationTileSize ) {
+        for ( int x = 0; x < gridWidth; ++x ) { //map->getWidth(); x += navigationTileSize ) {
+            QPoint p1( x * navigationTileSize, y * navigationTileSize );
+            QPoint p2( x * navigationTileSize + navigationTileSize, y * navigationTileSize);
+            QPoint p3( x * navigationTileSize, y * navigationTileSize + navigationTileSize );
+            QPoint p4( x * navigationTileSize + navigationTileSize, y * navigationTileSize + navigationTileSize );
 
             // convert to navigation grid coordinates
-            int cx = x / navigationTileSize;
-            int cy = y / navigationTileSize;
+            //int cx = x / navigationTileSize;
+            //int cy = y / navigationTileSize;
 
-            int position = (gridHeight - cy - 1) * gridWidth + cx;
+            int position = (gridHeight - y - 1) * gridWidth + x;
 
             // no toplevel terrain found so far
-            //qDebug() << position << cx << cy;
+            qDebug() << position << x << y;
             navigationGrid[ position ] = 0;
 
             // check all polygons to see if it intersects
@@ -64,7 +64,7 @@ void EditorMainWindow::generateNavigation () {
 
                 // does any point reside inside the polygon?
                 if ( terrain.containsPoint( p1, Qt::OddEvenFill ) || terrain.containsPoint( p2, Qt::OddEvenFill ) ||
-                     terrain.containsPoint( p3, Qt::OddEvenFill )|| terrain.containsPoint( p4, Qt::OddEvenFill ) ) {
+                     terrain.containsPoint( p3, Qt::OddEvenFill ) || terrain.containsPoint( p4, Qt::OddEvenFill ) ) {
                     Terrain * candidate = allTerrains[ index ];
                     if ( navigationGrid[ position ] == 0 || candidate->zValue() > navigationGrid[ position ]->zValue() ) {
                         navigationGrid[ position ] = candidate;
@@ -73,14 +73,14 @@ void EditorMainWindow::generateNavigation () {
             }
 
             // show debugging balls
-//            if ( navigationGrid[ position ] ) {
-//                QGraphicsEllipseItem * marker = new QGraphicsEllipseItem( QRectF( x, y, navigationTileSize, navigationTileSize ) );
-//                marker->setBrush( navigationGrid[ position ]->brush() );
-//                marker->setPen( QPen( Qt::black ));
-//                marker->setZValue( 255 );
-//                map->addItem( marker );
-//                foundCount++;
-//            }
+            if ( navigationGrid[ position ] ) {
+                QGraphicsEllipseItem * marker = new QGraphicsEllipseItem( QRectF( x * navigationTileSize, y * navigationTileSize, navigationTileSize, navigationTileSize ) );
+                marker->setBrush( navigationGrid[ position ]->brush() );
+                marker->setPen( QPen( Qt::black ));
+                marker->setZValue( 255 );
+                map->addItem( marker );
+                foundCount++;
+            }
         }
     }
 

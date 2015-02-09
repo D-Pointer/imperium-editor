@@ -36,7 +36,7 @@ void Terrain::addPoint (const QPointF & position, int index) {
 
     setPolygon( m_polygon );
 
-    createDot( mapFromScene( position ) );
+    createDot( mapFromScene( position ), index );
 }
 
 
@@ -106,6 +106,7 @@ void Terrain::setType (TerrainType type) {
 
 void Terrain::dotMoved (Dot * dot) {
     int index = m_dots.indexOf( dot );
+
     if ( index == -1 ) {
         qWarning() << "Terrain::dotMoved: dot not found";
         return;
@@ -229,14 +230,16 @@ QVariant Terrain::itemChange (GraphicsItemChange change, const QVariant &value) 
     return QGraphicsItem::itemChange(change, value);
 }
 
-void Terrain::createDot (const QPointF & scene_pos) {
+void Terrain::createDot (const QPointF & scene_pos, int index) {
     Dot * dot = new Dot( scene_pos, this );
-    m_dots << dot;
     dot->setZValue( 200 );
 
-    if ( scene() ) {
-        //scene()->addItem( dot );
+    // specific position?
+    if ( index == -1 ) {
+        // just append
+        m_dots << dot;
     }
-
-    //dot->setVisible( isSelected() );
+    else {
+        m_dots.insert( index, dot );
+    }
 }

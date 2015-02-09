@@ -25,7 +25,7 @@ Map::Map(QObject *parent) : QGraphicsScene(parent), m_background(0) {
 
 void Map::setSize (int width, int height) {
     m_background->setRect( 0, 0, width, height );
-    qDebug() << "Map::setSize: size:" << width << height;
+    //qDebug() << "Map::setSize: size:" << width << height;
 
     // nuke all old lines
     qDeleteAll( m_grid );
