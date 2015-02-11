@@ -55,7 +55,7 @@ void EditorMainWindow::generateNavigation () {
             int position = (gridHeight - y - 1) * gridWidth + x;
 
             // no toplevel terrain found so far
-            qDebug() << position << x << y;
+            //qDebug() << position << x << y;
             navigationGrid[ position ] = 0;
 
             // check all polygons to see if it intersects

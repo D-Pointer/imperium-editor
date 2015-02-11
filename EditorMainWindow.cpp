@@ -421,7 +421,6 @@ void EditorMainWindow::flipMapHorizontally () {
             rotation += 360;
         }
         house->setTransform(QTransform::fromScale(-1, 1), true );//setRotation( rotation );
-        qDebug() << old << "->" << rotation;
     }
 }
 
@@ -447,10 +446,7 @@ void EditorMainWindow::flipMapVertically () {
         }
 
         house->setTransform(QTransform::fromScale(1, -1), true );//setRotation( rotation );
-        qDebug() << old << "->" << rotation;
     }
-
-
 }
 
 
