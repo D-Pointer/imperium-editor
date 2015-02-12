@@ -21,16 +21,11 @@ void EditorMainWindow::generateNavigation () {
         terrains << polygon;
     }
 
-    // fill the result array with nothing
-//    if ( navigationGrid ) {
-//        delete [] navigationGrid;
-//    }
-
     int gridWidth = map->getWidth() / navigationTileSize;
     int gridHeight = map->getHeight() / navigationTileSize;
 
     // set up an empty navigation grid
-    navigationGrid.reserve( gridWidth * gridHeight ); //= new Terrain*[ gridWidth * gridHeight ];
+    navigationGrid.reserve( gridWidth * gridHeight );
     for ( int index = 0; index < gridWidth * gridHeight; ++index ) {
         navigationGrid << 0;
     }
@@ -41,16 +36,12 @@ void EditorMainWindow::generateNavigation () {
     int foundCount = 0;
 
     // loop the entire map
-    for ( int y = 0; y < gridHeight; ++y ) { //map->getHeight(); y += navigationTileSize ) {
-        for ( int x = 0; x < gridWidth; ++x ) { //map->getWidth(); x += navigationTileSize ) {
+    for ( int y = 0; y < gridHeight; ++y ) {
+        for ( int x = 0; x < gridWidth; ++x ) {
             QPoint p1( x * navigationTileSize, y * navigationTileSize );
             QPoint p2( x * navigationTileSize + navigationTileSize, y * navigationTileSize);
             QPoint p3( x * navigationTileSize, y * navigationTileSize + navigationTileSize );
             QPoint p4( x * navigationTileSize + navigationTileSize, y * navigationTileSize + navigationTileSize );
-
-            // convert to navigation grid coordinates
-            //int cx = x / navigationTileSize;
-            //int cy = y / navigationTileSize;
 
             int position = (gridHeight - y - 1) * gridWidth + x;
 
@@ -73,14 +64,14 @@ void EditorMainWindow::generateNavigation () {
             }
 
             // show debugging balls
-            if ( navigationGrid[ position ] ) {
-                QGraphicsEllipseItem * marker = new QGraphicsEllipseItem( QRectF( x * navigationTileSize, y * navigationTileSize, navigationTileSize, navigationTileSize ) );
-                marker->setBrush( navigationGrid[ position ]->brush() );
-                marker->setPen( QPen( Qt::black ));
-                marker->setZValue( 255 );
-                map->addItem( marker );
-                foundCount++;
-            }
+//            if ( navigationGrid[ position ] ) {
+//                QGraphicsEllipseItem * marker = new QGraphicsEllipseItem( QRectF( x * navigationTileSize, y * navigationTileSize, navigationTileSize, navigationTileSize ) );
+//                marker->setBrush( navigationGrid[ position ]->brush() );
+//                marker->setPen( QPen( Qt::black ));
+//                marker->setZValue( 255 );
+//                map->addItem( marker );
+//                foundCount++;
+//            }
         }
     }
 
