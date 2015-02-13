@@ -18,18 +18,12 @@ void EditorMainWindow::unitAdded (Unit * unit) {
 void EditorMainWindow::selectedUnitChanged (Unit * unit) {
     if ( unit == 0 ) {
         ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
-        //ui->m_tabs->setCurrentWidget( ui->m_map_tab );
-        //ui->m_unit_tab->setDisabled( true );
-        //ui->m_terrain_tab->setDisabled( true );
-        //ui->m_objective_tab->setDisabled( true );
 
         ui->m_unit_name->clear();
         ui->m_unit_id->clear();
     }
     else {
         ui->m_stack->setCurrentIndex( EditorMainWindow::UnitPage );
-        //ui->m_tabs->setCurrentWidget( ui->m_unit_tab );
-        //ui->m_unit_tab->setEnabled( true );
 
         ui->m_unit_name->setText( unit->m_name );
         ui->m_unit_id->setNum( unit->m_id );

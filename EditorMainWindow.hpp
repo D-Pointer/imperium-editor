@@ -85,6 +85,7 @@ private slots:
 private:
 
     friend class Serializer;
+    friend class Validator;
 
     void takeNewMapIntoUse ();
 

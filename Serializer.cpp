@@ -13,6 +13,7 @@
 #include "Selection.hpp"
 #include "EditorMainWindow.hpp"
 #include "ui_EditorMainWindow.h"
+#include "Validator.hpp"
 
 void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
     qDebug() << "Serializer::saveMap: saving to:" << map->m_name;
@@ -35,6 +36,11 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
 void Serializer::sendMapToIpad (QTcpSocket * ipad, EditorMainWindow * editor) {
     qDebug() << "Serializer::sendMapToIpad: saving to socket";
 
+    // first check if it is valid
+    if ( ! Validator().validate()) {
+        qDebug() << "Serializer::sendMapToIpad: scenario not valid, but sending anyway";
+    }
+    
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     // save the real map to a stream

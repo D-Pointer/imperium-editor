@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     GeneratorDialog.cpp \
     NavigationCallbacks.cpp \
     NormalMapCallbacks.cpp \
-    NetworkServer.cpp
+    NetworkServer.cpp \
+    Validator.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
@@ -45,7 +46,8 @@ HEADERS  += EditorMainWindow.hpp \
     House.hpp \
     Perlin.hpp \
     GeneratorDialog.hpp \
-    NetworkServer.hpp
+    NetworkServer.hpp \
+    Validator.hpp
 
 FORMS    += EditorMainWindow.ui \
     GeneratorDialog.ui
