@@ -625,7 +625,14 @@ void GeneratorDialog::createMap () {
     // add in all
     foreach ( const QPolygonF & forest, m_forests ) {
         Terrain * terrain = new Terrain( forest.translated( -s_margin, -s_margin ) );
-        terrain->setType( kWoods );
+
+        // 50% is woods, 50% trees
+        if ( qrand() % 2 == 1 ) {
+            terrain->setType( kWoods );
+        }
+        else {
+            terrain->setType( kScatteredTrees );
+        }
 
         m_map->addItem( terrain );
         allTerrains << terrain;
