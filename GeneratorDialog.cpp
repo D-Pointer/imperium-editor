@@ -3,15 +3,21 @@
 
 #include <QDebug>
 #include <QImage>
+#include <time.h>
+
 #include <QPixmap>
 #include <QStack>
 #include <QList>
 #include <QPainter>
+#include <QMessageBox>
 
 #include "GeneratorDialog.hpp"
 #include "ui_GeneratorDialog.h"
 #include "Map.hpp"
 #include "Perlin.hpp"
+
+const int GeneratorDialog::s_margin = 20;
+const int GeneratorDialog::s_tileSize = 10;
 
 GeneratorDialog::GeneratorDialog(QWidget *parent) : QDialog(parent), ui(new Ui::GeneratorDialog), m_map(0) {
     ui->setupUi(this);
@@ -28,8 +34,15 @@ GeneratorDialog::~GeneratorDialog() {
 void GeneratorDialog::ok () {
     qDebug() << "GeneratorDialog::ok";
 
-    m_width = ui->m_width->value() + 20;
-    m_height = ui->m_height->value() + 20;
+    if ( ui->m_width->value() % 100 != 0 ) {
+        QMessageBox::warning( this, "Size error", "The width must be a multiple of 100", QMessageBox::Ok );
+        return;
+    }
+
+    if ( ui->m_height->value() % 100 != 0 ) {
+        QMessageBox::warning( this, "Size error", "The height must be a multiple of 100", QMessageBox::Ok );
+        return;
+    }
 
     // create a new map, but use the final size
     m_map = new Map;
@@ -42,84 +55,76 @@ void GeneratorDialog::ok () {
         return;
     }
 
+    QApplication::setOverrideCursor( QCursor( Qt::WaitCursor ) );
+    QApplication::processEvents();
+
+    // use a larger width to allow for some margins where the woods can "swell out"
+    m_width = ui->m_width->value() + s_margin * 2;
+    m_height = ui->m_height->value() + s_margin * 2;
+
     // clear all state
     m_forests.clear();
 
     QImage image( m_width, m_height, QImage::Format_ARGB32 );
 
-
     // perlin noise
     generatePerlin( image );
-    showImage( image );
-
+    //showImage( image, "Noise" );
 
     // determine what is forest
     findForests( image );
-    showImage( image );
 
-    // vectorize the forests
-    traceForests( image );
+    // cleanup garbage
+    cleanup( image );
 
-    QImage forestsImage( m_width, m_height, QImage::Format_ARGB32 );
-    forestsImage.fill( Qt::white );
+    // trace
+    QList<QLine> lines = trace( image );
 
-    QPainter p( &forestsImage );
-    p.setPen( QColor( Qt::darkGreen ) );
+    // find polygons
+    buildPolygons( lines, image );
 
-    foreach ( const QPolygonF & forest, m_forests ) {
-        p.drawPolygon( forest );
-    }
-    p.end();
+    // white pen
+//    QPainter painter( &image );
+//    painter.setPen( QPen( QBrush( Qt::white ), 1 ) );
+//    painter.drawRect( s_margin, s_margin, ui->m_width->value(), ui->m_height->value() );
+//    painter.end();
 
-    showImage( forestsImage );
-
-
-    // simplify the forest polygons
-    for ( int index = 0; index < m_forests.size(); ++index ) {
-        simplifyForest( m_forests[ index ] );
-    }
-
-    QImage simplifiedImage( m_width, m_height, QImage::Format_ARGB32 );
-    simplifiedImage.fill( Qt::white );
-
-    QPainter p2( &simplifiedImage );
-    p2.setPen( QColor( Qt::darkGreen ) );
-
-    foreach ( const QPolygonF & forest, m_forests ) {
-        p2.drawPolygon( forest );
-    }
-    p2.end();
-
-    showImage( simplifiedImage );
-
+    // all rivers
+    //generateRivers( image );
+    //showImage( image, "Rivers" );
 
     // finally create the map
     createMap();
 
-    //findEdgePoints( image );
+    QApplication::restoreOverrideCursor();
+
     // we're done
-    //accept();
+    accept();
 }
 
 
 void GeneratorDialog::generatePerlin (QImage & image) {
     // parameters for the perlin noise generator
-    int octave = 2;
-    int frequency = 5;
+    int octave = ui->m_octave->value();
+    int frequency = ui->m_frequency->value();
+    int amplitude = 1;
+    int seed = qrand();
+
+    qsrand( time( 0 ) );
 
     // noise generator
-    Perlin perlin( octave, frequency, 1, qrand() );
+    Perlin perlin( octave, frequency, amplitude, seed );
 
 
     // fill with black
     image.fill( qRgba( 0, 0, 0, 255 ) );
 
-    for ( int y = 0; y < m_height - 20; ++y ) {
-        for ( int x = 0; x < m_width - 20; ++x ) {
+    for ( int y = 0; y < m_height - s_margin; ++y ) {
+        for ( int x = 0; x < m_width - s_margin; ++x ) {
             int value = 127 + ( perlin.Get( (float)x / m_width, (float)y / m_height ) * 128 );
 
             //qDebug() << x << y << value;
-            image.setPixel( x + 10, y + 10, qRgba( value, value, value, 255 ));
+            image.setPixel( x + s_margin / 2, y + s_margin / 2, qRgba( value, value, value, 255 ));
         }
     }
 }
@@ -156,9 +161,11 @@ void GeneratorDialog::findForests (QImage & image) {
     for ( int y = 0; y < m_height; ++y ) {
         for ( int x = 0; x < m_width; ++x ) {
             if ( qAlpha( image.pixel( x, y ) ) == 0 ) {
-                image.setPixel( x, y, qRgba( 0, 50, 0, 255 ));
+                // woods
+                image.setPixel( x, y, qRgba( 128, 128, 128, 255 ));
             }
             else {
+                // not woods
                 image.setPixel( x, y, qRgba( 0, 0, 0, 255 ));
             }
         }
@@ -166,253 +173,256 @@ void GeneratorDialog::findForests (QImage & image) {
 }
 
 
-void GeneratorDialog::traceForests (QImage & image) {
-    int color = 60;
-
-    // now fill all the forests with own colors
+void GeneratorDialog::cleanup (QImage & image) {
+    // check each woods pixel to see if they have enough woods neighbours. this will remove stray pixels
+    // that are alone or have one one neighbour
     for ( int y = 0; y < m_height; ++y ) {
         for ( int x = 0; x < m_width; ++x ) {
-            if ( qGreen( image.pixel( x, y ) ) == 50 ) {
-                fill( image, x, y, color, 50 );
+            // is this woods?
+            if ( qRed( image.pixel( x, y ) ) == 128 ) {
+                // woods pixel, does it have enough friends around?
+                int woods = 0, empty = 0;
 
-                // trace this color
-                traceOneForest( image, x, y, color, 0 );
-                color += 2;
+                // loop the 9 pixels around
+                for ( int y2 = qMax( 0, y - 1); y2 <= qMin( m_height - 1, y + 1); ++y2 ) {
+                    for ( int x2 = qMax( 0, x - 1); x2 <= qMin( m_width - 1, x + 1); ++x2 ) {
+                        if ( x2 == x && y2 == y ) {
+                            continue;
+                        }
 
-                if ( color == 64 ) {
-                    return;
-                }
-                // DEBUG: make only one forest
-                //return;
-            }
-        }
-    }
-
-    qDebug() << "GeneratorDialog::traceForests: found" << m_forests.size() << "forests";
-}
-
-
-void GeneratorDialog::fill (QImage & image, int x, int y, int newColor, int oldColor) {
-    if ( newColor == oldColor ) {
-        // avoid infinite loop
-        return;
-    }
-
-    QStack<int> stack;
-
-    // start case
-    stack.push( index( x, y ) );
-
-    while ( ! stack.isEmpty() ) {
-        // convert index back to pixel coords
-        fromIndex( stack.pop(), x, y );
-
-        // peform real filling
-        image.setPixel( x, y, qRgba( 0, newColor, 0, 255 ));
-
-        if ( x + 1 < m_width && qGreen( image.pixel( x + 1, y )) == oldColor ) {
-            stack.push( index( x + 1, y ) );
-        }
-
-        if ( x > 0  && qGreen( image.pixel( x - 1, y )) == oldColor ) {
-            stack.push( index( x - 1, y ) );
-        }
-
-        if ( y + 1 < m_height && qGreen( image.pixel( x, y + 1 )) == oldColor ) {
-            stack.push( index( x, y + 1 ) );
-        }
-
-        if ( y > 0 && qGreen( image.pixel( x, y - 1 )) == oldColor ) {
-            stack.push( index( x, y - 1 ) );
-        }
-    }
-}
-
-
-void GeneratorDialog::traceOneForest (QImage & image, int startX, int startY, int forestColor, int backgroundColor) {
-
-    // a path with a starting pos
-    QList<int> points;
-    points << index( startX, startY );
-
-    qDebug() << "GeneratorDialog::traceOneForest: adding first point:" << startX << startY;
-
-    bool found = false;
-
-    // parameters
-    const float radius = 3;
-    const int angleDelta = 2;
-
-    float distance;
-
-    do {
-        // not found a match yet
-        found = false;
-
-        int startColor;
-        int lastX, lastY;
-        int tmpX, tmpY;
-        fromIndex( points.last(), lastX, lastY );
-
-        for ( int angle = 0; angle < 360 - angleDelta; angle += angleDelta ) {
-            int x = lastX + (int)( cos( angle * M_PI / 180.0f ) * radius );
-            int y = lastY + (int)( sin( angle * M_PI / 180.0f ) * radius );
-
-            // still inside?
-            Q_ASSERT ( x >= 0 || x < m_width || y >= 0 || y < m_height );
-
-            // already tried that one?
-            //if ( points.contains( index( x1, y1 ) ) ) {
-            //    continue;
-            //}
-
-            int color = qGreen( image.pixel( x, y ) );
-
-            // first point we test?
-            if ( angle == 0 ) {
-                // yes, just get the starting color and then we're done
-                startColor = color;
-                continue;
-            }
-
-            // have we flipped color?
-            if ( color == startColor ) {
-                // not yet, same as the start, next angle
-                continue;
-            }
-
-            qDebug() << "GeneratorDialog::traceOneForest: edge:" << x << y;
-            qDebug() << "GeneratorDialog::traceOneForest: angle:" << angle;
-            qDebug() << "GeneratorDialog::traceOneForest: last:" << lastX << lastY;
-
-            // we have a changed color. if this is the second point then just add it
-            if ( points.size() == 1 ) {
-                found = true;
-                points << index( x, y );
-                qDebug() << "GeneratorDialog::traceOneForest: adding second point:" << x << y;
-
-                // done with this edge
-                break;
-            }
-
-            // are we close enough to the previous node of the path?
-            fromIndex( points[ points.size() - 2 ], tmpX, tmpY );
-            distance = sqrtf( (x - tmpX) * (x - tmpX)  +  (y - tmpY) * (y - tmpY) );
-            if ( distance <= radius * 0.9 ) {
-                qDebug() << "GeneratorDialog::traceOneForest: too close to second to last:" << tmpX << tmpY;
-                startColor = color;
-                continue;
-            }
-
-
-            // are we close enough to the first node of the path?
-            distance = sqrtf( (x - startX) * (x - startX)  +  (y - startY) * (y - startY) );
-            if ( distance <= radius * 0.9 ) {
-                // close enough, do we have enough points?
-                if ( points.size() > 2 ) {
-                    qDebug() << "GeneratorDialog::traceOneForest: found starting point";
-                    break;
-                }
-            }
-
-            // seems we found a point
-            found = true;
-            points << index( x, y );
-            qDebug() << "GeneratorDialog::traceOneForest: adding point:" << x << y;
-            break;
-        }
-    } while ( found );
-
-    /*
-        for ( int angle = 0; angle < 360 - angleDelta; angle += angleDelta ) {
-            int endX1 = startX + (int)( cos( angle * M_PI / 180.0f ) * radius );
-            int endY1 = startY + (int)( sin( angle * M_PI / 180.0f ) * radius );
-            int endX2 = startX + (int)( cos( (angle + angleDelta) * M_PI / 180.0f ) * radius );
-            int endY2 = startY + (int)( sin( (angle + angleDelta) * M_PI / 180.0f ) * radius );
-
-            // still inside?
-            if ( endX1 < 0 || endX1 >= m_width || endY1 < 0 || endY1 >= m_height ||
-                 endX2 < 0 || endX2 >= m_width || endY2 < 0 || endY2 >= m_height ) {
-                continue;
-            }
-
-            // already tried that one?
-            if ( points.contains( index( endX1, endY1 ) ) ) {
-                continue;
-            }
-
-            int color1 = qGreen( image.pixel( endX1, endY1 ) );
-            int color2 = qGreen( image.pixel( endX2, endY2 ) );
-
-            // did the color change from the last color?
-            if ( color1 != color2 && ( color1 == forestColor || color2 == forestColor )) {
-                // we have a color change, try to rule out a 180 degree turn
-                if ( points.size() > 1 ) {
-                    int tmpX, tmpY;
-
-                    if ( points.size() > 2 ) {
-                        // are we close enough to the first node of the path?
-                        fromIndex( points.first(), tmpX, tmpY );
-
-                        if ( qAbs( endX1 - startX ) <= radius * 1.5 && qAbs( endY1 - startY ) <= radius * 1.5 ) {
-                            // same point we came from
-                            qDebug() << "GeneratorDialog::traceOneForest: first point found:" << endX1 << endY1 << "==" << startX << startY;
-                            qDebug() << "GeneratorDialog::traceOneForest: points:" << points.size();
-                            //continue;
-                            break;
+                        if ( qRed( image.pixel( x2, y2 ) ) == 128 ) {
+                            woods++;
+                        }
+                        else {
+                            empty++;
                         }
                     }
-
-                    // are we close enough to the first node of the path?
-                    fromIndex( points.at( points.size() - 2 ), tmpX, tmpY );
-
-                    if ( qAbs( endX1 - tmpX ) <= radius / 2 && qAbs( endY1 - tmpY ) <= radius / 2 ) {
-                        // same point we came from
-                        continue;
-                    }
                 }
 
-                //qDebug() << "angle:" << angle << "path size:" << points.size() << "edge:" << x << y << "->" << endX1 << endY1;
-                startX = endX1;
-                startY = endY1;
-                found = true;
+                //qDebug() << x << y << woods << empty;
 
-                points << index( startX, startY );
-
-                // done with this edge
-                break;
+                // enough around?
+                if ( woods < 2) {
+                    // too few woods around this pixel, clear it
+                    image.setPixel( x, y, qRgba( 0, 0, 0, 255 ));
+                }
             }
         }
-    } while ( found );
-*/
-    // only add in the ones that are decent sized
-    if ( points.size() <= 5 ) {
-        qDebug() << "forest size:" << points.size() << "is too small, ignoring forest";
-        return;
     }
-
-    // create a polygon from the forest
-    QPolygonF forest;
-    int tmpX, tmpY;
-
-    for ( int index = 0; index < points.size() - 1; index++ ) {
-        fromIndex( points[ index ], tmpX, tmpY );
-
-        forest << QPointF( tmpX, tmpY );
-    }
-
-    // and add the first point once more to close
-    fromIndex( points.first(), startX, startY );
-    forest << QPointF( startX, startY );
-
-    m_forests << forest;
 }
 
 
-void GeneratorDialog::simplifyForest (QPolygonF &forest) {
-    int startSize = forest.size();
+QList<QLine>  GeneratorDialog::trace (QImage & image) {
+    // uses marching cubes, see:
+    // http://en.wikipedia.org/wiki/Marching_squares
+
+    const int halfTile = s_tileSize / 2;
+
+    int tiles = 0, edges = 0, outside = 0, inside = 0;
+
+    QList<QLine> lines;
+
+    // loop all tiles and give a value 0..15 based on which corners are in woods and which not
+    for ( int y = 0; y < m_height - s_tileSize; y += s_tileSize ) {
+        for ( int x = 0; x < m_width - s_tileSize; x += s_tileSize ) {
+            int value = 0;
+
+            // up left
+            if ( qRed( image.pixel( x, y ) ) == 128 ) {
+                value += 1;
+            }
+
+            // up right
+            if ( qRed( image.pixel( x + s_tileSize, y ) ) == 128 ) {
+                value += 2;
+            }
+
+            // down left
+            if ( qRed( image.pixel( x, y + s_tileSize ) ) == 128 ) {
+                value += 8;
+            }
+
+            // down right
+            if ( qRed( image.pixel( x + s_tileSize, y + s_tileSize ) ) == 128 ) {
+                value += 4;
+            }
+
+            tiles++;
+
+            // 0 and 15 are fully inside or fully outside, ignore them
+            if ( value == 0 ) {
+                outside++;
+                continue;
+            }
+            else if ( value == 15 ) {
+                inside++;
+                continue;
+            }
+
+            edges++;
+
+            // create lines based on the value
+            // note: values 0 and 15 skipped above
+            switch ( value ) {
+            case 1:
+            case 14:
+                lines << QLine( x + 0, y + halfTile,
+                                x + halfTile, y + 0 );
+                break;
+
+            case 2:
+            case 13:
+                lines << QLine( x + halfTile, y + 0,
+                                x + s_tileSize, y + halfTile );
+                break;
+
+            case 4:
+            case 11:
+                lines << QLine( x + halfTile, y + s_tileSize,
+                                x + s_tileSize, y + halfTile );
+                break;
+
+            case 7:
+            case 8:
+                lines << QLine( x + 0, y + halfTile,
+                                x + halfTile, y + s_tileSize );
+                break;
+
+            case 3:
+            case 12:
+                lines << QLine( x + 0, y + halfTile,
+                                x + s_tileSize, y + halfTile );
+                break;
+
+            case 6:
+            case 9:
+                lines << QLine( x + halfTile, y + 0,
+                                x + halfTile, y + s_tileSize );
+                break;
+
+            case 5:
+                // two lines
+                lines << QLine( x + 0, y + halfTile,
+                                x + halfTile, y + 0 );
+                lines << QLine( x + halfTile, y + s_tileSize,
+                                x + s_tileSize, y + halfTile );
+                break;
+
+            case 10:
+                // two lines
+                lines << QLine( x + 0, y + halfTile,
+                                x + halfTile, y + s_tileSize );
+                lines << QLine( x + halfTile, y + 0,
+                                x + s_tileSize, y + halfTile );
+                break;
+            }
+        }
+    }
+
+    qDebug() << "GeneratorDialog::trace: tiles:" << tiles << "edges:" << edges << "inside:" << inside << "outside:" << outside;
+
+    QPainter painter( &image );
+
+    // white pen
+    painter.setPen( QPen( QBrush( Qt::white ), 1 ) );
+
+    // draw each line
+    foreach ( QLine line, lines ) {
+        painter.drawLine( line );
+    }
+
+    painter.end();
+
+    return lines;
+}
+
+
+void GeneratorDialog::buildPolygons (QList<QLine> & lines, QImage & image) {
+    qDebug() << "GeneratorDialog::buildPolygons: building polygons from" << lines.size() << "lines";
+
+    while ( lines.size() > 0 ) {
+        QLine line = lines.takeFirst();
+
+        // a new polygon starts with this line
+        QPolygon polygon;
+        polygon << line.p1();
+        polygon << line.p2();
+
+        QPoint last = line.p1();
+        QPoint current = line.p2();
+
+        //qDebug() << "GeneratorDialog::buildPolygons: starting a new polygon, now:" << m_forests.size();
+        //qDebug() << "GeneratorDialog::buildPolygons: start:" << current << "last:" << last;
+
+        bool lastFound = false;
+
+        // loop until we find a line that connects to the current/last points
+        while ( ! lastFound ) {
+            //qDebug() << "GeneratorDialog::buildPolygons: current:" << current << "last:" << last << "found:" << lastFound;
+
+            QMutableListIterator<QLine> iter( lines );
+            while ( iter.hasNext() ) {
+                QLine line = iter.next();
+
+                // connects to the current?
+                if ( line.p1() == current ) {
+                    // last line?
+                    if ( line.p2() == last ) {
+                        //qDebug() << "GeneratorDialog::buildPolygons: last found:" << line;
+                        lastFound = true;
+                        iter.remove();
+                        break;
+                    }
+
+                    polygon << line.p2();
+                    current = line.p2();
+                    iter.remove();
+                    //qDebug() << "GeneratorDialog::buildPolygons: added point:" << line.p2() << "from line:" << line << "now:" << polygon.size();
+                }
+
+                else if ( line.p2() == current ) {
+                    // last line?
+                    if ( line.p1() == last ) {
+                        //qDebug() << "GeneratorDialog::buildPolygons: last found:" << line;
+                        lastFound = true;
+                        iter.remove();
+                        break;
+                    }
+
+                    polygon << line.p1();
+                    current = line.p1();
+                    iter.remove();
+                    //qDebug() << "GeneratorDialog::buildPolygons: added point:" << line.p1() << "from line:" << line << "now:" << polygon.size();
+                }
+            }
+        }
+
+        // simplify the polygon
+        simplifyPolygon( polygon );
+
+        // now add the polygon, if we add it when created a copy gets added to the polygon list and it'll
+        // only contain start and end
+        m_forests << QPolygonF( polygon );
+    }
+
+    QPainter painter( &image );
+    painter.setPen( QPen( QBrush( Qt::red ), 2 ) );
+
+    // draw each polygon
+    foreach ( QPolygonF polygon, m_forests ) {
+        painter.drawPolygon( polygon );
+    }
+
+    painter.end();
+
+}
+
+
+void GeneratorDialog::simplifyPolygon (QPolygon & polygon) {
     int currentIndex = 0;
     bool found ;
+
+    //qDebug() << "GeneratorDialog::simplifyPolygon: start size:" << polygon.size();
 
     // max distance for the mid point from the line between two points for it to be cut
     const float maxDistance = 2;
@@ -421,10 +431,12 @@ void GeneratorDialog::simplifyForest (QPolygonF &forest) {
         // nothing to remove found yet
         found = false;
 
-        while ( currentIndex < forest.size() - 2 ) {
-            QPointF start = forest.at( currentIndex );
-            QPointF mid = forest.at( currentIndex + 1 );
-            QPointF end = forest.at( currentIndex + 2 );
+        while ( currentIndex < polygon.size() - 1 ) {
+            int realIndex = currentIndex % polygon.size();
+
+            QPointF start = polygon.at( realIndex );
+            QPointF mid = polygon.at( realIndex + 1 );
+            QPointF end = polygon.at( realIndex + 2 );
 
             // get the distance from the mid point to the line start -> end
             float px = end.x() - start.x();
@@ -452,7 +464,7 @@ void GeneratorDialog::simplifyForest (QPolygonF &forest) {
             if ( distance < maxDistance ) {
                 // yes, remove it and do not increment the current index, that way we check the next available end point from the
                 // same start -> can simplify long straights into one
-                forest.remove( currentIndex + 1 );
+                polygon.remove( realIndex + 1 );
                 found = true;
             }
             else {
@@ -463,13 +475,148 @@ void GeneratorDialog::simplifyForest (QPolygonF &forest) {
     }
     while( found );
 
-    qDebug() << "GeneratorDialog::simplifyForest: start size:" << startSize << ", end size:" << forest.size();
+    //qDebug() << "GeneratorDialog::simplifyPolygon: end size:" << polygon.size();
 }
 
 
-void GeneratorDialog::showImage (const QImage & image) {
+void GeneratorDialog::generateRivers (QImage & image) {
+    for ( int index = 0; index < ui->m_rivers->value(); ++index ) {
+        qDebug() << "GeneratorDialog::generateRivers: starting river" << index;
+        generateOneRiver( image );
+    }
+}
+
+
+void GeneratorDialog::generateOneRiver (QImage &image) {
+    QPointF start1, start2;
+    float direction;
+    QList<QPointF> points;
+
+    QPainter painter( &image );
+    painter.setPen( QPen( QBrush( Qt::yellow ), 3 ) );
+
+    bool inWoods;
+
+    // starting point
+    do {
+        inWoods = false;
+
+        // up/down or left/right?
+        switch ( qrand() % 4 ) {
+        case 0:
+            // left
+            start1.setX( s_margin );
+            start1.setY( s_margin + ( qrand() % ui->m_height->value() ) );
+            start2.setX( start1.x() );
+            start2.setY( start1.y() + 10 + qrand() % 30 );
+            direction = 0;
+            break;
+
+        case 1:
+            // right
+            start1.setX( s_margin + ui->m_width->value() );
+            start1.setY( s_margin + ( qrand() % ui->m_height->value() ) );
+            start2.setX( start1.x() );
+            start2.setY( start1.y() + 10 + qrand() % 30 );
+            direction = 180;
+            break;
+
+        case 2:
+            // top
+            start1.setX( s_margin + ( qrand() % ui->m_width->value() ) );
+            start1.setY( s_margin );
+            start2.setX( start1.x() + 10 + qrand() % 30 );
+            start2.setY( start1.y());
+            direction = 270;
+            break;
+
+        case 3:
+            // bottom
+            start1.setX( s_margin + ( qrand() % ui->m_width->value() ) );
+            start1.setY( s_margin +ui->m_height->value()  );
+            start2.setX( start1.x() + 10 + qrand() % 30 );
+            start2.setY( start1.y());
+            direction = 90;
+            break;
+        }
+
+        // inside any of the forests?
+        foreach ( QPolygonF forest, m_forests ) {
+            if ( forest.containsPoint( start1, Qt::OddEvenFill ) || forest.containsPoint( start2, Qt::OddEvenFill ) ) {
+                // in woods
+                qDebug() << "GeneratorDialog::generateRivers: starting point in woods";
+                inWoods = true;
+                break;
+            }
+        }
+    }
+    while ( inWoods );
+
+    qDebug() << "starting point ok";
+
+    painter.drawPoint( start1 );
+    painter.drawPoint( start2 );
+
+    points << start1;
+
+    // starting position found
+    bool finished = false;
+    while ( ! finished ) {
+
+        int tries = 0;
+        inWoods = false;
+        QPointF candidate;
+
+        // try to find a position not in woods
+        do {
+            // how far does this leg go
+            float distance = 10 + qrand() % 30;
+
+            // new direction
+            direction += -30 + qrand() % 60;
+
+            // deltas
+            float x = distance * cosf( direction / 180.0f * M_PI );
+            float y = distance * sinf( direction / 180.0f * M_PI );
+            candidate = points.last() + QPointF( x, y );
+
+            // outside?
+            if ( candidate.x() < s_margin || candidate.x() > s_margin + ui->m_width->value() ||
+                 candidate.y() < s_margin || candidate.y() > s_margin + ui->m_height->value() ) {
+                finished = true;
+                break;
+            }
+
+            // not outside yet, hit woods?
+            foreach ( const QPolygonF & forest, m_forests ) {
+                if ( forest.containsPoint( candidate, Qt::OddEvenFill )) {
+                    // in woods
+                    qDebug() << "GeneratorDialog::generateRivers: point in woods";
+                    inWoods = true;
+                    tries++;
+                    break;
+                }
+            }
+        }
+        while ( inWoods && tries < 30);
+
+        if ( inWoods ) {
+            // this did not work out, back off a bit
+            points.removeLast();
+            qDebug() << "backing off";
+        }
+        else {
+            points << candidate;
+            painter.drawPoint( points.last() );
+        }
+    }
+}
+
+
+void GeneratorDialog::showImage (const QImage & image, const QString & title) {
     QLabel * label = new QLabel();
     label->setPixmap( QPixmap::fromImage( image ) );
+    label->setWindowTitle( title );
     label->show();
 }
 
@@ -477,7 +624,7 @@ void GeneratorDialog::showImage (const QImage & image) {
 void GeneratorDialog::createMap () {
     // add in all
     foreach ( const QPolygonF & forest, m_forests ) {
-        Terrain * terrain = new Terrain( forest );
+        Terrain * terrain = new Terrain( forest.translated( -s_margin, -s_margin ) );
         terrain->setType( kWoods );
 
         m_map->addItem( terrain );
@@ -486,99 +633,4 @@ void GeneratorDialog::createMap () {
 }
 
 
-/*void GeneratorDialog::traceForests (QImage & image) {
-    for ( int y = 0; y < m_height - 1; ++y ) {
-        for ( int x = 0; x < m_width; ++x ) {
-            if ( qGreen( image.pixel( x, y ) ) != qGreen( image.pixel( x, y + 1 ) ) ) {
-                image.setPixel( x, y, qRgb( 255, 0, 0 ));
-            }
-        }
-    }
 
-    for ( int y = 0; y < m_height ; ++y ) {
-        for ( int x = 0; x < m_width - 1; ++x ) {
-            if ( qGreen( image.pixel( x, y ) ) != qGreen( image.pixel( x + 1, y ) ) ) {
-                image.setPixel( x, y, qRgb( 255, 0, 0 ));
-            }
-        }
-    }
-
-    // make the rest white
-    for ( int y = 0; y < m_height; ++y ) {
-        for ( int x = 0; x < m_width; ++x ) {
-            if ( qRed( image.pixel( x, y ) ) != 255 ) {
-                image.setPixel( x, y, qRgb( 250, 250, 250 ));
-            }
-        }
-    }
-}
-
-
-void GeneratorDialog::findEdgePoints (const QImage & image) {
-    int last1 = -100;
-    int last2 = -100;
-
-    // upper and lower edges
-    for ( int x = 0; x < m_width; ++x ) {
-        if ( qRed( image.pixel( x, 0 ) ) == 255 ) {
-            // was the last position also an edge point?
-            if ( last1 < x - 1 ) {
-                // found a position
-                traceEdge( image, x, 0 );
-            }
-
-            last1 = x;
-        }
-        if ( qRed( image.pixel( x, m_height - 1 ) ) == 255 ) {
-            // was the last position also an edge point?
-            if ( last2 < x - 1 ) {
-                // found a position
-                traceEdge( image, x, m_height - 1 );
-            }
-
-            last2 = x;
-        }
-    }
-
-    last1 = -100;
-    last2 = -100;
-
-    // left and right edges, 1px from the top and bottom
-    for ( int y = 1; y < m_height - 1; ++y ) {
-        if ( qRed( image.pixel( 0, y ) ) == 255 ) {
-            // was the last position also an edge point?
-            if ( last1 < y - 1 ) {
-                // found a position
-                traceEdge( image, 0, y );
-            }
-
-            last1 = y;
-        }
-        if ( qRed( image.pixel( m_width - 1, y ) ) == 255 ) {
-            // was the last position also an edge point?
-            if ( last2 < y - 1 ) {
-                // found a position
-                traceEdge( image, m_width - 1, y );
-            }
-
-            last2 = y;
-        }
-    }
-}
-
-
-void GeneratorDialog::traceEdge (const QImage & image, int x, int y) {
-    // is this point already used?
-    if ( m_used.contains( index(x, y) ) ) {
-        qDebug() << "GeneratorDialog::traceEdge: already used:" << x << y;
-        return;
-    }
-
-    qDebug() << "GeneratorDialog::traceEdge: tracing from start:" << x << y;
-    m_used << index(x, y);
-
-    const int radius = 10;
-
-
-}
-*/

@@ -12,7 +12,8 @@ Validator::Validator () {
 bool Validator::validate (EditorMainWindow * editor) {
     return validateMetaData( editor ) &&
             validateUnits( editor ) &&
-            validateObjectives( editor );
+            validateObjectives( editor ) &&
+            validateVictoryConditions( editor );
 }
 
 
@@ -67,10 +68,22 @@ bool Validator::validateObjectives (EditorMainWindow * editor) {
         // objective title must be valid
         if ( objective->m_title.isEmpty() ) {
             QMessageBox::warning( editor, "Validation Error", "Objective must have a title.", QMessageBox::Ok );
+            return false;
         }
     }
 
     // objectives are valid
+    return true;
+}
+
+
+bool Validator::validateVictoryConditions (EditorMainWindow * editor) {
+    if ( allVictoryConditions.isEmpty() ) {
+        QMessageBox::warning( editor, "Validation Error", "No victory or game end conditions set.", QMessageBox::Ok );
+        return false;
+    }
+
+    // we have victory conditions
     return true;
 }
 

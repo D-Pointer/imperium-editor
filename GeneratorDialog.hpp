@@ -12,6 +12,7 @@ namespace Ui {
 class GeneratorDialog;
 }
 
+
 class GeneratorDialog : public QDialog {
     Q_OBJECT
     
@@ -39,25 +40,21 @@ private:
     void generatePerlin (QImage & image);
 
     void findForests (QImage & image);
-    void traceForests (QImage & image);
-    void traceOneForest (QImage & image, int x, int y, int forestColor, int backgroundColor);
 
-    void fill (QImage & image, int x, int y, int newColor, int oldColor);
+    void cleanup (QImage & image);
 
-    void simplifyForest (QPolygonF & forest);
+    QList<QLine> trace (QImage & image);
 
-    void showImage (const QImage & image);
+    void buildPolygons (QList<QLine> & lines, QImage & image);
+
+    void simplifyPolygon (QPolygon & polygon);
+
+    void generateRivers (QImage &image);
+    void generateOneRiver (QImage &image);
+
+    void showImage (const QImage & image, const QString & title);
 
     void createMap ();
-
-    inline int index (int x, int y) const {
-        return m_width * y + x;
-    }
-
-    inline void fromIndex (int index, int & x, int & y) const {
-        y = index / m_width;
-        x = index - m_width * y;
-    }
 
     Ui::GeneratorDialog *ui;
 
@@ -66,6 +63,9 @@ private:
 
     int m_width;
     int m_height;
+
+    static const int s_margin;
+    static const int s_tileSize;
 
     // found forests
     QList<QPolygonF> m_forests;

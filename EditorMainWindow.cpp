@@ -11,6 +11,8 @@
 #include "Serializer.hpp"
 #include "GeneratorDialog.hpp"
 #include "NetworkServer.hpp"
+#include "Version.hpp"
+#include "VictoryConditionsDialog.hpp"
 
 EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::EditorMainWindow) {
     ui->setupUi(this);
@@ -24,20 +26,22 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     m_actionGroup->addAction( ui->m_objective_action );
     m_actionGroup->setExclusive( true );
 
-    connect( ui->m_open_action,        SIGNAL( triggered() ),       SLOT( openMap()) );
-    connect( ui->m_new_action,         SIGNAL( triggered() ),       SLOT( newMap()) );
-    connect( ui->m_save_action,        SIGNAL( triggered() ),       SLOT( saveMap()) );
-    connect( ui->m_save_as_action,     SIGNAL( triggered() ),       SLOT( saveMapAs()) );
-    connect( ui->m_quit_action,        SIGNAL( triggered() ),       SLOT( close()) );
+    connect( ui->m_open_action,        SIGNAL( triggered() ),            SLOT( openMap()) );
+    connect( ui->m_new_action,         SIGNAL( triggered() ),            SLOT( newMap()) );
+    connect( ui->m_save_action,        SIGNAL( triggered() ),            SLOT( saveMap()) );
+    connect( ui->m_save_as_action,     SIGNAL( triggered() ),            SLOT( saveMapAs()) );
+    connect( ui->m_quit_action,        SIGNAL( triggered() ),            SLOT( close()) );
 
-    connect( ui->m_edit_action,        SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_terrain_action,     SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_unit_action,        SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_house_action,       SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_road_action  ,      SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_objective_action,   SIGNAL( triggered() ),       SLOT( editModeChanged()) );
-    connect( ui->m_delete_action,      SIGNAL( triggered() ),       SLOT( deleteSelectedItem()) );
-    connect( ui->m_deselect_action,    SIGNAL( triggered() ),       SLOT( deselect()) );
+    connect( ui->m_edit_action,        SIGNAL( triggered() ),            SLOT( editModeChanged()) );
+    connect( ui->m_terrain_action,     SIGNAL( triggered() ),            SLOT( editModeChanged()) );
+    connect( ui->m_unit_action,        SIGNAL( triggered() ),            SLOT( editModeChanged()) );
+    connect( ui->m_house_action,       SIGNAL( triggered() ),            SLOT( editModeChanged()) );
+    connect( ui->m_road_action  ,      SIGNAL( triggered() ),            SLOT( editModeChanged()) );
+    connect( ui->m_objective_action,   SIGNAL( triggered() ),            SLOT( editModeChanged()) );
+    connect( ui->m_delete_action,      SIGNAL( triggered() ),            SLOT( deleteSelectedItem()) );
+    connect( ui->m_deselect_action,    SIGNAL( triggered() ),            SLOT( deselect()) );
+    connect( ui->m_flip_horizontally_action, SIGNAL( triggered()),       SLOT( flipMapHorizontally()) );
+    connect( ui->m_flip_vertically_action,   SIGNAL( triggered()),       SLOT( flipMapVertically()) );
 
     connect( ui->m_rotation,           SIGNAL(valueChanged(int)),        SLOT( unitRotated()) );
     connect( ui->m_unit_name,          SIGNAL(textChanged(QString)),     SLOT( unitNameChanged(QString)) );
@@ -49,23 +53,22 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_ammo,               SIGNAL(valueChanged(int)),        SLOT( unitAmmoChanged()) );
     connect( ui->m_weapon,             SIGNAL(currentIndexChanged(int)), SLOT( unitWeaponChanged()) );
     connect( ui->m_experience,         SIGNAL(currentIndexChanged(int)), SLOT( unitExperienceChanged()) );
+    connect( ui->m_victory,            SIGNAL(clicked()),                SLOT( editVictoryConditions()) );
 
     connect( ui->m_objective_title,    SIGNAL( textChanged(QString)),    SLOT( objectiveNameChanged(QString)) );
 
     connect( ui->m_house_rotation,     SIGNAL(valueChanged(int)),        SLOT( houseRotated()) );
     connect( ui->m_house_type,         SIGNAL(currentIndexChanged(int)), SLOT( houseTypeChanged()) );
 
-    connect( ui->m_rotate_left,        SIGNAL( clicked()),             SLOT( rotateTerrain()) );
-    connect( ui->m_rotate_right,       SIGNAL( clicked()),             SLOT( rotateTerrain()) );
-    connect( ui->m_duplicate,          SIGNAL( clicked()),             SLOT( duplicateTerrain()) );
-    connect( ui->m_flipHorizontal,     SIGNAL( clicked()),             SLOT( flipMapHorizontally()) );
-    connect( ui->m_flipVertical,       SIGNAL( clicked()),             SLOT( flipMapVertically()) );
-    connect( ui->m_done,               SIGNAL( clicked()),             SLOT( terrainDone()) );
-    connect( ui->m_add_point,          SIGNAL( clicked()),             SLOT( addPoint()) );
-    connect( ui->m_zoom_in,            SIGNAL( clicked()),             SLOT( zoomIn()) );
-    connect( ui->m_zoom_out,           SIGNAL( clicked()),             SLOT( zoomOut()) );
-    connect( ui->m_zoom_normal,        SIGNAL( clicked()),             SLOT( zoomNormal()) );
-    connect( ui->m_terrain_type,       SIGNAL(currentIndexChanged(int)), SLOT(terrainTypeChanged()) );
+    connect( ui->m_rotate_left,        SIGNAL( clicked()),               SLOT( rotateTerrain()) );
+    connect( ui->m_rotate_right,       SIGNAL( clicked()),               SLOT( rotateTerrain()) );
+    connect( ui->m_duplicate,          SIGNAL( clicked()),               SLOT( duplicateTerrain()) );
+    connect( ui->m_done,               SIGNAL( clicked()),               SLOT( terrainDone()) );
+    connect( ui->m_add_point,          SIGNAL( clicked()),               SLOT( addPoint()) );
+    connect( ui->m_zoom_in,            SIGNAL( clicked()),               SLOT( zoomIn()) );
+    connect( ui->m_zoom_out,           SIGNAL( clicked()),               SLOT( zoomOut()) );
+    connect( ui->m_zoom_normal,        SIGNAL( clicked()),               SLOT( zoomNormal()) );
+    connect( ui->m_terrain_type,       SIGNAL(currentIndexChanged(int)), SLOT( terrainTypeChanged()) );
     connect( selection, SIGNAL( selectedUnitChanged(Unit*)),             SLOT( selectedUnitChanged(Unit*)) );
     connect( selection, SIGNAL( selectedTerrainChanged(Terrain*)),       SLOT( selectedTerrainChanged(Terrain*)) );
     connect( selection, SIGNAL( selectedObjectiveChanged(Objective*)),   SLOT( selectedObjectiveChanged(Objective*)) );
@@ -74,6 +77,9 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     // create the network server
     m_server = new NetworkServer( this );
     connect( m_server, SIGNAL(sendMapToIpad(QTcpSocket*)), SLOT(sendMapToIpad(QTcpSocket*)) );
+
+    // set a nice caption
+    setWindowTitle( QString("Imperium Scenario Editor v%1.%2").arg( MAJOR_VERSION).arg( MINOR_VERSION) );
 }
 
 
@@ -120,6 +126,7 @@ void EditorMainWindow::newMap () {
     allTerrains.clear();
     allObjectives.clear();
     allHouses.clear();
+    allVictoryConditions.clear();
 
     navigationGrid.clear();
 //    if ( navigationGrid ) {
@@ -132,8 +139,7 @@ void EditorMainWindow::newMap () {
 
     takeNewMapIntoUse();
 
-    ui->m_width->setNum( map->getWidth() );
-    ui->m_height->setNum( map->getHeight() );
+    ui->m_size->setText( QString::number( map->getWidth() ) + " x " + QString::number( map->getHeight() ));
     ui->m_time->setTime( QTime( 12, 0 ) );
     ui->m_title->clear();
     ui->m_description->clear();
@@ -169,6 +175,7 @@ void EditorMainWindow::openMap () {
     allTerrains.clear();
     allObjectives.clear();
     allHouses.clear();
+    allVictoryConditions.clear();
 
     navigationGrid.clear();
 
@@ -489,10 +496,8 @@ void EditorMainWindow::takeNewMapIntoUse () {
     ui->m_stack->setEnabled( true );
     ui->m_toolbar->setEnabled( true );
 
-    ui->m_width->setEnabled( true );
-    ui->m_height->setEnabled( true );
+    ui->m_size->setEnabled( true );
     ui->m_time->setEnabled( true );
-    ui->m_length->setEnabled( true );
     ui->m_tutorial->setEnabled( true );
     ui->m_view->setEnabled( true );
     ui->m_zoom_in->setEnabled( true );
@@ -507,4 +512,9 @@ void EditorMainWindow::takeNewMapIntoUse () {
     }
 
     updateUnitStats();
+}
+
+
+void EditorMainWindow::editVictoryConditions () {
+    VictoryConditionsDialog().exec();
 }

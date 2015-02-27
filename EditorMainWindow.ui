@@ -15,13 +15,81 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_3">
+    <item row="2" column="3">
+     <spacer name="horizontalSpacer_9">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>900</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="2" column="0">
+     <widget class="QToolButton" name="m_zoom_in">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>+</string>
+      </property>
+      <property name="shortcut">
+       <string>Ctrl++</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QToolButton" name="m_zoom_out">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>-</string>
+      </property>
+      <property name="shortcut">
+       <string>Ctrl+-</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QToolButton" name="m_zoom_normal">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>=</string>
+      </property>
+      <property name="shortcut">
+       <string>Ctrl+Shift+0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="4">
+     <widget class="QGraphicsView" name="m_view">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="renderHints">
+       <set>QPainter::Antialiasing|QPainter::TextAntialiasing</set>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0" colspan="4">
      <widget class="QStackedWidget" name="m_stack">
       <property name="enabled">
        <bool>false</bool>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="metaDataPage">
        <layout class="QGridLayout" name="gridLayout">
@@ -37,34 +105,51 @@
         <property name="bottomMargin">
          <number>5</number>
         </property>
-        <item row="1" column="12">
-         <widget class="QSpinBox" name="m_length">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="minimum">
-           <number>1800</number>
-          </property>
-          <property name="maximum">
-           <number>36000</number>
-          </property>
-          <property name="value">
-           <number>3600</number>
+        <item row="1" column="3">
+         <widget class="QLabel" name="label_18">
+          <property name="text">
+           <string>Depends:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="6">
-         <widget class="QLineEdit" name="m_title">
+        <item row="0" column="12">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Description:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="11">
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>17</width>
+            <height>17</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="m_size">
           <property name="minimumSize">
            <size>
-            <width>100</width>
+            <width>80</width>
             <height>0</height>
            </size>
           </property>
+          <property name="text">
+           <string>N/A</string>
+          </property>
          </widget>
         </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer">
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer_15">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -79,41 +164,132 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="m_width">
-          <property name="minimumSize">
+        <item row="0" column="8">
+         <spacer name="horizontalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
            <size>
-            <width>50</width>
-            <height>0</height>
+            <width>40</width>
+            <height>20</height>
            </size>
           </property>
+         </spacer>
+        </item>
+        <item row="1" column="5">
+         <spacer name="horizontalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>0</string>
+           <string>Size:</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="16">
-         <widget class="QLabel" name="label_18">
+        <item row="0" column="5">
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer_14">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Minimum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Depends:</string>
+           <string>Title:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="8">
-         <widget class="QLabel" name="label_22">
-          <property name="text">
-           <string>AI Hint:</string>
+        <item row="0" column="13" colspan="3">
+         <widget class="QPlainTextEdit" name="m_description">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
           </property>
          </widget>
         </item>
-        <item row="0" column="11">
+        <item row="0" column="9">
          <widget class="QLabel" name="label_3">
           <property name="text">
            <string>Time:</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="9">
+        <item row="0" column="11">
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="m_id"/>
+        </item>
+        <item row="0" column="10">
+         <widget class="QTimeEdit" name="m_time">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="6">
+         <widget class="QLabel" name="label_24">
+          <property name="text">
+           <string>Battle size:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="7">
          <widget class="QComboBox" name="m_battleSize">
           <item>
            <property name="text">
@@ -137,47 +313,40 @@
           </item>
          </widget>
         </item>
-        <item row="0" column="13">
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="8">
-         <widget class="QLabel" name="label_24">
-          <property name="text">
-           <string>Battle size:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="14">
+        <item row="1" column="0">
          <widget class="QLabel" name="label_17">
           <property name="text">
            <string>Id:</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="11">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Length:</string>
+        <item row="1" column="4">
+         <widget class="QSpinBox" name="m_depends">
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
           </property>
          </widget>
         </item>
-        <item row="2" column="9">
+        <item row="0" column="4">
+         <widget class="QLineEdit" name="m_title">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="7">
          <spacer name="verticalSpacer_3">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::MinimumExpanding</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -187,7 +356,7 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="9">
+        <item row="0" column="7">
          <widget class="QComboBox" name="m_aiHint">
           <item>
            <property name="text">
@@ -206,204 +375,24 @@
           </item>
          </widget>
         </item>
-        <item row="0" column="12">
-         <widget class="QTimeEdit" name="m_time">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QPushButton" name="m_flipHorizontal">
+        <item row="0" column="6">
+         <widget class="QLabel" name="label_22">
           <property name="text">
-           <string>Flip</string>
+           <string>AI Hint:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="5">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Title:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5" colspan="2">
+        <item row="1" column="9" colspan="2">
          <widget class="QCheckBox" name="m_tutorial">
           <property name="text">
-           <string>Tutorial</string>
+           <string>Tutorial scenario</string>
           </property>
          </widget>
-        </item>
-        <item row="0" column="4">
-         <spacer name="horizontalSpacer_14">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Minimum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="3">
-         <widget class="QPushButton" name="m_flipVertical">
-          <property name="text">
-           <string>Flip</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="7">
-         <spacer name="horizontalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Width:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="7">
-         <spacer name="horizontalSpacer_6">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="4">
-         <spacer name="horizontalSpacer_15">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Minimum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item row="1" column="13">
-         <spacer name="horizontalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>17</width>
-            <height>17</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="15">
-         <widget class="QSpinBox" name="m_id"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="m_height">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
+         <widget class="QPushButton" name="m_victory">
           <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="15" colspan="3">
-         <widget class="QPlainTextEdit" name="m_description">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>50</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="10">
-         <spacer name="horizontalSpacer_11">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="17">
-         <widget class="QSpinBox" name="m_depends">
-          <property name="minimum">
-           <number>-1</number>
-          </property>
-          <property name="value">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Minimum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="14">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Description:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Height:</string>
+           <string>Victory Conditions</string>
           </property>
          </widget>
         </item>
@@ -749,7 +738,7 @@
         <item row="3" column="1">
          <widget class="QLabel" name="m_unit_stats2">
           <property name="text">
-           <string>YYY</string>
+           <string>N/A</string>
           </property>
          </widget>
         </item>
@@ -895,7 +884,7 @@
         <item row="2" column="1">
          <widget class="QLabel" name="m_unit_stats1">
           <property name="text">
-           <string>XXX</string>
+           <string>N/A</string>
           </property>
          </widget>
         </item>
@@ -1116,74 +1105,6 @@
       </widget>
      </widget>
     </item>
-    <item row="1" column="0" colspan="4">
-     <widget class="QGraphicsView" name="m_view">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>1</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="renderHints">
-       <set>QPainter::Antialiasing|QPainter::TextAntialiasing</set>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QToolButton" name="m_zoom_in">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="text">
-       <string>+</string>
-      </property>
-      <property name="shortcut">
-       <string>Ctrl++</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QToolButton" name="m_zoom_out">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="text">
-       <string>-</string>
-      </property>
-      <property name="shortcut">
-       <string>Ctrl+-</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2">
-     <widget class="QToolButton" name="m_zoom_normal">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="text">
-       <string>=</string>
-      </property>
-      <property name="shortcut">
-       <string>Ctrl+Shift+0</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="3">
-     <spacer name="horizontalSpacer_9">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>900</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -1206,7 +1127,15 @@
     <addaction name="separator"/>
     <addaction name="m_quit_action"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="m_flip_horizontally_action"/>
+    <addaction name="m_flip_vertically_action"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuEdit"/>
   </widget>
   <widget class="QStatusBar" name="m_statusbar"/>
   <widget class="QToolBar" name="m_toolbar">
@@ -1337,6 +1266,9 @@
    <property name="statusTip">
     <string>Test</string>
    </property>
+   <property name="shortcut">
+    <string>O</string>
+   </property>
   </action>
   <action name="m_house_action">
    <property name="checkable">
@@ -1364,6 +1296,22 @@
    </property>
    <property name="shortcut">
     <string>R</string>
+   </property>
+  </action>
+  <action name="m_flip_vertically_action">
+   <property name="text">
+    <string>Flip vertically</string>
+   </property>
+   <property name="toolTip">
+    <string>Flip the map vertically</string>
+   </property>
+  </action>
+  <action name="m_flip_horizontally_action">
+   <property name="text">
+    <string>Flip Horizontally</string>
+   </property>
+   <property name="toolTip">
+    <string>Flip the map horizontally</string>
    </property>
   </action>
  </widget>

@@ -14,6 +14,7 @@
 #include "EditorMainWindow.hpp"
 #include "ui_EditorMainWindow.h"
 #include "Validator.hpp"
+#include "VictoryConditions.hpp"
 
 void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
     qDebug() << "Serializer::saveMap: saving to:" << map->m_name;
@@ -37,7 +38,7 @@ void Serializer::sendMapToIpad (QTcpSocket * ipad, EditorMainWindow * editor) {
     qDebug() << "Serializer::sendMapToIpad: saving to socket";
 
     // first check if it is valid
-    if ( ! Validator().validate()) {
+    if ( ! Validator().validate( editor )) {
         qDebug() << "Serializer::sendMapToIpad: scenario not valid, but sending anyway";
     }
     
@@ -57,12 +58,17 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
            << "id "       << editor->ui->m_id->value() << endl
            << "depend "   << editor->ui->m_depends->value() << endl
            << "time "     << editor->ui->m_time->time().hour() << " " << editor->ui->m_time->time().minute() << endl
-           << "length "   << editor->ui->m_length->value() << endl
            << "tutorial " << (editor->ui->m_tutorial->isChecked() ? "1" : "0") << endl
            << "aihint "   << editor->ui->m_aiHint->currentIndex() << endl
            << "battlesize " << editor->ui->m_battleSize->currentIndex() << endl
            << "title "    << editor->ui->m_title->text() << endl
            << "desc "     << editor->ui->m_description->toPlainText().replace( "\n", "|") << endl;
+
+    // all victory conditions
+    foreach ( VictoryCondition * condition, allVictoryConditions ) {
+        stream << "victory " << condition->toString() << endl;
+    }
+
 
     // sort all terrains according to z order first
     qSort( allTerrains.begin(), allTerrains.end(), terrainComparator );
@@ -191,8 +197,7 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
             int width  = parts.takeFirst().toInt();
             height = parts.takeFirst().toInt();
             map->setSize( width, height );
-            editor->ui->m_width->setNum( width );
-            editor->ui->m_height->setNum( height );
+            editor->ui->m_size->setText( QString::number( width ) + " x " + QString::number( height ));
         }
 
         else if ( type == "id" ) {
@@ -209,8 +214,16 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
             editor->ui->m_time->setTime( QTime( hours, minutes ) );
         }
 
-        else if ( type == "length" ) {
-            editor->ui->m_length->setValue( parts.takeFirst().toInt() );
+        else if ( type == "victory" ) {
+            QString type = parts.takeFirst();
+
+            if ( type == TimeBased::id() ) {
+                allVictoryConditions << new TimeBased( parts.takeFirst().toInt() );
+            }
+
+            if ( type == CasualtyBased::id() ) {
+                allVictoryConditions << new CasualtyBased( parts.takeFirst().toInt() );
+            }
         }
 
         else if ( type == "tutorial" ) {

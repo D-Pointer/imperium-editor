@@ -11,5 +11,7 @@ QList<House *> allHouses;
 QList<Terrain *> allTerrains;
 QList<Terrain *> navigationGrid;
 QList<Objective *> allObjectives;
+QList<VictoryCondition *> allVictoryConditions;
+
 Selection * selection = new Selection();
 Map * map = 0;

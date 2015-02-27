@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     NavigationCallbacks.cpp \
     NormalMapCallbacks.cpp \
     NetworkServer.cpp \
-    Validator.cpp
+    Validator.cpp \
+    VictoryConditionsDialog.cpp \
+    VictoryConditions.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
@@ -47,10 +49,14 @@ HEADERS  += EditorMainWindow.hpp \
     Perlin.hpp \
     GeneratorDialog.hpp \
     NetworkServer.hpp \
-    Validator.hpp
+    Validator.hpp \
+    Version.hpp \
+    VictoryConditionsDialog.hpp \
+    VictoryConditions.hpp
 
 FORMS    += EditorMainWindow.ui \
-    GeneratorDialog.ui
+    GeneratorDialog.ui \
+    VictoryConditionsDialog.ui
 
 RESOURCES += \
     Icons.qrc

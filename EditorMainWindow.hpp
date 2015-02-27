@@ -80,6 +80,7 @@ private slots:
     void deselect ();
 
     void generateNavigation ();
+    void editVictoryConditions ();
 
 
 private:

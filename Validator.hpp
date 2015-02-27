@@ -26,6 +26,8 @@ private:
     bool validateUnits (EditorMainWindow * editor);
 
     bool validateObjectives (EditorMainWindow * editor);
+
+    bool validateVictoryConditions (EditorMainWindow * editor);
 };
 
 #endif // VALIDATOR_HPP

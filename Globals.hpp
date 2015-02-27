@@ -9,6 +9,7 @@ class Terrain;
 class Objective;
 class Map;
 class House;
+class VictoryCondition;
 
 // battle size for multiplayer games
 typedef enum {
@@ -93,6 +94,7 @@ extern QList<Unit *> allUnits;
 extern QList<Objective *> allObjectives;
 extern QList<Terrain *> allTerrains;
 extern QList<Terrain *> navigationGrid;
+extern QList<VictoryCondition *> allVictoryConditions;
 extern Selection * selection;
 extern Map * map;
 
