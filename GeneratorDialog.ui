@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Create new map</string>
+   <string>Create a new map</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -31,6 +31,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>Map width in meters. Must be a multiple of 100 m.</string>
      </property>
      <property name="suffix">
       <string> m</string>
@@ -58,6 +61,9 @@
    </item>
    <item row="1" column="1">
     <widget class="QSpinBox" name="m_height">
+     <property name="toolTip">
+      <string>Map height in meters. Must be a multiple of 100 m.</string>
+     </property>
      <property name="suffix">
       <string>  m</string>
      </property>
@@ -77,6 +83,9 @@
    </item>
    <item row="2" column="1">
     <widget class="QCheckBox" name="m_autoGenerate">
+     <property name="toolTip">
+      <string>Populate the new map with randomized trees and woods</string>
+     </property>
      <property name="text">
       <string>Auto generate</string>
      </property>
@@ -96,6 +105,9 @@
     <widget class="QSpinBox" name="m_woods">
      <property name="enabled">
       <bool>true</bool>
+     </property>
+     <property name="toolTip">
+      <string>The woods/trees coverage % for the new map</string>
      </property>
      <property name="suffix">
       <string> %</string>
@@ -120,6 +132,9 @@
    </item>
    <item row="4" column="1">
     <widget class="QSpinBox" name="m_octave">
+     <property name="toolTip">
+      <string>Wooded area roughness</string>
+     </property>
      <property name="minimum">
       <number>1</number>
      </property>
@@ -140,6 +155,9 @@
    </item>
    <item row="5" column="1">
     <widget class="QSpinBox" name="m_frequency">
+     <property name="toolTip">
+      <string>Wooded area finer roughness</string>
+     </property>
      <property name="minimum">
       <number>1</number>
      </property>
@@ -227,6 +245,54 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_autoGenerate</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_woods</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>255</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>251</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_autoGenerate</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_octave</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>255</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>251</x>
+     <y>148</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_autoGenerate</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_frequency</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>255</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>251</x>
+     <y>182</y>
     </hint>
    </hints>
   </connection>

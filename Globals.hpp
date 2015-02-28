@@ -25,7 +25,8 @@ typedef enum {
     kAddHouse,
     kAddUnit,
     kAddObjective,
-    kAddRoad
+    kAddRoad,
+    kAddRiver
 } EditorMode;
 
 typedef enum {

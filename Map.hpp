@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QGraphicsLineItem>
+#include <QDebug>
 
 #include "Unit.hpp"
 #include "Terrain.hpp"
@@ -21,6 +22,19 @@ public:
 
     int getHeight () const {
         return m_background->rect().height();
+    }
+
+    void setRiverWidths (int minWidth, int maxWidth) {
+        m_minRiverWidth = minWidth;
+        m_maxRiverWidth = maxWidth;
+    }
+
+    int getRiverMinWidth () const {
+        return m_minRiverWidth;
+    }
+
+    int getRiverMaxWidth () const {
+        return m_maxRiverWidth;
     }
 
     QString m_name;
@@ -43,7 +57,7 @@ protected:
 
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
 
-    void addPointToRoad (Terrain * road, const QPointF & pos);
+    void addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float width=-1);
 
 
 private slots:
@@ -56,6 +70,10 @@ private:
     QGraphicsRectItem * m_background;
 
     QList<QGraphicsLineItem *> m_grid;
+
+    // river dimensions
+    int m_minRiverWidth;
+    int m_maxRiverWidth;
 };
 
 #endif // MAP_HPP

@@ -35,7 +35,6 @@ private slots:
     void saveMap ();
     void saveMapAs ();
     void sendMapToIpad (QTcpSocket * ipad);
-    void updateNormalMap ();
 
     void editModeChanged ();
     void selectedTerrainChanged (Terrain * terrain);
@@ -82,6 +81,9 @@ private slots:
     void generateNavigation ();
     void editVictoryConditions ();
 
+    void riverMinWidthChanged (int width);
+    void riverMaxWidthChanged (int width);
+
 
 private:
 
@@ -99,7 +101,8 @@ private:
         TerrainPage,
         HousePage,
         UnitPage,
-        ObjectivePage
+        ObjectivePage,
+        RiverPage,
     };
 
     // server for sharing scenarios with the iPad game

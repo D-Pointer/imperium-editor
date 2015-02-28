@@ -22,6 +22,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     m_actionGroup->addAction( ui->m_terrain_action );
     m_actionGroup->addAction( ui->m_house_action );
     m_actionGroup->addAction( ui->m_road_action );
+    m_actionGroup->addAction( ui->m_river_action );
     m_actionGroup->addAction( ui->m_unit_action );
     m_actionGroup->addAction( ui->m_objective_action );
     m_actionGroup->setExclusive( true );
@@ -37,6 +38,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_unit_action,        SIGNAL( triggered() ),            SLOT( editModeChanged()) );
     connect( ui->m_house_action,       SIGNAL( triggered() ),            SLOT( editModeChanged()) );
     connect( ui->m_road_action  ,      SIGNAL( triggered() ),            SLOT( editModeChanged()) );
+    connect( ui->m_river_action  ,     SIGNAL( triggered() ),            SLOT( editModeChanged()) );
     connect( ui->m_objective_action,   SIGNAL( triggered() ),            SLOT( editModeChanged()) );
     connect( ui->m_delete_action,      SIGNAL( triggered() ),            SLOT( deleteSelectedItem()) );
     connect( ui->m_deselect_action,    SIGNAL( triggered() ),            SLOT( deselect()) );
@@ -59,6 +61,9 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
 
     connect( ui->m_house_rotation,     SIGNAL(valueChanged(int)),        SLOT( houseRotated()) );
     connect( ui->m_house_type,         SIGNAL(currentIndexChanged(int)), SLOT( houseTypeChanged()) );
+
+    connect( ui->m_minRiverWidth,      SIGNAL( valueChanged(int)),       SLOT( riverMinWidthChanged(int)) );
+    connect( ui->m_maxRiverWidth,      SIGNAL( valueChanged(int)),       SLOT( riverMaxWidthChanged(int)) );
 
     connect( ui->m_rotate_left,        SIGNAL( clicked()),               SLOT( rotateTerrain()) );
     connect( ui->m_rotate_right,       SIGNAL( clicked()),               SLOT( rotateTerrain()) );
@@ -271,6 +276,11 @@ void EditorMainWindow::editModeChanged () {
         statusBar()->showMessage( "Click points to create road, [Esc] to finish", 5000 );
         ui->m_stack->setCurrentIndex( EditorMainWindow::TerrainPage );
     }
+    else if ( ui->m_river_action->isChecked() ) {
+        editorMode = kAddRiver;
+        statusBar()->showMessage( "Click points to create river, [Esc] to finish", 5000 );
+        ui->m_stack->setCurrentIndex( EditorMainWindow::RiverPage );
+    }
 
     selection->deselect();
 }
@@ -282,7 +292,13 @@ void EditorMainWindow::selectedTerrainChanged (Terrain * terrain) {
         ui->m_bound_size->clear();
     }
     else {
-        ui->m_stack->setCurrentIndex( EditorMainWindow::TerrainPage );
+        if ( editorMode == kAddRiver ) {
+            ui->m_stack->setCurrentIndex( EditorMainWindow::RiverPage );
+        }
+        else {
+            ui->m_stack->setCurrentIndex( EditorMainWindow::TerrainPage );
+        }
+
         ui->m_terrain_type->setCurrentIndex( terrain->m_type );
         ui->m_bound_size->setText( QString( "%1 x %2 m").arg( terrain->boundingRect().size().width()).arg( terrain->boundingRect().size().height()) );
     }
@@ -506,6 +522,9 @@ void EditorMainWindow::takeNewMapIntoUse () {
 
     ui->m_hq->clear();
     ui->m_hq->addItem( "No HQ", -1 );
+
+    ui->m_minRiverWidth->setValue( map->getRiverMinWidth() );
+    ui->m_maxRiverWidth->setValue( map->getRiverMaxWidth() );
 
     foreach ( Unit * unit, allUnits ) {
         ui->m_hq->addItem( unit->m_name, unit->m_id );

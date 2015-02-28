@@ -9,7 +9,7 @@
 #include "Objective.hpp"
 #include "Selection.hpp"
 
-Map::Map(QObject *parent) : QGraphicsScene(parent), m_background(0) {
+Map::Map(QObject *parent) : QGraphicsScene(parent), m_background(0), m_minRiverWidth(20), m_maxRiverWidth(30) {
     m_background = new QGraphicsRectItem( 0, 0, 1024, 768, 0 );
     m_background->setBrush( QBrush( Qt::green ) );
     addItem( m_background );
@@ -62,6 +62,7 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
     Terrain * terrain = 0;
     Objective * objective = 0;
     House * house = 0;
+    float width;
 
     switch ( editorMode ) {
     case kEdit:
@@ -98,7 +99,29 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
         }
 
         // add the clicked position
-        addPointToRoad( terrain, event->scenePos() );
+        addPointToRoadOrRiver( terrain, event->scenePos() );
+        clearSelection();
+
+        emit terrainAdded( terrain );
+        terrain->setSelected( true );
+        selection->setTerrain( terrain );
+        break;
+
+    case kAddRiver:
+        terrain = selection->getSelectedTerrain();
+
+        if ( terrain == 0 ) {
+            terrain = new Terrain;
+            terrain->setType( kRiver );
+            addItem( terrain );
+            allTerrains << terrain;
+        }
+
+        // river width is random between the limits
+        width = m_minRiverWidth + qrand() % ( m_maxRiverWidth - m_minRiverWidth );
+
+        // add the clicked position
+        addPointToRoadOrRiver( terrain, event->scenePos(), width );
         clearSelection();
 
         emit terrainAdded( terrain );
@@ -154,18 +177,20 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
 }
 
 
-void Map::addPointToRoad (Terrain * road, const QPointF & pos) {
+void Map::addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float width) {
     Q_ASSERT( road->m_type == kRoad );
 
     QPolygonF polygon = road->polygon();
 
-    // road width
-    const float roadWidth = 10;
+    if ( width < 0 ) {
+        // no width, assume road and use a fixed width
+        width = 10;
+    }
 
     // how many points does it have now?
     if ( polygon.size() == 0 ) {
         // add the first point
-        road->addPoint( QPointF( pos.x(), pos.y() + roadWidth ) );
+        road->addPoint( QPointF( pos.x(), pos.y() + width ) );
         road->addPoint( pos );
     }
     else {
@@ -177,13 +202,13 @@ void Map::addPointToRoad (Terrain * road, const QPointF & pos) {
 
         // now create a line from the two last positions to get an angle
         QLineF line( road->mapToScene( polygon[ polygon.size() -2 ] ),
-                     road->mapToScene( polygon.last() ));
+                road->mapToScene( polygon.last() ));
 
         // get a normal vector
         QLineF normal = line.normalVector().unitVector();
 
         // make it as tall as the road is wide
-        QPointF delta = (normal.p1() - normal.p2()) * roadWidth;
+        QPointF delta = (normal.p1() - normal.p2()) * width;
 
         // add it first. the polygon expands at the end and at the beginning
         road->addPoint( pos + delta, 0 );

@@ -30,11 +30,12 @@ SOURCES += main.cpp\
     Perlin.cpp \
     GeneratorDialog.cpp \
     NavigationCallbacks.cpp \
-    NormalMapCallbacks.cpp \
+    #NormalMapCallbacks.cpp \
     NetworkServer.cpp \
     Validator.cpp \
     VictoryConditionsDialog.cpp \
-    VictoryConditions.cpp
+    VictoryConditions.cpp \
+    RiverCallbacks.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
