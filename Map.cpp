@@ -177,7 +177,7 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
 }
 
 
-void Map::addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float width) {
+bool Map::addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float width) {
     Q_ASSERT( road->m_type == kRoad );
 
     QPolygonF polygon = road->polygon();
@@ -192,6 +192,9 @@ void Map::addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float widt
         // add the first point
         road->addPoint( QPointF( pos.x(), pos.y() + width ) );
         road->addPoint( pos );
+
+        // return true if inside and false if not
+        return pos.x() >= 0 && pos.x() < getWidth() && pos.y() >= 0 && pos.y() < getHeight();
     }
     else {
         // add in two points, first append the clicked position
@@ -208,10 +211,13 @@ void Map::addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float widt
         QLineF normal = line.normalVector().unitVector();
 
         // make it as tall as the road is wide
-        QPointF delta = (normal.p1() - normal.p2()) * width;
+        QPointF pos2 = pos + (normal.p1() - normal.p2()) * width;
 
         // add it first. the polygon expands at the end and at the beginning
-        road->addPoint( pos + delta, 0 );
+        road->addPoint( pos2, 0 );
+
+        return ! ( ( pos.x() < 0 || pos.x() >= getWidth() || pos.y() < 0 || pos.y() >= getHeight() ) &&
+                ( pos2.x() < 0 || pos2.x() >= getWidth() || pos2.y() < 0 || pos2.y() >= getHeight() ) );
     }
 }
 

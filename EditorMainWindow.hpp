@@ -83,6 +83,7 @@ private slots:
 
     void riverMinWidthChanged (int width);
     void riverMaxWidthChanged (int width);
+    void addRiver ();
 
 
 private:

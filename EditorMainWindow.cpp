@@ -57,13 +57,17 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_experience,         SIGNAL(currentIndexChanged(int)), SLOT( unitExperienceChanged()) );
     connect( ui->m_victory,            SIGNAL(clicked()),                SLOT( editVictoryConditions()) );
 
+    // objective page
     connect( ui->m_objective_title,    SIGNAL( textChanged(QString)),    SLOT( objectiveNameChanged(QString)) );
 
+    // house page
     connect( ui->m_house_rotation,     SIGNAL(valueChanged(int)),        SLOT( houseRotated()) );
     connect( ui->m_house_type,         SIGNAL(currentIndexChanged(int)), SLOT( houseTypeChanged()) );
 
+    // river page
     connect( ui->m_minRiverWidth,      SIGNAL( valueChanged(int)),       SLOT( riverMinWidthChanged(int)) );
     connect( ui->m_maxRiverWidth,      SIGNAL( valueChanged(int)),       SLOT( riverMaxWidthChanged(int)) );
+    connect( ui->m_addRiver,           SIGNAL( clicked()),               SLOT( addRiver()) );
 
     connect( ui->m_rotate_left,        SIGNAL( clicked()),               SLOT( rotateTerrain()) );
     connect( ui->m_rotate_right,       SIGNAL( clicked()),               SLOT( rotateTerrain()) );
@@ -250,8 +254,7 @@ void EditorMainWindow::sendMapToIpad (QTcpSocket * ipad) {
 
 
 void EditorMainWindow::editModeChanged () {
-    if ( ui->m_edit_action->isChecked() ) {
-        editorMode = kEdit;
+    if ( ui->m_edit_action->isChecked() ) {        editorMode = kEdit;
         ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
     }
     else if ( ui->m_terrain_action->isChecked() ) {

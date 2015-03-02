@@ -37,6 +37,8 @@ public:
         return m_maxRiverWidth;
     }
 
+    bool addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float width=-1);
+
     QString m_name;
 
 
@@ -56,8 +58,6 @@ public slots:
 protected:
 
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
-
-    void addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float width=-1);
 
 
 private slots:
