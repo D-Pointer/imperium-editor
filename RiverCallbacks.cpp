@@ -43,15 +43,14 @@ void EditorMainWindow::addRiver () {
     map->addItem( river );
     allTerrains << river;
 
-    //emit terrainAdded( river );
-    river->setSelected( true );
-    selection->setTerrain( river );
-
     int minWidth = ui->m_minRiverWidth->value();
     int maxWidth = ui->m_maxRiverWidth->value();
 
     // river width is random between the limits
     int riverWidth = minWidth + qrand() % ( maxWidth - minWidth );
+
+    const float minLength = 20;
+    const float maxLength = 50;
 
     // starting point up/down or left/right?
     switch ( qrand() % 4 ) {
@@ -92,15 +91,21 @@ void EditorMainWindow::addRiver () {
     bool firstPoint = true;
 
     while ( true ) {
-        // how far does this leg go and in wht direction?
+        // how far does this leg go and in what direction?
         if ( firstPoint ) {
             distance = 30 + qrand() % 20;
             direction += -5 + qrand() % 10;
             firstPoint = false;
         }
         else {
-            distance = 10 + qrand() % 20;
-            direction += -30 + qrand() % 60;
+            float delta = -30 + qrand() % 60;
+            direction += delta;
+
+            distance = minLength + abs( delta ) / maxLength * (maxLength - minLength );
+
+            qDebug() << abs(direction) << distance;
+            //distance = 10 + qrand() % 20;
+
         }
 
         // deltas
@@ -111,14 +116,34 @@ void EditorMainWindow::addRiver () {
         // river width is random between the limits
         float riverWidth = minWidth + qrand() % ( maxWidth - minWidth );
 
+        bool riverHit = false;
+
+        // was a river hit? we check this before adding the point so that the check doesn't
+        // match the added point
+        foreach ( Terrain * terrain, allTerrains ) {
+            if ( terrain->m_type != kRiver ) {
+                continue;
+            }
+
+            if ( terrain->polygon().containsPoint( pos, Qt::OddEvenFill ) ) {
+                // hit a river
+                riverHit = true;
+                break;
+            }
+        }
+
         // add the clicked position
         if ( ! map->addPointToRoadOrRiver( river, pos, riverWidth ) ) {
             // both positions are no longer inside
             break;
         }
+
+        if ( riverHit ) {
+            break;
+        }
     }
 
     // bac to edit mode
-    editorMode = kEdit;
-    ui->m_edit_action->setChecked( true );
+//    editorMode = kEdit;
+//    ui->m_edit_action->setChecked( true );
 }

@@ -254,7 +254,8 @@ void EditorMainWindow::sendMapToIpad (QTcpSocket * ipad) {
 
 
 void EditorMainWindow::editModeChanged () {
-    if ( ui->m_edit_action->isChecked() ) {        editorMode = kEdit;
+    if ( ui->m_edit_action->isChecked() ) {
+        editorMode = kEdit;
         ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
     }
     else if ( ui->m_terrain_action->isChecked() ) {
@@ -284,6 +285,8 @@ void EditorMainWindow::editModeChanged () {
         statusBar()->showMessage( "Click points to create river, [Esc] to finish", 5000 );
         ui->m_stack->setCurrentIndex( EditorMainWindow::RiverPage );
     }
+
+    //qDebug() << "EditorMainWindow::editModeChanged: editor mode:" << editorMode;
 
     selection->deselect();
 }
@@ -351,7 +354,7 @@ void EditorMainWindow::deleteSelectedItem () {
     if ( dot ) {
         dot->getTerrain()->removeDot( dot );
         delete dot;
-        qDebug() << "EditorMainWindow::addPoint: dot!";
+        //qDebug() << "EditorMainWindow::addPoint: dot!";
     }
 
 }
@@ -383,7 +386,7 @@ void EditorMainWindow::addPoint () {
     Dot * dot = dynamic_cast<Dot *>( selected.first() );
     if ( dot ) {
         dot->getTerrain()->addPointAfter( dot );
-        qDebug() << "EditorMainWindow::addPoint: dot!";
+        //qDebug() << "EditorMainWindow::addPoint: dot!";
     }
 }
 
@@ -497,6 +500,8 @@ void EditorMainWindow::deselect () {
 
     editorMode = kEdit;
     ui->m_edit_action->setChecked( true );
+
+    //qDebug() << "EditorMainWindow::deselect";
 
     ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
 }

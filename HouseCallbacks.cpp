@@ -6,18 +6,12 @@
 #include "Selection.hpp"
 
 void EditorMainWindow::selectedHouseChanged (House * house) {
+    qDebug() << "EditorMainWindow::selectedHouseChanged";
     if ( house == 0 ) {
         ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
-//        ui->m_tabs->setCurrentWidget( ui->m_map_tab );
-//        ui->m_unit_tab->setDisabled( true );
-//        ui->m_terrain_tab->setDisabled( true );
-//        ui->m_objective_tab->setDisabled( true );
-//        ui->m_houses_tab->setDisabled( true );
     }
     else {
         ui->m_stack->setCurrentIndex( EditorMainWindow::HousePage );
-//        ui->m_tabs->setCurrentWidget( ui->m_houses_tab );
-//        ui->m_houses_tab->setEnabled( true );
         ui->m_house_rotation->setEnabled( true );
         ui->m_house_rotation->setValue( (int)house->rotation() );
         ui->m_house_type->setCurrentIndex( house->getType() );
