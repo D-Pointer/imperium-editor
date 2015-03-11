@@ -13,6 +13,7 @@
 #include "NetworkServer.hpp"
 #include "Version.hpp"
 #include "VictoryConditionsDialog.hpp"
+#include "UnitList.hpp"
 
 EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::EditorMainWindow) {
     ui->setupUi(this);
@@ -44,6 +45,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_deselect_action,    SIGNAL( triggered() ),            SLOT( deselect()) );
     connect( ui->m_flip_horizontally_action, SIGNAL( triggered()),       SLOT( flipMapHorizontally()) );
     connect( ui->m_flip_vertically_action,   SIGNAL( triggered()),       SLOT( flipMapVertically()) );
+    connect( ui->m_duplicate_unit_action,    SIGNAL( triggered()),       SLOT( duplicateUnit()) );
 
     connect( ui->m_rotation,           SIGNAL(valueChanged(int)),        SLOT( unitRotated()) );
     connect( ui->m_unit_name,          SIGNAL(textChanged(QString)),     SLOT( unitNameChanged(QString)) );
@@ -138,10 +140,6 @@ void EditorMainWindow::newMap () {
     allVictoryConditions.clear();
 
     navigationGrid.clear();
-//    if ( navigationGrid ) {
-//        delete [] navigationGrid;
-//        navigationGrid = 0;
-//    }
 
     // get the new map
     map = generatorDialog.getMap();
@@ -270,6 +268,9 @@ void EditorMainWindow::editModeChanged () {
     else if ( ui->m_unit_action->isChecked() ) {
         editorMode = kAddUnit;
         ui->m_stack->setCurrentIndex( EditorMainWindow::UnitPage );
+
+        // DEBUG
+        //(new UnitList( 0 ))->show();
     }
     else if ( ui->m_objective_action->isChecked() ) {
         editorMode = kAddObjective;
@@ -441,7 +442,7 @@ void EditorMainWindow::flipMapHorizontally () {
 
     foreach (House * house, allHouses ) {
         house->setPos( map->getWidth() - house->pos().x() - house->boundingRect().width(), house->pos().y() );
-        float old = house->rotation();
+        //float old = house->rotation();
         float rotation = 180 + house->rotation();
         if ( rotation > 360 ) {
             rotation -= 360;
@@ -465,7 +466,7 @@ void EditorMainWindow::flipMapVertically () {
 
     foreach (House * house, allHouses ) {
         house->setPos( house->pos().x(), map->getHeight() - house->pos().y() - house->boundingRect().height() );
-        float old = house->rotation();
+        //float old = house->rotation();
         float rotation = 180 - house->rotation();
         if ( rotation > 360 ) {
             rotation -= 360;

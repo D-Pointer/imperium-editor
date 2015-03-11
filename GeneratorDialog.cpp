@@ -31,6 +31,13 @@ GeneratorDialog::~GeneratorDialog() {
 }
 
 
+Map * GeneratorDialog::getMap () {
+    // create the map
+    createMap();
+    return m_map;
+}
+
+
 void GeneratorDialog::ok () {
     qDebug() << "GeneratorDialog::ok";
 
@@ -93,8 +100,6 @@ void GeneratorDialog::ok () {
     //generateRivers( image );
     //showImage( image, "Rivers" );
 
-    // finally create the map
-    createMap();
 
     QApplication::restoreOverrideCursor();
 

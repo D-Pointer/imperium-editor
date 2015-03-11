@@ -25,9 +25,7 @@ public:
      *
      * @return the created map.
      */
-    Map * getMap () {
-        return m_map;
-    }
+    Map * getMap ();
 
 
 private slots:

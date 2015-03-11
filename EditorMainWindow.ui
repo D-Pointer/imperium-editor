@@ -1238,6 +1238,7 @@
     </property>
     <addaction name="m_flip_horizontally_action"/>
     <addaction name="m_flip_vertically_action"/>
+    <addaction name="m_duplicate_unit_action"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuEdit"/>
@@ -1426,6 +1427,20 @@
    </property>
    <property name="text">
     <string>River</string>
+   </property>
+  </action>
+  <action name="m_duplicate_unit_action">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Duplicate Unit</string>
+   </property>
+   <property name="shortcut">
+    <string>D</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
  </widget>

@@ -102,10 +102,6 @@ void EditorMainWindow::addRiver () {
             direction += delta;
 
             distance = minLength + abs( delta ) / maxLength * (maxLength - minLength );
-
-            qDebug() << abs(direction) << distance;
-            //distance = 10 + qrand() % 20;
-
         }
 
         // deltas

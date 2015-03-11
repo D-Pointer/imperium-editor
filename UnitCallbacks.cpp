@@ -18,7 +18,7 @@ void EditorMainWindow::unitAdded (Unit * unit) {
 void EditorMainWindow::selectedUnitChanged (Unit * unit) {
     if ( unit == 0 ) {
         ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
-
+        ui->m_duplicate_unit_action->setEnabled( false );
         ui->m_unit_name->clear();
         ui->m_unit_id->clear();
     }
@@ -35,6 +35,7 @@ void EditorMainWindow::selectedUnitChanged (Unit * unit) {
         ui->m_owner->setCurrentIndex( unit->m_owner );
         ui->m_rotation->setValue( (int)unit->rotation() );
         ui->m_type->setCurrentIndex( unit->m_type );
+        ui->m_duplicate_unit_action->setEnabled( true );
 
         int index = ui->m_hq->findData( unit->m_hq_id, Qt::UserRole );
         if ( index != -1 ) {
@@ -210,7 +211,6 @@ void EditorMainWindow::updateUnitStats () {
     foreach ( Unit * unit, allUnits ) {
         units[ unit->m_owner]++;
         men[ unit->m_owner] += unit->m_men;
-        //guns[ unit->m_owner] += unit->m_guns;
     }
 
     ui->m_unit_stats1->setText( QString("%1 units, %2 men").arg(units[kPlayer1]).arg(men[kPlayer1]) );
@@ -251,5 +251,28 @@ void EditorMainWindow::updateUnitWeaponCount () {
             ui->m_weapon_count->setNum( selected->m_men / 2 );
             break;
     }
+}
 
+
+void EditorMainWindow::duplicateUnit () {
+    qDebug() << "EditorMainWindow::duplicateUnit";
+    Unit * selected = selection->getSelectedUnit();
+    if ( ! selected ) {
+        // we should not be here...
+        ui->m_duplicate_unit_action->setEnabled( false );
+        return;
+    }
+
+    // create a new unit a bit offset
+    Unit * duplicate = new Unit( selected );
+    map->addItem( duplicate );
+    allUnits << duplicate;
+
+    map->clearSelection();
+
+    selection->setUnit( duplicate );
+    duplicate->setSelected( true );
+
+    // update our UI too
+    unitAdded( duplicate );
 }

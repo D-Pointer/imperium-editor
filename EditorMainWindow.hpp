@@ -64,6 +64,7 @@ private slots:
     void refreshHqList ();
     void updateUnitStats ();
     void updateUnitWeaponCount ();
+    void duplicateUnit ();
 
     void selectedObjectiveChanged (Objective * objective);
     void objectiveNameChanged (const QString & name);

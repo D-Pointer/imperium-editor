@@ -8,6 +8,7 @@
 class Unit : public QGraphicsPixmapItem {
 
 public:
+    Unit (Unit * original);
     Unit (const QPointF & pos, QGraphicsItem * parent=0);
     Unit (int id, Player owner, UnitType type, const QPointF & pos, QGraphicsItem * parent=0);
 

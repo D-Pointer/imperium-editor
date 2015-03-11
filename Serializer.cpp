@@ -88,7 +88,6 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
         polygon = QMatrix().rotate( terrain->rotation() ).map( polygon );
         polygon.translate( pos );
 
-        stream << "terrain " << terrain->m_type;
         foreach ( QPointF point_pos, polygon ) {
             point_pos += terrain_pos;
             stream << " " << (int)point_pos.x() << " " << (int)toSave( point_pos.y(), height );

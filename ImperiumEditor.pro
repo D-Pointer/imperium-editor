@@ -35,7 +35,9 @@ SOURCES += main.cpp\
     Validator.cpp \
     VictoryConditionsDialog.cpp \
     VictoryConditions.cpp \
-    RiverCallbacks.cpp
+    RiverCallbacks.cpp \
+    UnitList.cpp \
+    UnitsModel.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
@@ -53,11 +55,14 @@ HEADERS  += EditorMainWindow.hpp \
     Validator.hpp \
     Version.hpp \
     VictoryConditionsDialog.hpp \
-    VictoryConditions.hpp
+    VictoryConditions.hpp \
+    UnitList.hpp \
+    UnitsModel.hpp
 
 FORMS    += EditorMainWindow.ui \
     GeneratorDialog.ui \
-    VictoryConditionsDialog.ui
+    VictoryConditionsDialog.ui \
+    UnitList.ui
 
 RESOURCES += \
     Icons.qrc
