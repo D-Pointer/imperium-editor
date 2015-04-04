@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include "Globals.hpp"
+
 class VictoryCondition {
 public:
 
@@ -14,6 +16,24 @@ public:
     }
 };
 
+
+class DestroyUnit : public VictoryCondition {
+public:
+
+    DestroyUnit (int unitId) : m_unitId(unitId) {
+
+    }
+
+    static QString id () {
+        return "destroy";
+    }
+
+    virtual QString toString () const {
+        return QString("destroy %1").arg( m_unitId);
+    }
+
+    int m_unitId;
+};
 
 class TimeBased : public VictoryCondition {
 public:
@@ -30,6 +50,26 @@ public:
         return QString("time %1").arg( m_duration );
     }
 
+    int m_duration;
+};
+
+
+class HoldAllObjectivesBased : public VictoryCondition {
+public:
+
+    HoldAllObjectivesBased (Player player, int duration) : m_player(player), m_duration(duration) {
+
+    }
+
+    static QString id () {
+        return "hold";
+    }
+
+    virtual QString toString () const {
+        return QString("hold %1 %1").arg( m_player ).arg( m_duration );
+    }
+
+    Player m_player;
     int m_duration;
 };
 

@@ -17,7 +17,6 @@ void EditorMainWindow::unitAdded (Unit * unit) {
 
 void EditorMainWindow::selectedUnitChanged (Unit * unit) {
     if ( unit == 0 ) {
-        ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
         ui->m_duplicate_unit_action->setEnabled( false );
         ui->m_unit_name->clear();
         ui->m_unit_id->clear();
@@ -47,6 +46,7 @@ void EditorMainWindow::selectedUnitChanged (Unit * unit) {
 
         updateUnitWeaponCount();
     }
+    qDebug() << "EditorMainWindow::selectedUnitChanged: current index:" << ui->m_stack->currentIndex();
 }
 
 

@@ -25,15 +25,12 @@ void EditorMainWindow::generateNavigation () {
     int gridHeight = map->getHeight() / navigationTileSize;
 
     // set up an empty navigation grid
-    navigationGrid.reserve( gridWidth * gridHeight );
+    navigationGrid = new Terrain*[ gridWidth * gridHeight ];
     for ( int index = 0; index < gridWidth * gridHeight; ++index ) {
-        navigationGrid << 0;
+        navigationGrid[ index ] = 0;
     }
 
-    qDebug() << "EditorMainWindow::generateNavigation: grid size:" << gridWidth << "x" << gridHeight << "=" << navigationGrid.size();
-
-    // number of terrains found that are not open
-    int foundCount = 0;
+    qDebug() << "EditorMainWindow::generateNavigation: grid size:" << gridWidth << "x" << gridHeight << "=" << gridWidth * gridHeight;
 
     // loop the entire map
     for ( int y = 0; y < gridHeight; ++y ) {
@@ -70,7 +67,6 @@ void EditorMainWindow::generateNavigation () {
 //                marker->setPen( QPen( Qt::black ));
 //                marker->setZValue( 255 );
 //                map->addItem( marker );
-//                foundCount++;
 //            }
         }
     }
@@ -78,6 +74,6 @@ void EditorMainWindow::generateNavigation () {
     // we now have a navigation map
     statusBar()->showMessage( "Navigation grid done", 3000 );
 
-    qDebug() << "EditorMainWindow::generateNavigation: found:" << foundCount << "non open terrains";
+    qDebug() << "EditorMainWindow::generateNavigation: navigation grid done";
 }
 

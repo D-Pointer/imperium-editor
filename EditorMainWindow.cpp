@@ -46,7 +46,10 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_flip_horizontally_action, SIGNAL( triggered()),       SLOT( flipMapHorizontally()) );
     connect( ui->m_flip_vertically_action,   SIGNAL( triggered()),       SLOT( flipMapVertically()) );
     connect( ui->m_duplicate_unit_action,    SIGNAL( triggered()),       SLOT( duplicateUnit()) );
-
+    connect( ui->m_scale_x_up,         SIGNAL( clicked()),               SLOT( xScaleChanged()) );
+    connect( ui->m_scale_x_down,       SIGNAL( clicked()),               SLOT( xScaleChanged()) );
+    connect( ui->m_scale_y_up,         SIGNAL( clicked()),               SLOT( yScaleChanged()) );
+    connect( ui->m_scale_y_down,       SIGNAL( clicked()),               SLOT( yScaleChanged()) );
     connect( ui->m_rotation,           SIGNAL(valueChanged(int)),        SLOT( unitRotated()) );
     connect( ui->m_unit_name,          SIGNAL(textChanged(QString)),     SLOT( unitNameChanged(QString)) );
     connect( ui->m_owner,              SIGNAL(currentIndexChanged(int)), SLOT( unitOwnerChanged()) );
@@ -139,10 +142,15 @@ void EditorMainWindow::newMap () {
     allHouses.clear();
     allVictoryConditions.clear();
 
-    navigationGrid.clear();
+    if ( navigationGrid ) {
+        delete[] navigationGrid;
+        navigationGrid = 0;
+    }
 
     // get the new map
     map = generatorDialog.getMap();
+
+    qDebug() << "EditorMainWindow::newMap: terrains:" << allTerrains.size();
 
     takeNewMapIntoUse();
 
@@ -184,7 +192,10 @@ void EditorMainWindow::openMap () {
     allHouses.clear();
     allVictoryConditions.clear();
 
-    navigationGrid.clear();
+    if ( navigationGrid ) {
+        delete[] navigationGrid;
+        navigationGrid = 0;
+    }
 
     ui->m_tutorial->setChecked( false );
 
@@ -287,7 +298,7 @@ void EditorMainWindow::editModeChanged () {
         ui->m_stack->setCurrentIndex( EditorMainWindow::RiverPage );
     }
 
-    //qDebug() << "EditorMainWindow::editModeChanged: editor mode:" << editorMode;
+    qDebug() << "EditorMainWindow::editModeChanged: current index:" << ui->m_stack->currentIndex();
 
     selection->deselect();
 }
@@ -295,20 +306,24 @@ void EditorMainWindow::editModeChanged () {
 
 void EditorMainWindow::selectedTerrainChanged (Terrain * terrain) {
     if ( terrain == 0 ) {
-        ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
+        //ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
         ui->m_bound_size->clear();
     }
     else {
-        if ( editorMode == kAddRiver ) {
-            ui->m_stack->setCurrentIndex( EditorMainWindow::RiverPage );
-        }
-        else {
+//        if ( editorMode == kAddRiver ) {
+//            ui->m_stack->setCurrentIndex( EditorMainWindow::RiverPage );
+//        }
+//        else {
             ui->m_stack->setCurrentIndex( EditorMainWindow::TerrainPage );
-        }
+//        }
 
         ui->m_terrain_type->setCurrentIndex( terrain->m_type );
-        ui->m_bound_size->setText( QString( "%1 x %2 m").arg( terrain->boundingRect().size().width()).arg( terrain->boundingRect().size().height()) );
+        ui->m_bound_size->setText( QString( "%1 x %2 m")
+                                   .arg( terrain->boundingRect().size().width(), 0, 'f', 0)
+                                   .arg( terrain->boundingRect().size().height(), 0, 'f', 0) );
     }
+
+    qDebug() << "EditorMainWindow::selectedTerrainChanged: current index:" << ui->m_stack->currentIndex();
 }
 
 
@@ -480,6 +495,46 @@ void EditorMainWindow::flipMapVertically () {
 }
 
 
+void EditorMainWindow::xScaleChanged () {
+    Terrain * selected = selection->getSelectedTerrain();
+    if ( ! selected ) {
+        return;
+    }
+
+    // the new scale
+    float scale = sender() == ui->m_scale_x_up ? 1.10f : 0.90f;
+
+    float centerX = selected->boundingRect().center().x();
+
+    // scale all the dots positions, this will move the corresponding polygon point too
+    foreach ( Dot * dot, selected->m_dots ) {
+        QPointF pos = dot->pos();
+        pos.setX( (pos.x() - centerX ) * scale + centerX );
+        dot->setPos( pos );
+    }
+}
+
+
+void EditorMainWindow::yScaleChanged () {
+    Terrain * selected = selection->getSelectedTerrain();
+    if ( ! selected ) {
+        return;
+    }
+
+    // the new scale
+    float scale = sender() == ui->m_scale_y_up ? 1.10f : 0.90f;
+
+    float centerY = selected->boundingRect().center().y();
+
+    // scale all the dots positions, this will move the corresponding polygon point too
+    foreach ( Dot * dot, selected->m_dots ) {
+        QPointF pos = dot->pos();
+        pos.setY( (pos.y() - centerY) * scale + centerY );
+        dot->setPos( pos );
+    }
+}
+
+
 void EditorMainWindow::zoomIn () {
     ui->m_view->scale( 1.1, 1.1 );
 }
@@ -505,6 +560,7 @@ void EditorMainWindow::deselect () {
     //qDebug() << "EditorMainWindow::deselect";
 
     ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
+    qDebug() << "EditorMainWindow::deselect: current index:" << ui->m_stack->currentIndex();
 }
 
 

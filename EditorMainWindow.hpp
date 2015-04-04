@@ -47,6 +47,8 @@ private slots:
 
     void flipMapHorizontally ();
     void flipMapVertically ();
+    void xScaleChanged ();
+    void yScaleChanged ();
 
 
     void unitAdded (Unit * unit);

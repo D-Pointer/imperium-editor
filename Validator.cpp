@@ -1,4 +1,3 @@
-#include <QMessageBox>
 #include <QDebug>
 
 #include "Validator.hpp"
@@ -9,81 +8,90 @@ Validator::Validator () {
 }
 
 
-bool Validator::validate (EditorMainWindow * editor) {
-    return validateMetaData( editor ) &&
-            validateUnits( editor ) &&
-            validateObjectives( editor ) &&
-            validateVictoryConditions( editor );
+bool Validator::validate (EditorMainWindow * editor, QString &result) {
+    bool ok = validateMetaData( editor, result );
+    ok &= validateUnits( editor, result );
+    ok &= validateObjectives( editor, result );
+    ok &= validateVictoryConditions( editor, result );
+
+    if ( ok ) {
+ result += "Scenario is ok.\n";
+    }
+
+    return ok;
 }
 
 
-bool Validator::validateMetaData (EditorMainWindow * editor) {
+bool Validator::validateMetaData (EditorMainWindow * editor, QString &result) {
+    bool ok = true;
+
     // title
     if ( editor->ui->m_title->text().isEmpty() ) {
-        QMessageBox::warning( editor, "Validation Error", "The scenario must have a valid title.", QMessageBox::Ok );
-        return false;
+        result += "The scenario must have a valid title.\n";
+        ok = false;
     }
 
     // description
     if ( editor->ui->m_description->toPlainText().isEmpty() ) {
-        QMessageBox::warning( editor, "Validation Error", "The scenario must have a description.", QMessageBox::Ok );
-        return false;
+        result += "The scenario must have a description.\n";
+        ok = false;
     }
 
-    // meta data is valid
-    return true;
+    return ok;
 }
 
 
-bool Validator::validateUnits (EditorMainWindow * editor) {
+bool Validator::validateUnits (EditorMainWindow * editor, QString &result) {
     int unitCounts[2] = { 0, 0 };
+
+    bool ok = true;
 
     foreach (Unit * unit, allUnits ) {
         // add to the counts
         unitCounts[ unit->m_owner ]++;
 
         if ( unit->m_name.isEmpty() || unit->m_name == "Unnamed" ) {
-            QMessageBox::warning( editor, "Validation Error", "Unit must have a valid name.", QMessageBox::Ok );
-            return false;
+            result += "Unit must have a valid name.\n";
+            ok = false;
         }
     }
 
     // unit counts ok?
     if ( unitCounts[0] == 0 ) {
-        QMessageBox::warning( editor, "Validation Error", "No units for player 1", QMessageBox::Ok );
-        return false;
+        result += "No units for player 1.\n";
+        ok = false;
     }
     if ( unitCounts[1] == 0 ) {
-        QMessageBox::warning( editor, "Validation Error", "No units for player 2", QMessageBox::Ok );
-        return false;
+        result += "No units for player 2.\n";
+        ok = false;
     }
 
-    // units are valid
-    return true;
+    return ok;
 }
 
 
-bool Validator::validateObjectives (EditorMainWindow * editor) {
+bool Validator::validateObjectives (EditorMainWindow * editor, QString &result) {
+    bool ok = true;
+
     foreach (Objective * objective, allObjectives ) {
         // objective title must be valid
         if ( objective->m_title.isEmpty() ) {
-            QMessageBox::warning( editor, "Validation Error", "Objective must have a title.", QMessageBox::Ok );
-            return false;
+            result += "Objective must have a title.\n";
+            ok = false;
         }
     }
 
-    // objectives are valid
-    return true;
+    return ok;
 }
 
 
-bool Validator::validateVictoryConditions (EditorMainWindow * editor) {
+bool Validator::validateVictoryConditions (EditorMainWindow * editor, QString &result) {
+    bool ok = true;
     if ( allVictoryConditions.isEmpty() ) {
-        QMessageBox::warning( editor, "Validation Error", "No victory or game end conditions set.", QMessageBox::Ok );
-        return false;
+        result += "No victory or game end conditions set.\n";
+        ok = false;
     }
 
-    // we have victory conditions
-    return true;
+    return ok;
 }
 

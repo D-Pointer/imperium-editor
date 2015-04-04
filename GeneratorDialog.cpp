@@ -32,6 +32,10 @@ GeneratorDialog::~GeneratorDialog() {
 
 
 Map * GeneratorDialog::getMap () {
+    // create a new map, but use the final size
+    m_map = new Map;
+    m_map->setSize( ui->m_width->value(), ui->m_height->value() );
+
     // create the map
     createMap();
     return m_map;
@@ -50,10 +54,6 @@ void GeneratorDialog::ok () {
         QMessageBox::warning( this, "Size error", "The height must be a multiple of 100", QMessageBox::Ok );
         return;
     }
-
-    // create a new map, but use the final size
-    m_map = new Map;
-    m_map->setSize( ui->m_width->value(), ui->m_height->value() );
 
     // generate stuff?
     if ( ! ui->m_autoGenerate->isChecked() ) {

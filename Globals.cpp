@@ -9,7 +9,7 @@ EditorMode editorMode = kEdit;
 QList<Unit *> allUnits;
 QList<House *> allHouses;
 QList<Terrain *> allTerrains;
-QList<Terrain *> navigationGrid;
+Terrain ** navigationGrid;
 QList<Objective *> allObjectives;
 QList<VictoryCondition *> allVictoryConditions;
 

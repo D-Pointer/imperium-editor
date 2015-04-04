@@ -7,15 +7,13 @@
 
 void EditorMainWindow::selectedHouseChanged (House * house) {
     qDebug() << "EditorMainWindow::selectedHouseChanged";
-    if ( house == 0 ) {
-        ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
-    }
-    else {
+    if ( house ) {
         ui->m_stack->setCurrentIndex( EditorMainWindow::HousePage );
         ui->m_house_rotation->setEnabled( true );
         ui->m_house_rotation->setValue( (int)house->rotation() );
         ui->m_house_type->setCurrentIndex( house->getType() );
     }
+    qDebug() << "EditorMainWindow::selectedHouseChanged: current index:" << ui->m_stack->currentIndex();
 }
 
 

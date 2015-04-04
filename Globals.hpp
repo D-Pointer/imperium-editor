@@ -94,7 +94,7 @@ extern QList<House *> allHouses;
 extern QList<Unit *> allUnits;
 extern QList<Objective *> allObjectives;
 extern QList<Terrain *> allTerrains;
-extern QList<Terrain *> navigationGrid;
+extern Terrain ** navigationGrid;
 extern QList<VictoryCondition *> allVictoryConditions;
 extern Selection * selection;
 extern Map * map;

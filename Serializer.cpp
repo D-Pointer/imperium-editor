@@ -19,7 +19,13 @@
 void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
     qDebug() << "Serializer::saveMap: saving to:" << map->m_name;
 
-   QFile file( map->m_name );
+    // first check if it is valid
+    QString validationResult = "";
+    if ( ! Validator().validate( editor, validationResult )) {
+        QMessageBox::warning( 0, "Scenario validation failed", validationResult );
+    }
+
+    QFile file( map->m_name );
     if ( ! file.open( QIODevice::WriteOnly |QIODevice::Truncate ) ) {
         // failed
         QMessageBox::warning( 0, "Save Failed", "Failed to save the map: " + file.errorString(), QMessageBox::Ok );
@@ -38,8 +44,10 @@ void Serializer::sendMapToIpad (QTcpSocket * ipad, EditorMainWindow * editor) {
     qDebug() << "Serializer::sendMapToIpad: saving to socket";
 
     // first check if it is valid
-    if ( ! Validator().validate( editor )) {
-        qDebug() << "Serializer::sendMapToIpad: scenario not valid, but sending anyway";
+    QString validationResult = "";
+    if ( ! Validator().validate( editor, validationResult )) {
+        QMessageBox::warning( 0, "Scenario validation failed", validationResult );
+        return;
     }
     
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -70,6 +78,8 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
     }
 
 
+    qDebug() << "Serializer::saveMapToStream: terrains:" << allTerrains.size();
+
     // sort all terrains according to z order first
     qSort( allTerrains.begin(), allTerrains.end(), terrainComparator );
 
@@ -88,6 +98,7 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
         polygon = QMatrix().rotate( terrain->rotation() ).map( polygon );
         polygon.translate( pos );
 
+        stream << "terrain " << terrain->m_type;
         foreach ( QPointF point_pos, polygon ) {
             point_pos += terrain_pos;
             stream << " " << (int)point_pos.x() << " " << (int)toSave( point_pos.y(), height );
@@ -139,7 +150,9 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
     stream << "navgrid";
 
     // loop the entire map
-    for ( int index = 0; index < navigationGrid.size(); ++index ) {
+    int items = (map->getWidth() / navigationTileSize) * (map->getHeight() / navigationTileSize);
+
+    for ( int index = 0; index < items; ++index ) {
         stream << " ";
         if ( navigationGrid[ index ] != 0 ) {
             stream << navigationGrid[ index ]->m_type;
@@ -220,8 +233,16 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
                 allVictoryConditions << new TimeBased( parts.takeFirst().toInt() );
             }
 
-            if ( type == CasualtyBased::id() ) {
+            else if ( type == CasualtyBased::id() ) {
                 allVictoryConditions << new CasualtyBased( parts.takeFirst().toInt() );
+            }
+
+            else if ( type == HoldAllObjectivesBased::id() ) {
+                allVictoryConditions << new HoldAllObjectivesBased( (Player)parts.takeFirst().toInt(), parts.takeFirst().toInt() );
+            }
+
+            else if ( type == DestroyUnit::id() ) {
+                allVictoryConditions << new DestroyUnit( parts.takeFirst().toInt() );
             }
         }
 
@@ -359,7 +380,7 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
 
     for ( int y = terrain->boundingRect().y(); y <= terrain->boundingRect().y() + terrain->boundingRect().height(); y += delta ) {
         for ( int x = terrain->boundingRect().x(); x <= terrain->boundingRect().x() + terrain->boundingRect().width(); x += delta ) {
-             // randomly skip trees
+            // randomly skip trees
             if ( ((float)rand() / RAND_MAX) < skipValue ) {
                 continue;
             }
@@ -384,8 +405,8 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
 
                 // is the position inside the polygon? test 4 positions: above, below, left and right
                 if ( terrain->contains( QPoint( treeX, treeY ) ) ) {
-//                    if ( terrain->contains( QPoint( treeX - radius, treeY ) ) && terrain->contains( QPoint( treeX + radius, treeY ) ) &&
-//                         terrain->contains( QPoint( treeX, treeY - radius ) ) && terrain->contains( QPoint( treeX, treeY + radius ) ) ) {
+                    //                    if ( terrain->contains( QPoint( treeX - radius, treeY ) ) && terrain->contains( QPoint( treeX + radius, treeY ) ) &&
+                    //                         terrain->contains( QPoint( treeX, treeY - radius ) ) && terrain->contains( QPoint( treeX, treeY + radius ) ) ) {
                     // save a tree
                     stream << " " << tree << " " << (int)treeX << " " << (int)toSave( treeY, mapHeight ) << " " << scale << " " << (int)rotation;
                     generated++;
@@ -433,7 +454,7 @@ void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float map
 
     for ( int y = terrain->boundingRect().y() + marginBottom; y <= terrain->boundingRect().y() + terrain->boundingRect().height() - marginTop - marginBottom; y += delta ) {
         for ( int x = terrain->boundingRect().x() + marginLeft; x <= terrain->boundingRect().x() + terrain->boundingRect().width() - marginRight - marginLeft; x += delta ) {
-             // a random rock
+            // a random rock
             int rock = rand() % 6;
 
             // offset the positions a bit
@@ -461,7 +482,7 @@ void Serializer::generateRocks (Terrain *terrain, QTextStream &stream, float map
         QPointF center = terrain->boundingRect().center();
 
         // a random rock
-       int rock = rand() % 6;
+        int rock = rand() % 6;
 
         // scale and rotate a bit randomly
         float scale = 0.8 + ((float)rand() / RAND_MAX) * 0.2;

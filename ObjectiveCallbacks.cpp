@@ -11,7 +11,6 @@ void EditorMainWindow::selectedObjectiveChanged (Objective * objective) {
     qDebug() << "EditorMainWindow::selectedObjectiveChanged";
 
     if ( objective == 0 ) {
-        ui->m_stack->setCurrentIndex( EditorMainWindow::ScenarioPage );
          ui->m_objective_title->clear();
     }
     else {
@@ -19,6 +18,7 @@ void EditorMainWindow::selectedObjectiveChanged (Objective * objective) {
         ui->m_objective_title->setEnabled( true );
         ui->m_objective_title->setText( objective->m_title );
     }
+    qDebug() << "EditorMainWindow::selectedObjectiveChanged: current index:" << ui->m_stack->currentIndex();
 }
 
 

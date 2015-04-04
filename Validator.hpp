@@ -16,18 +16,18 @@ public:
      *
      * @return true if the scenario is valid and false if not.
      */
-    bool validate (EditorMainWindow * editor);
+    bool validate (EditorMainWindow * editor, QString & result);
 
 
 private:
 
-    bool validateMetaData (EditorMainWindow * editor);
+    bool validateMetaData (EditorMainWindow * editor, QString &result);
 
-    bool validateUnits (EditorMainWindow * editor);
+    bool validateUnits (EditorMainWindow * editor, QString &result);
 
-    bool validateObjectives (EditorMainWindow * editor);
+    bool validateObjectives (EditorMainWindow * editor, QString &result);
 
-    bool validateVictoryConditions (EditorMainWindow * editor);
+    bool validateVictoryConditions (EditorMainWindow * editor, QString &result);
 };
 
 #endif // VALIDATOR_HPP
