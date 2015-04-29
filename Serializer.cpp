@@ -36,6 +36,9 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
 
     // save the real map to a stream
     QTextStream stream( &file );
+
+    // use one decimal value only
+    stream.setRealNumberPrecision( 1 );
     saveMapToStream( stream, editor );
 }
 
@@ -54,6 +57,7 @@ void Serializer::sendMapToIpad (QTcpSocket * ipad, EditorMainWindow * editor) {
 
     // save the real map to a stream
     QTextStream stream( ipad );
+    stream.setRealNumberPrecision( 1 );
     saveMapToStream( stream, editor );
 }
 
@@ -368,11 +372,8 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
     float treeX, treeY;
 
     // woods has more trees
-    int delta = terrain->m_type == kWoods ? 18 : 25;
+    int delta = terrain->m_type == kWoods ? 15 : 25;
     int offset = terrain->m_type == kWoods ? 5 : 5;
-
-    // trees are 30 px wide and high
-    //const int treeSize = 30;
 
     float skipValue = terrain->m_type == kWoods ? 0.05 : 0.1;
 
@@ -394,19 +395,15 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
                 int tree = rand() % 5;
 
                 // scale and rotate a bit randomly
-                float scale = 0.3 + ((float)rand() / RAND_MAX) * 0.8;
+                float scale = 0.3 + ((float)rand() / RAND_MAX) * 0.7;
                 float rotation = 20 + ((float)rand() / RAND_MAX) * 40;
 
-                //float radius = (treeSize * scale) / 2.0f;
-
-                // offset the positions a bit
+                // randomize the positions a bit
                 treeX = x - offset + ((float)rand() / RAND_MAX) * offset * 2;
                 treeY = y - offset + ((float)rand() / RAND_MAX) * offset * 2;
 
                 // is the position inside the polygon? test 4 positions: above, below, left and right
                 if ( terrain->contains( QPoint( treeX, treeY ) ) ) {
-                    //                    if ( terrain->contains( QPoint( treeX - radius, treeY ) ) && terrain->contains( QPoint( treeX + radius, treeY ) ) &&
-                    //                         terrain->contains( QPoint( treeX, treeY - radius ) ) && terrain->contains( QPoint( treeX, treeY + radius ) ) ) {
                     // save a tree
                     stream << " " << tree << " " << (int)treeX << " " << (int)toSave( treeY, mapHeight ) << " " << scale << " " << (int)rotation;
                     generated++;
