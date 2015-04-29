@@ -372,7 +372,7 @@ void Serializer::generateTrees (Terrain *terrain, QTextStream &stream, float map
     float treeX, treeY;
 
     // woods has more trees
-    int delta = terrain->m_type == kWoods ? 15 : 25;
+    int delta = terrain->m_type == kWoods ? 13 : 20;
     int offset = terrain->m_type == kWoods ? 5 : 5;
 
     float skipValue = terrain->m_type == kWoods ? 0.05 : 0.1;
