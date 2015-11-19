@@ -9,13 +9,14 @@
 #include "Globals.hpp"
 #include "Map.hpp"
 #include "House.hpp"
+#include "ReinforcementPoint.hpp"
 
 class Selection : public QObject {
     Q_OBJECT
 
 public:
 
-    Selection () : QObject(), m_unit(0), m_terrain(0) {
+    Selection () : QObject(), m_unit(0), m_terrain(0), m_objective(0), m_house(0), m_reinforcementPoint(0) {
 
     }
 
@@ -39,6 +40,11 @@ public:
         emit selectedHouseChanged( m_house );
     }
 
+    void setReinforcementPoint (ReinforcementPoint * point) {
+        m_reinforcementPoint = point;
+        emit selectedReinforcementPointChanged( m_reinforcementPoint );
+    }
+
     Unit * getSelectedUnit () {
         return m_unit;
     }
@@ -53,6 +59,10 @@ public:
 
     House * getSelectedHouse () {
         return m_house;
+    }
+
+    ReinforcementPoint * getSelectedReinforcementPoint () {
+        return m_reinforcementPoint;
     }
 
 
@@ -74,6 +84,10 @@ public:
             setHouse( 0 );
         }
 
+        if ( m_reinforcementPoint ) {
+            setReinforcementPoint( 0 );
+        }
+
         if ( map ) {
             map->clearSelection();
         }
@@ -85,6 +99,7 @@ signals:
     void selectedTerrainChanged (Terrain * terrain);
     void selectedObjectiveChanged (Objective * objective);
     void selectedHouseChanged (House * house);
+    void selectedReinforcementPointChanged (ReinforcementPoint * point);
 
 
 private:
@@ -92,6 +107,7 @@ private:
     Terrain * m_terrain;
     Objective * m_objective;
     House * m_house;
+    ReinforcementPoint * m_reinforcementPoint;
 };
 
 #endif // SELECTION_HH

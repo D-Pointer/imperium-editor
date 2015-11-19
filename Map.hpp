@@ -4,12 +4,16 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QGraphicsLineItem>
+#include <QPixmap>
 #include <QDebug>
 
 #include "Unit.hpp"
 #include "Terrain.hpp"
 #include "Objective.hpp"
 #include "House.hpp"
+#include "ReinforcementPoint.hpp"
+
+class QGraphicsPixmapItem;
 
 class Map : public QGraphicsScene {
     Q_OBJECT
@@ -39,6 +43,8 @@ public:
 
     bool addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float width=-1);
 
+    void setBackground (const QPixmap & pixmap);
+
     QString m_name;
 
 
@@ -48,6 +54,7 @@ signals:
     void terrainAdded (Terrain * terrain);
     void objectiveAdded (Objective * objective);
     void houseAdded (House * house);
+    void reinforcementPointAdded (ReinforcementPoint * point);
 
 
 public slots:
@@ -68,6 +75,7 @@ private slots:
 private:
     
     QGraphicsRectItem * m_background;
+    QGraphicsPixmapItem * m_traceBackground;
 
     QList<QGraphicsLineItem *> m_grid;
 

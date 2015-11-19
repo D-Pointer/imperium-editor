@@ -1,5 +1,5 @@
 
-#include <math.h>
+#include <cmath>
 
 #include <QMessageBox>
 #include <QDebug>
@@ -101,7 +101,7 @@ void EditorMainWindow::addRiver () {
             float delta = -30 + qrand() % 60;
             direction += delta;
 
-            distance = minLength + abs( delta ) / maxLength * (maxLength - minLength );
+            distance = minLength + std::abs( delta ) / maxLength * (maxLength - minLength );
         }
 
         // deltas
@@ -109,8 +109,14 @@ void EditorMainWindow::addRiver () {
         float y = distance * sinf( direction / 180.0f * M_PI );
         pos += QPointF( x, y );
 
-        // river width is random between the limits
-        float riverWidth = minWidth + qrand() % ( maxWidth - minWidth );
+        // the river can change with 5 m per step
+        riverWidth += -5 + (qrand() % 10);
+        if ( riverWidth < minWidth ) {
+            riverWidth = minWidth;
+        }
+        else if ( riverWidth > maxWidth ) {
+            riverWidth = maxWidth;
+        }
 
         bool riverHit = false;
 

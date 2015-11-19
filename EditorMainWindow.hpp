@@ -45,6 +45,7 @@ private slots:
     void rotateTerrain ();
     void duplicateTerrain ();
 
+    void setBackground ();
     void flipMapHorizontally ();
     void flipMapVertically ();
     void xScaleChanged ();
@@ -74,6 +75,8 @@ private slots:
     void selectedHouseChanged (House * house);
     void houseRotated();
     void houseTypeChanged ();
+
+    void reinforcementPointAdded (ReinforcementPoint * point);
 
     void zoomIn ();
     void zoomOut ();
@@ -107,6 +110,7 @@ private:
         UnitPage,
         ObjectivePage,
         RiverPage,
+        ReinforcementsPage
     };
 
     // server for sharing scenarios with the iPad game

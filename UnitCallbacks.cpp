@@ -239,7 +239,8 @@ void EditorMainWindow::updateUnitWeaponCount () {
             ui->m_weapon_count->setNum( selected->m_men / 5 );
             break;
 
-        case kHeavyCannon:
+    case kHeavyCannon:
+    case kHowitzer:
             ui->m_weapon_count->setNum( selected->m_men / 6 );
             break;
 

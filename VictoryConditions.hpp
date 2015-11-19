@@ -93,6 +93,26 @@ public:
 };
 
 
+class EscortUnitBased : public VictoryCondition {
+public:
+
+    EscortUnitBased (int unitId, int objectiveId) : m_unitId(unitId), m_objectiveId(objectiveId) {
+
+    }
+
+    static QString id () {
+        return "escort";
+    }
+
+    virtual QString toString () const {
+        return QString("escort %1 %2").arg( m_unitId ).arg( m_objectiveId );
+    }
+
+    int m_unitId;
+    int m_objectiveId;
+};
+
+
 
 #endif // VICTORYCONDITIONS_HPP
 

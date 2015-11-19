@@ -430,15 +430,16 @@ void GeneratorDialog::simplifyPolygon (QPolygon & polygon) {
     //qDebug() << "GeneratorDialog::simplifyPolygon: start size:" << polygon.size();
 
     // max distance for the mid point from the line between two points for it to be cut
-    const float maxDistance = 2;
+    const float maxDistance = 3.5;
 
     do {
         // nothing to remove found yet
         found = false;
 
-        while ( currentIndex < polygon.size() - 1 ) {
+        while ( currentIndex < polygon.size() - 2 ) {
             int realIndex = currentIndex % polygon.size();
 
+            qDebug() << currentIndex <<  polygon.size();
             QPointF start = polygon.at( realIndex );
             QPointF mid = polygon.at( realIndex + 1 );
             QPointF end = polygon.at( realIndex + 2 );

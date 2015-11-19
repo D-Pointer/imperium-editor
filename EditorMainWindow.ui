@@ -89,7 +89,7 @@
        <bool>false</bool>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="metaDataPage">
        <layout class="QGridLayout" name="gridLayout">
@@ -273,7 +273,11 @@
          </spacer>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="m_id"/>
+         <widget class="QSpinBox" name="m_id">
+          <property name="maximum">
+           <number>9999</number>
+          </property>
+         </widget>
         </item>
         <item row="0" column="10">
          <widget class="QTimeEdit" name="m_time">
@@ -324,6 +328,9 @@
          <widget class="QSpinBox" name="m_depends">
           <property name="minimum">
            <number>-1</number>
+          </property>
+          <property name="maximum">
+           <number>1000</number>
           </property>
           <property name="value">
            <number>-1</number>
@@ -399,6 +406,9 @@
        </layout>
       </widget>
       <widget class="QWidget" name="terrainPage">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
          <widget class="QLabel" name="label_16">
@@ -626,6 +636,13 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="m_reinforcement">
+          <property name="text">
+           <string>Add reinforcement</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1015,6 +1032,11 @@
             <string>Mortar</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>Howitzer</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item row="1" column="5">
@@ -1254,6 +1276,50 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="reinforcementsPage">
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_29">
+          <property name="text">
+           <string>Reinforcement points:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="m_reinforcementCount">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer_17">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>949</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="0">
+         <spacer name="verticalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>114</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -1282,6 +1348,7 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="m_background_action"/>
     <addaction name="m_flip_horizontally_action"/>
     <addaction name="m_flip_vertically_action"/>
     <addaction name="m_duplicate_unit_action"/>
@@ -1310,6 +1377,7 @@
    <addaction name="m_river_action"/>
    <addaction name="m_unit_action"/>
    <addaction name="m_objective_action"/>
+   <addaction name="m_reinforcements_action"/>
    <addaction name="separator"/>
    <addaction name="m_delete_action"/>
    <addaction name="m_deselect_action"/>
@@ -1487,6 +1555,19 @@
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="m_reinforcements_action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Reinforcements</string>
+   </property>
+  </action>
+  <action name="m_background_action">
+   <property name="text">
+    <string>Background</string>
    </property>
   </action>
  </widget>

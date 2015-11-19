@@ -19,5 +19,6 @@
         <file>Icons/House5.png</file>
         <file>Icons/House6.png</file>
         <file>Icons/House7.png</file>
+        <file>Icons/ReinforcementPoint.png</file>
     </qresource>
 </RCC>

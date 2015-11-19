@@ -39,6 +39,7 @@ void Serializer::saveMap (Map * map, EditorMainWindow * editor) {
 
     // use one decimal value only
     stream.setRealNumberPrecision( 1 );
+    stream.setRealNumberNotation( QTextStream::FixedNotation );
     saveMapToStream( stream, editor );
 }
 
@@ -247,6 +248,10 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
 
             else if ( type == DestroyUnit::id() ) {
                 allVictoryConditions << new DestroyUnit( parts.takeFirst().toInt() );
+            }
+
+            else if ( type == EscortUnitBased::id() ) {
+                allVictoryConditions << new EscortUnitBased( parts.takeFirst().toInt(), parts.takeFirst().toInt() );
             }
         }
 

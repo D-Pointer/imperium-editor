@@ -12,7 +12,7 @@ TARGET = ImperiumEditor
 TEMPLATE = app
 ICON = Icons/Icon.icns
 
-QMAKE_MAC_SDK = macosx10.9
+#QMAKE_MAC_SDK = macosx10.9
 
 SOURCES += main.cpp\
         EditorMainWindow.cpp \
@@ -37,7 +37,9 @@ SOURCES += main.cpp\
     VictoryConditions.cpp \
     RiverCallbacks.cpp \
     UnitList.cpp \
-    UnitsModel.cpp
+    UnitsModel.cpp \
+    ReinforcementPoint.cpp \
+    ReinforcementPointCallbacks.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
@@ -57,7 +59,8 @@ HEADERS  += EditorMainWindow.hpp \
     VictoryConditionsDialog.hpp \
     VictoryConditions.hpp \
     UnitList.hpp \
-    UnitsModel.hpp
+    UnitsModel.hpp \
+    ReinforcementPoint.hpp
 
 FORMS    += EditorMainWindow.ui \
     GeneratorDialog.ui \

@@ -4,6 +4,7 @@
 #include "Selection.hpp"
 #include "Map.hpp"
 #include "House.hpp"
+#include "ReinforcementPoint.hpp"
 
 EditorMode editorMode = kEdit;
 QList<Unit *> allUnits;
@@ -12,6 +13,7 @@ QList<Terrain *> allTerrains;
 Terrain ** navigationGrid;
 QList<Objective *> allObjectives;
 QList<VictoryCondition *> allVictoryConditions;
+QList<ReinforcementPoint *> allReinforcementPoints;
 
 Selection * selection = new Selection();
 Map * map = 0;

@@ -9,9 +9,10 @@
 #include "Objective.hpp"
 #include "Selection.hpp"
 
-Map::Map(QObject *parent) : QGraphicsScene(parent), m_background(0), m_minRiverWidth(20), m_maxRiverWidth(30) {
+Map::Map(QObject *parent) : QGraphicsScene(parent), m_background(0), m_traceBackground(0), m_minRiverWidth(20), m_maxRiverWidth(30) {
     m_background = new QGraphicsRectItem( 0, 0, 1024, 768, 0 );
     m_background->setBrush( QBrush( Qt::green ) );
+    m_background->setZValue( 10 );
     addItem( m_background );
 
     m_name = "";
@@ -34,7 +35,9 @@ void Map::setSize (int width, int height) {
     QGraphicsLineItem * line;
 
     for ( int y = 0; y < height; y += 100 ) {
-       line = new QGraphicsLineItem( 0, y, width, y, m_background );
+       line = new QGraphicsLineItem( 0, y, width, y );
+       line->setZValue( 20 );
+       addItem( line );
        if ( y % 500 == 0 ) {
            line->setPen( QPen( Qt::black ) );
        }
@@ -45,7 +48,9 @@ void Map::setSize (int width, int height) {
     }
 
     for ( int x = 0; x < width; x += 100 ) {
-        line = new QGraphicsLineItem( x, 0, x, height, m_background );
+        line = new QGraphicsLineItem( x, 0, x, height );
+        line->setZValue( 20 );
+        addItem( line );
         if ( x % 500 == 0 ) {
             line->setPen( QPen( Qt::black ) );
         }
@@ -62,6 +67,7 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
     Terrain * terrain = 0;
     Objective * objective = 0;
     House * house = 0;
+    ReinforcementPoint * reinforcementPoint = 0;
     float width;
 
     switch ( editorMode ) {
@@ -157,6 +163,20 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
         objective->setSelected( true );
         break;
 
+    case kAddReinforcementPoint:
+        qDebug() << "Map::mousePressEvent: add reinforcement point";
+        reinforcementPoint = new ReinforcementPoint( event->scenePos() );
+        addItem( reinforcementPoint );
+        allReinforcementPoints << reinforcementPoint;
+
+        clearSelection();
+
+        emit reinforcementPointAdded( reinforcementPoint );
+
+        selection->setReinforcementPoint( reinforcementPoint );
+        reinforcementPoint->setSelected( true );
+        break;
+
     case kAddHouse:
         qDebug() << "Map::mousePressEvent: add house";
         int houseId = qrand() % 5;
@@ -218,6 +238,23 @@ bool Map::addPointToRoadOrRiver (Terrain * road, const QPointF & pos, float widt
 
         return ! ( ( pos.x() < 0 || pos.x() >= getWidth() || pos.y() < 0 || pos.y() >= getHeight() ) &&
                 ( pos2.x() < 0 || pos2.x() >= getWidth() || pos2.y() < 0 || pos2.y() >= getHeight() ) );
+    }
+}
+
+
+void Map::setBackground (const QPixmap & pixmap) {
+    QPixmap scaled = pixmap.scaled( getWidth(), getHeight() );
+
+    if ( ! m_traceBackground ) {
+        m_traceBackground = new QGraphicsPixmapItem( scaled );
+        m_traceBackground->setZValue( 10 );
+        addItem( m_traceBackground );
+
+        // make the old green background transparent
+        m_background->setBrush( QBrush( Qt::transparent) );
+    }
+    else {
+        m_traceBackground->setPixmap( scaled );
     }
 }
 

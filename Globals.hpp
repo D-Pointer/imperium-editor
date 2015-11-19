@@ -10,6 +10,7 @@ class Objective;
 class Map;
 class House;
 class VictoryCondition;
+class ReinforcementPoint;
 
 // battle size for multiplayer games
 typedef enum {
@@ -26,7 +27,8 @@ typedef enum {
     kAddUnit,
     kAddObjective,
     kAddRoad,
-    kAddRiver
+    kAddRiver,
+    kAddReinforcementPoint,
 } EditorMode;
 
 typedef enum {
@@ -55,7 +57,8 @@ typedef enum {
     kFlamethrower,
     kRifleMk2,
     kSubmachineGun,
-    kMortar
+    kMortar,
+    kHowitzer
 } WeaponType;
 
 
@@ -94,6 +97,7 @@ extern QList<House *> allHouses;
 extern QList<Unit *> allUnits;
 extern QList<Objective *> allObjectives;
 extern QList<Terrain *> allTerrains;
+extern QList<ReinforcementPoint *> allReinforcementPoints;
 extern Terrain ** navigationGrid;
 extern QList<VictoryCondition *> allVictoryConditions;
 extern Selection * selection;
