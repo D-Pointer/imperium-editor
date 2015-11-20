@@ -314,6 +314,7 @@ void EditorMainWindow::editModeChanged () {
     if ( ui->m_stack->currentWidget() ) {
         ui->m_stack->currentWidget()->setEnabled( true );
     }
+
     qDebug() << "EditorMainWindow::editModeChanged: current index:" << ui->m_stack->currentIndex();
 
     selection->deselect();

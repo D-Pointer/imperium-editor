@@ -53,7 +53,6 @@ public:
     int m_duration;
 };
 
-
 class HoldAllObjectivesBased : public VictoryCondition {
 public:
 
@@ -93,6 +92,8 @@ public:
 };
 
 
+
+
 class EscortUnitBased : public VictoryCondition {
 public:
 
@@ -112,6 +113,41 @@ public:
     int m_objectiveId;
 };
 
+
+class MultiplayerTimeBased : public VictoryCondition {
+public:
+
+    MultiplayerTimeBased (int duration) : m_duration(duration) {
+
+    }
+
+    static QString id () {
+        return "multiplayertime";
+    }
+
+    virtual QString toString () const {
+        return QString("multiplayertime %1").arg( m_duration );
+    }
+
+    int m_duration;
+};
+
+class MultiplayerCasualtyBased : public VictoryCondition {
+public:
+
+    MultiplayerCasualtyBased (int percentage) : m_percentage(percentage) {
+    }
+
+    static QString id () {
+        return "multiplayercasualty";
+    }
+
+    virtual QString toString () const {
+        return QString("multiplayercasualty %1").arg( m_percentage );
+    }
+
+    int m_percentage;
+};
 
 
 #endif // VICTORYCONDITIONS_HPP

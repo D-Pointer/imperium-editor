@@ -253,6 +253,14 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
             else if ( type == EscortUnitBased::id() ) {
                 allVictoryConditions << new EscortUnitBased( parts.takeFirst().toInt(), parts.takeFirst().toInt() );
             }
+
+            else if ( type == MultiplayerTimeBased::id() ) {
+                allVictoryConditions << new MultiplayerTimeBased( parts.takeFirst().toInt() );
+            }
+
+            else if ( type == MultiplayerCasualtyBased::id() ) {
+                allVictoryConditions << new MultiplayerCasualtyBased( parts.takeFirst().toInt() );
+            }
         }
 
         else if ( type == "tutorial" ) {
