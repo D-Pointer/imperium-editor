@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>502</width>
-    <height>556</height>
+    <height>698</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -211,6 +211,82 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="m_objectiveCombo"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="m_multiplayerTimeGroup">
+     <property name="title">
+      <string>Multiplayer - time based</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Maximum scenario length:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="m_multiplayerDuration">
+        <property name="suffix">
+         <string> seconds</string>
+        </property>
+        <property name="minimum">
+         <number>2400</number>
+        </property>
+        <property name="maximum">
+         <number>36000</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="m_multiplayerCasualtiesGroup">
+     <property name="title">
+      <string>Multiplayer - casualties</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Maximum casualties:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="m_multiplayerPercentage">
+        <property name="suffix">
+         <string> %</string>
+        </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>75</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

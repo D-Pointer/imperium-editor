@@ -117,6 +117,21 @@ VictoryConditionsDialog::VictoryConditionsDialog (QWidget *parent) : QDialog(par
                 ui->m_objectiveCombo->setCurrentIndex( 0 );
             }
         }
+
+
+        // multiplayer casualty based?
+        MultiplayerCasualtyBased * mpCasualtyBased = dynamic_cast<MultiplayerCasualtyBased *>( condition );
+        if ( mpCasualtyBased ) {
+            ui->m_multiplayerCasualtiesGroup->setChecked( true );
+            ui->m_multiplayerPercentage->setValue( mpCasualtyBased->m_percentage );
+        }
+
+        // multiplayertime based?
+        MultiplayerTimeBased * mpTimeBased = dynamic_cast<MultiplayerTimeBased *>( condition );
+        if ( mpTimeBased ) {
+            ui->m_multiplayerTimeGroup->setChecked( true );
+            ui->m_multiplayerDuration->setValue( mpTimeBased->m_duration );
+        }
     }
 }
 
@@ -132,7 +147,9 @@ void VictoryConditionsDialog::accept () {
          ! ui->m_casualtiesGroup->isChecked() &&
          ! ui->m_holdGroup->isChecked() &&
          ! ui->m_destroyGroup->isChecked() &&
-         ! ui->m_escortGroup->isChecked() ) {
+         ! ui->m_escortGroup->isChecked() &&
+         ! ui->m_multiplayerTimeGroup->isChecked() &&
+         ! ui->m_multiplayerCasualtiesGroup->isChecked()) {
         QMessageBox::warning( this, "Error", "At least one victory condition must be enabled.", QMessageBox::Ok );
         return;
     }
@@ -164,6 +181,14 @@ void VictoryConditionsDialog::accept () {
         int objectiveId = ui->m_objectiveCombo->itemData( ui->m_objectiveCombo->currentIndex() ).toInt();
 
         allVictoryConditions << new EscortUnitBased( unitId, objectiveId );
+    }
+
+    if ( ui->m_multiplayerTimeGroup->isChecked() ) {
+        allVictoryConditions << new MultiplayerTimeBased( ui->m_multiplayerDuration->value() );
+    }
+
+    if ( ui->m_multiplayerCasualtiesGroup->isChecked() ) {
+        allVictoryConditions << new MultiplayerCasualtyBased( ui->m_multiplayerPercentage->value() );
     }
 
     // we're done
