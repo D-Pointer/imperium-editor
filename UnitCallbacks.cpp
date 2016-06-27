@@ -225,32 +225,33 @@ void EditorMainWindow::updateUnitWeaponCount () {
     }
 
     switch ( selected->m_weapon ) {
-        case kRifle:
-        case kRifleMk2:
-        case kSubmachineGun:
-            ui->m_weapon_count->setNum( selected->m_men );
-            break;
+    case kRifle:
+    case kRifleMk2:
+    case kSubmachineGun:
+    case kSniperRifle:
+        ui->m_weapon_count->setNum( selected->m_men );
+        break;
 
-        case kMachineGun:
-            ui->m_weapon_count->setNum( selected->m_men / 3 );
-            break;
+    case kMachineGun:
+        ui->m_weapon_count->setNum( selected->m_men / 3 );
+        break;
 
-        case kLightCannon:
-            ui->m_weapon_count->setNum( selected->m_men / 5 );
-            break;
+    case kLightCannon:
+        ui->m_weapon_count->setNum( selected->m_men / 5 );
+        break;
 
     case kHeavyCannon:
     case kHowitzer:
-            ui->m_weapon_count->setNum( selected->m_men / 6 );
-            break;
+        ui->m_weapon_count->setNum( selected->m_men / 6 );
+        break;
 
-        case kMortar:
-            ui->m_weapon_count->setNum( selected->m_men / 3 );
-            break;
+    case kMortar:
+        ui->m_weapon_count->setNum( selected->m_men / 3 );
+        break;
 
-        case kFlamethrower:
-            ui->m_weapon_count->setNum( selected->m_men / 2 );
-            break;
+    case kFlamethrower:
+        ui->m_weapon_count->setNum( selected->m_men / 2 );
+        break;
     }
 }
 

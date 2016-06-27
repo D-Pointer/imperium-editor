@@ -7,13 +7,15 @@ namespace Ui {
 class ScriptEditor;
 }
 
-class ScriptEditor : public QDialog
-{
+class ScriptEditor : public QDialog {
     Q_OBJECT
 
 public:
-    explicit ScriptEditor(QWidget *parent = 0);
+    explicit ScriptEditor(const QString & script, QWidget *parent = 0);
     ~ScriptEditor();
+
+    QString getScript () const;
+
 
 private:
     Ui::ScriptEditor *ui;

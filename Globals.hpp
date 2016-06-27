@@ -11,6 +11,7 @@ class Map;
 class House;
 class VictoryCondition;
 class ReinforcementPoint;
+class StartPos;
 
 // battle size for multiplayer games
 typedef enum {
@@ -28,6 +29,7 @@ typedef enum {
     kAddObjective,
     kAddRoad,
     kAddRiver,
+    kAddStartPos,
     kAddReinforcementPoint,
 } EditorMode;
 
@@ -58,7 +60,8 @@ typedef enum {
     kRifleMk2,
     kSubmachineGun,
     kMortar,
-    kHowitzer
+    kHowitzer,
+    kSniperRifle
 } WeaponType;
 
 
@@ -98,9 +101,11 @@ extern QList<Unit *> allUnits;
 extern QList<Objective *> allObjectives;
 extern QList<Terrain *> allTerrains;
 extern QList<ReinforcementPoint *> allReinforcementPoints;
+extern QList<StartPos *> allStartPositions;
 extern Terrain ** navigationGrid;
 extern QList<VictoryCondition *> allVictoryConditions;
 extern Selection * selection;
 extern Map * map;
+extern QString script;
 
 #endif // GLOBALS_HPP

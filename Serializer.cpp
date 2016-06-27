@@ -66,7 +66,7 @@ void Serializer::sendMapToIpad (QTcpSocket * ipad, EditorMainWindow * editor) {
 void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * editor) {
     float height = map->getHeight();
 
-    // map metadata
+    // map metadata with
     stream << "size "     << map->getWidth() << " " << map->getHeight() << endl
            << "id "       << editor->ui->m_id->value() << endl
            << "depend "   << editor->ui->m_depends->value() << endl
@@ -82,6 +82,8 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
         stream << "victory " << condition->toString() << endl;
     }
 
+    // final newline at the end to separate the metadata from the real map data
+    stream << endl;
 
     qDebug() << "Serializer::saveMapToStream: terrains:" << allTerrains.size();
 
@@ -168,6 +170,12 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
     }
 
     stream << endl;
+
+    // any script?
+    if ( script != "" ) {
+        QString escapedScript = script;
+        stream << "script " << escapedScript.replace( "\n", "|") << endl;
+    }
 
     // write the final "end"
     stream << "end" << endl;
@@ -261,6 +269,10 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
             else if ( type == MultiplayerCasualtyBased::id() ) {
                 allVictoryConditions << new MultiplayerCasualtyBased( parts.takeFirst().toInt() );
             }
+        }
+
+        else if ( type == "script" ) {
+            script = parts.join( " ").replace( "|", "\n" );
         }
 
         else if ( type == "tutorial" ) {

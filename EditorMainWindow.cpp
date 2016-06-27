@@ -14,6 +14,7 @@
 #include "Version.hpp"
 #include "VictoryConditionsDialog.hpp"
 #include "UnitList.hpp"
+#include "ScriptEditor.hpp"
 
 EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::EditorMainWindow) {
     ui->setupUi(this);
@@ -26,6 +27,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     m_actionGroup->addAction( ui->m_river_action );
     m_actionGroup->addAction( ui->m_unit_action );
     m_actionGroup->addAction( ui->m_objective_action );
+    m_actionGroup->addAction( ui->m_start_pos_action );
     m_actionGroup->addAction( ui->m_reinforcements_action );
     m_actionGroup->setExclusive( true );
 
@@ -42,10 +44,12 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent), ui(ne
     connect( ui->m_road_action  ,      SIGNAL( triggered() ),            SLOT( editModeChanged()) );
     connect( ui->m_river_action  ,     SIGNAL( triggered() ),            SLOT( editModeChanged()) );
     connect( ui->m_objective_action,   SIGNAL( triggered() ),            SLOT( editModeChanged()) );
+    connect( ui->m_start_pos_action,   SIGNAL( triggered() ),            SLOT( editModeChanged()) );
     connect( ui->m_reinforcements_action, SIGNAL( triggered() ),         SLOT( editModeChanged()) );
     connect( ui->m_delete_action,      SIGNAL( triggered() ),            SLOT( deleteSelectedItem()) );
     connect( ui->m_deselect_action,    SIGNAL( triggered() ),            SLOT( deselect()) );
     connect( ui->m_background_action,  SIGNAL( triggered()),             SLOT( setBackground()) );
+    connect( ui->m_script_action,      SIGNAL( triggered()),             SLOT( editScript()) );
     connect( ui->m_flip_horizontally_action, SIGNAL( triggered()),       SLOT( flipMapHorizontally()) );
     connect( ui->m_flip_vertically_action,   SIGNAL( triggered()),       SLOT( flipMapVertically()) );
     connect( ui->m_duplicate_unit_action,    SIGNAL( triggered()),       SLOT( duplicateUnit()) );
@@ -145,6 +149,7 @@ void EditorMainWindow::newMap () {
     allHouses.clear();
     allVictoryConditions.clear();
     allReinforcementPoints.clear();
+    script = "";
 
     if ( navigationGrid ) {
         delete[] navigationGrid;
@@ -196,6 +201,7 @@ void EditorMainWindow::openMap () {
     allHouses.clear();
     allVictoryConditions.clear();
     allReinforcementPoints.clear();
+    script = "";
 
     if ( navigationGrid ) {
         delete[] navigationGrid;
@@ -292,11 +298,11 @@ void EditorMainWindow::editModeChanged () {
         editorMode = kAddObjective;
         ui->m_stack->setCurrentIndex( EditorMainWindow::ObjectivePage );
     }
-    else if ( ui->m_reinforcements_action->isChecked() ) {
-        editorMode = kAddReinforcementPoint;
-        ui->m_stack->setCurrentIndex( EditorMainWindow::ReinforcementsPage );
+    else if ( ui->m_start_pos_action->isChecked() ) {
+        editorMode = kAddStartPos;
+        ui->m_stack->setCurrentIndex( EditorMainWindow::StartPosPage );
     }
-    else if ( ui->m_reinforcements_action->isChecked() ) {
+     else if ( ui->m_reinforcements_action->isChecked() ) {
         editorMode = kAddReinforcementPoint;
         ui->m_stack->setCurrentIndex( EditorMainWindow::ReinforcementsPage );
     }
@@ -380,6 +386,22 @@ void EditorMainWindow::deleteSelectedItem () {
         allHouses.removeAll( house );
         selection->setHouse( 0 );
         delete house;
+        return;
+    }
+
+    ReinforcementPoint * point = dynamic_cast<ReinforcementPoint *>( selected.first() );
+    if ( point ) {
+        allReinforcementPoints.removeAll( point );
+        selection->setReinforcementPoint( 0 );
+        delete point;
+        return;
+    }
+
+    StartPos * startPos = dynamic_cast<StartPos *>( selected.first() );
+    if ( startPos ) {
+        allStartPositions.removeAll( startPos );
+        selection->setStartPos( 0 );
+        delete startPos;
         return;
     }
 
@@ -605,6 +627,7 @@ void EditorMainWindow::takeNewMapIntoUse () {
 
     connect( map, SIGNAL(unitAdded(Unit*)), SLOT( unitAdded(Unit *)) );
     connect( map, SIGNAL(reinforcementPointAdded(ReinforcementPoint*)), SLOT( reinforcementPointAdded(ReinforcementPoint*)) );
+    connect( map, SIGNAL(startPosAdded(StartPos*)), SLOT( startPosAdded(StartPos*)) );
 
     // now we can save
     ui->m_save_action->setEnabled( true );
@@ -639,4 +662,12 @@ void EditorMainWindow::takeNewMapIntoUse () {
 
 void EditorMainWindow::editVictoryConditions () {
     VictoryConditionsDialog().exec();
+}
+
+
+void EditorMainWindow::editScript () {
+    ScriptEditor editor( script );
+    if ( editor.exec() == QDialog::Accepted ) {
+        script = editor.getScript();
+    }
 }

@@ -12,6 +12,7 @@
 #include "Objective.hpp"
 #include "House.hpp"
 #include "ReinforcementPoint.hpp"
+#include "StartPos.hpp"
 
 class QGraphicsPixmapItem;
 
@@ -55,6 +56,7 @@ signals:
     void objectiveAdded (Objective * objective);
     void houseAdded (House * house);
     void reinforcementPointAdded (ReinforcementPoint * point);
+    void startPosAdded (StartPos * point);
 
 
 public slots:

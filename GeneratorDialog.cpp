@@ -439,7 +439,7 @@ void GeneratorDialog::simplifyPolygon (QPolygon & polygon) {
         while ( currentIndex < polygon.size() - 2 ) {
             int realIndex = currentIndex % polygon.size();
 
-            qDebug() << currentIndex <<  polygon.size();
+            //qDebug() << currentIndex <<  polygon.size();
             QPointF start = polygon.at( realIndex );
             QPointF mid = polygon.at( realIndex + 1 );
             QPointF end = polygon.at( realIndex + 2 );

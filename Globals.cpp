@@ -14,6 +14,8 @@ Terrain ** navigationGrid;
 QList<Objective *> allObjectives;
 QList<VictoryCondition *> allVictoryConditions;
 QList<ReinforcementPoint *> allReinforcementPoints;
+QList<StartPos *> allStartPositions;
 
 Selection * selection = new Selection();
 Map * map = 0;
+QString script = "";

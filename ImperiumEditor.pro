@@ -39,7 +39,10 @@ SOURCES += main.cpp\
     UnitList.cpp \
     UnitsModel.cpp \
     ReinforcementPoint.cpp \
-    ReinforcementPointCallbacks.cpp
+    ReinforcementPointCallbacks.cpp \
+    ScriptEditor.cpp \
+    StartPos.cpp \
+    StartPosCallbacks.cpp
 
 HEADERS  += EditorMainWindow.hpp \
     Map.hpp \
@@ -60,12 +63,15 @@ HEADERS  += EditorMainWindow.hpp \
     VictoryConditions.hpp \
     UnitList.hpp \
     UnitsModel.hpp \
-    ReinforcementPoint.hpp
+    ReinforcementPoint.hpp \
+    ScriptEditor.hpp \
+    StartPos.hpp
 
 FORMS    += EditorMainWindow.ui \
     GeneratorDialog.ui \
     VictoryConditionsDialog.ui \
-    UnitList.ui
+    UnitList.ui \
+    ScriptEditor.ui
 
 RESOURCES += \
     Icons.qrc

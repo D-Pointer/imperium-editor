@@ -77,6 +77,7 @@ private slots:
     void houseTypeChanged ();
 
     void reinforcementPointAdded (ReinforcementPoint * point);
+    void startPosAdded (StartPos * startPos);
 
     void zoomIn ();
     void zoomOut ();
@@ -91,6 +92,8 @@ private slots:
     void riverMaxWidthChanged (int width);
     void addRiver ();
 
+    void editScript ();
+
 
 private:
 
@@ -104,12 +107,13 @@ private:
     Ui::EditorMainWindow *ui;
 
     enum StackPage {
-        ScenarioPage,
+        ScenarioPage = 0,
         TerrainPage,
         HousePage,
         UnitPage,
         ObjectivePage,
         RiverPage,
+        StartPosPage,
         ReinforcementsPage
     };
 

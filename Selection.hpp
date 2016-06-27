@@ -10,6 +10,7 @@
 #include "Map.hpp"
 #include "House.hpp"
 #include "ReinforcementPoint.hpp"
+#include "StartPos.hpp"
 
 class Selection : public QObject {
     Q_OBJECT
@@ -43,6 +44,11 @@ public:
     void setReinforcementPoint (ReinforcementPoint * point) {
         m_reinforcementPoint = point;
         emit selectedReinforcementPointChanged( m_reinforcementPoint );
+    }
+
+    void setStartPos (StartPos * startPos) {
+        m_startPos = startPos;
+        emit selectedStartPosChanged( m_startPos );
     }
 
     Unit * getSelectedUnit () {
@@ -100,6 +106,7 @@ signals:
     void selectedObjectiveChanged (Objective * objective);
     void selectedHouseChanged (House * house);
     void selectedReinforcementPointChanged (ReinforcementPoint * point);
+    void selectedStartPosChanged (StartPos * startPos);
 
 
 private:
@@ -107,6 +114,7 @@ private:
     Terrain * m_terrain;
     Objective * m_objective;
     House * m_house;
+    StartPos * m_startPos;
     ReinforcementPoint * m_reinforcementPoint;
 };
 

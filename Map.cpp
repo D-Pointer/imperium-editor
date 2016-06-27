@@ -68,6 +68,7 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
     Objective * objective = 0;
     House * house = 0;
     ReinforcementPoint * reinforcementPoint = 0;
+    StartPos * startPos = 0;
     float width;
 
     switch ( editorMode ) {
@@ -161,6 +162,20 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
 
         selection->setObjective( objective );
         objective->setSelected( true );
+        break;
+
+    case kAddStartPos:
+        qDebug() << "Map::mousePressEvent: add start position";
+        startPos = new StartPos( event->scenePos() );
+        addItem( startPos );
+        allStartPositions << startPos;
+
+        clearSelection();
+
+        emit startPosAdded( startPos );
+
+        selection->setStartPos( startPos );
+        startPos->setSelected( true );
         break;
 
     case kAddReinforcementPoint:
