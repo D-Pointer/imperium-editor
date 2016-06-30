@@ -149,6 +149,7 @@ void EditorMainWindow::newMap () {
     allHouses.clear();
     allVictoryConditions.clear();
     allReinforcementPoints.clear();
+    allStartPositions.clear();
     script = "";
 
     if ( navigationGrid ) {
@@ -167,7 +168,7 @@ void EditorMainWindow::newMap () {
     ui->m_time->setTime( QTime( 12, 0 ) );
     ui->m_title->clear();
     ui->m_description->clear();
-    ui->m_tutorial->setChecked( false );
+    ui->m_mapType->setCurrentIndex( kCampaign );
 
     statusBar()->showMessage( "Created a new map", 3000 );
 
@@ -201,6 +202,7 @@ void EditorMainWindow::openMap () {
     allHouses.clear();
     allVictoryConditions.clear();
     allReinforcementPoints.clear();
+    allStartPositions.clear();
     script = "";
 
     if ( navigationGrid ) {
@@ -208,7 +210,7 @@ void EditorMainWindow::openMap () {
         navigationGrid = 0;
     }
 
-    ui->m_tutorial->setChecked( false );
+    ui->m_mapType->setCurrentIndex( kCampaign );
 
     map = Serializer().loadMap( name, this );
 
@@ -236,8 +238,10 @@ void EditorMainWindow::saveMap () {
         saveMapAs();
     }
     else {
-        // first generate the navigation grid
-        generateNavigation();
+        // first generate the navigation grid, but not for multiplayer
+        if ( ui->m_mapType->currentIndex() != kMultiplayer ) {
+            generateNavigation();
+        }
 
         Serializer().saveMap( map, this );
         statusBar()->showMessage( QString("Saved map: ") + map->m_name, 3000 );
@@ -513,17 +517,17 @@ void EditorMainWindow::flipMapHorizontally () {
         objective->setPos( map->getWidth() - objective->pos().x() - objective->boundingRect().width(), objective->pos().y() );
     }
 
+    foreach (StartPos * startPos, allStartPositions ) {
+        startPos->setPos( map->getWidth() - startPos->pos().x() - startPos->boundingRect().width(), startPos->pos().y() );
+    }
+
     foreach (House * house, allHouses ) {
-        house->setPos( map->getWidth() - house->pos().x() - house->boundingRect().width(), house->pos().y() );
-        //float old = house->rotation();
-        float rotation = 180 + house->rotation();
-        if ( rotation > 360 ) {
-            rotation -= 360;
-        }
-        else if ( rotation < 0 ) {
-            rotation += 360;
-        }
-        house->setTransform(QTransform::fromScale(-1, 1), true );//setRotation( rotation );
+        qDebug() << "start" << house->pos();
+        house->setPos( map->getWidth() - house->pos().x(), house->pos().y() );
+        qDebug() << "end" << house->pos();
+
+        // flip x
+        house->setTransform(QTransform::fromScale(-1, 1), true );
     }
 }
 
@@ -537,6 +541,10 @@ void EditorMainWindow::flipMapVertically () {
         objective->setPos( objective->pos().x(), map->getHeight() - objective->pos().y() - objective->boundingRect().height() );
     }
 
+    foreach (StartPos * startPos, allStartPositions ) {
+        startPos->setPos( map->getWidth() - startPos->pos().x() - startPos->boundingRect().width(), startPos->pos().y() );
+    }
+
     foreach (House * house, allHouses ) {
         house->setPos( house->pos().x(), map->getHeight() - house->pos().y() - house->boundingRect().height() );
         //float old = house->rotation();
@@ -548,7 +556,7 @@ void EditorMainWindow::flipMapVertically () {
             rotation += 360;
         }
 
-        house->setTransform(QTransform::fromScale(1, -1), true );//setRotation( rotation );
+        house->setTransform(QTransform::fromScale(1, -1), true );
     }
 }
 
@@ -639,7 +647,7 @@ void EditorMainWindow::takeNewMapIntoUse () {
 
     ui->m_size->setEnabled( true );
     ui->m_time->setEnabled( true );
-    ui->m_tutorial->setEnabled( true );
+    ui->m_mapType->setEnabled( true );
     ui->m_view->setEnabled( true );
     ui->m_zoom_in->setEnabled( true );
     ui->m_zoom_normal->setEnabled( true );

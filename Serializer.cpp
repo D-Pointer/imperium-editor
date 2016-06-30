@@ -71,15 +71,20 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
            << "id "       << editor->ui->m_id->value() << endl
            << "depend "   << editor->ui->m_depends->value() << endl
            << "time "     << editor->ui->m_time->time().hour() << " " << editor->ui->m_time->time().minute() << endl
-           << "tutorial " << (editor->ui->m_tutorial->isChecked() ? "1" : "0") << endl
+           << "type "     << editor->ui->m_mapType->currentIndex() << endl
            << "aihint "   << editor->ui->m_aiHint->currentIndex() << endl
            << "battlesize " << editor->ui->m_battleSize->currentIndex() << endl
            << "title "    << editor->ui->m_title->text() << endl
            << "desc "     << editor->ui->m_description->toPlainText().replace( "\n", "|") << endl;
 
-    // all victory conditions
-    foreach ( VictoryCondition * condition, allVictoryConditions ) {
-        stream << "victory " << condition->toString() << endl;
+    // all victory conditions, except if it's a tutorial
+    if ( editor->ui->m_mapType->currentIndex() == kTutorial ) {
+        stream << "victory tutorial" << endl;
+    }
+    else {
+        foreach ( VictoryCondition * condition, allVictoryConditions ) {
+            stream << "victory " << condition->toString() << endl;
+        }
     }
 
     // final newline at the end to separate the metadata from the real map data
@@ -153,23 +158,36 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
                << " " << unit->m_name << endl;
     }
 
-    // the navigation grid is saved as one single long line
-    stream << "navgrid";
-
-    // loop the entire map
-    int items = (map->getWidth() / navigationTileSize) * (map->getHeight() / navigationTileSize);
-
-    for ( int index = 0; index < items; ++index ) {
-        stream << " ";
-        if ( navigationGrid[ index ] != 0 ) {
-            stream << navigationGrid[ index ]->m_type;
+    // the start positions are one line
+    if ( allStartPositions.count() > 0 ) {
+        stream << "startpos";
+        foreach ( StartPos * startPos, allStartPositions ) {
+            QPointF pos = startPos->pos() + startPos->boundingRect().center();
+            stream << " " << (int)pos.x() << " " << (int)toSave( pos.y(), height );
         }
-        else {
-            stream << kGrass;
-        }
+
+        stream << endl;
     }
 
-    stream << endl;
+    // the navigation grid is saved as one single long line, but only for non multiplayer games
+    if ( editor->ui->m_mapType->currentIndex() != kMultiplayer ) {
+        stream << "navgrid";
+
+        // loop the entire map
+        int items = (map->getWidth() / navigationTileSize) * (map->getHeight() / navigationTileSize);
+
+        for ( int index = 0; index < items; ++index ) {
+            stream << " ";
+            if ( navigationGrid[ index ] != 0 ) {
+                stream << navigationGrid[ index ]->m_type;
+            }
+            else {
+                stream << kGrass;
+            }
+        }
+
+        stream << endl;
+    }
 
     // any script?
     if ( script != "" ) {
@@ -275,8 +293,8 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
             script = parts.join( " ").replace( "|", "\n" );
         }
 
-        else if ( type == "tutorial" ) {
-            editor->ui->m_tutorial->setChecked( parts.takeFirst().toInt() == 1 );
+        else if ( type == "type" ) {
+            editor->ui->m_mapType->setCurrentIndex( parts.takeFirst().toInt() );
         }
 
         else if ( type == "aihint" ) {
@@ -362,6 +380,16 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
 
             map->addItem( house );
             allHouses << house;
+        }
+
+        else if ( type == "startpos" ) {
+            while ( ! parts.isEmpty() ) {
+                float x = parts.takeFirst().toFloat();
+                float y = fromSave( parts.takeFirst().toFloat(), height );
+                StartPos * startPos = new StartPos( QPointF( x, y ) );
+                map->addItem( startPos );
+                allStartPositions << startPos;
+            }
         }
 
         else if ( type == "navgrid" ) {

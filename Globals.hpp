@@ -22,6 +22,12 @@ typedef enum {
 } BattleSizeType;
 
 typedef enum {
+    kCampaign,
+    kTutorial,
+    kMultiplayer
+} MapType;
+
+typedef enum {
     kEdit,
     kAddTerrain,
     kAddHouse,

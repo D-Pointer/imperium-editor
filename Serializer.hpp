@@ -30,11 +30,6 @@ private:
 
     void generateTrees (Terrain * terrain, QTextStream & stream, float mapHeight);
     void generateRocks (Terrain * terrain, QTextStream & stream, float mapHeight);
-
-    //void saveNavigationGrid ();
-    //void saveNavigationGrid (QTextStream & stream);
-
-    //void saveHeightmap ();
 };
 
 

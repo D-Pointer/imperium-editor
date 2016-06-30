@@ -42,6 +42,10 @@ bool Validator::validateMetaData (EditorMainWindow * editor, QString &result) {
 
 
 bool Validator::validateUnits (EditorMainWindow * editor, QString &result) {
+    if ( editor->ui->m_mapType == kMultiplayer ) {
+        return true;
+    }
+
     int unitCounts[2] = { 0, 0 };
 
     bool ok = true;
