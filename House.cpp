@@ -2,13 +2,12 @@
 
 #include "House.hpp"
 
-House::House (const QPointF & pos, int type, QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
+House::House (const QPointF & pos, int type, QGraphicsItem * parent) : QGraphicsPixmapItem(parent)/*, m_flipped(false)*/ {
     setType( type );
 
     setFlags( QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable );
 
-    setTransformOriginPoint( boundingRect().center() );
-    setPos( pos ); //- boundingRect().center() );
+    setPos( pos );
     setZValue( 150 );
 }
 
@@ -20,4 +19,5 @@ void House::setType (int type) {
 
     // new pixmap
     setPixmap( QPixmap(":/Icons/House" + QString::number( type + 1 ) + ".png") );
+    setTransformOriginPoint( boundingRect().center() );
 }

@@ -90,8 +90,6 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
     // final newline at the end to separate the metadata from the real map data
     stream << endl;
 
-    qDebug() << "Serializer::saveMapToStream: terrains:" << allTerrains.size();
-
     // sort all terrains according to z order first
     qSort( allTerrains.begin(), allTerrains.end(), terrainComparator );
 
@@ -138,10 +136,16 @@ void Serializer::saveMapToStream (QTextStream & stream, EditorMainWindow * edito
     }
 
     foreach ( House * house, allHouses ) {
+        // the house is offset by half the bounding rect, as the origin is at the top left. the transform origin
+        // point is only for rotations
         QPointF house_pos = house->pos() + house->boundingRect().center();
         stream << "house " << house->getType() << " "
                << (int)house_pos.x() << " " << (int)toSave( house_pos.y(), height ) << " "
                << house->rotation() << endl;
+//        if ( house->isFlipped() ) {
+//            stream << " 1";
+//        }
+//        stream << endl;
     }
 
     foreach ( Unit * unit, allUnits ) {
@@ -378,6 +382,11 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
             house->setPos( new_pos );
             house->setRotation( rotation );
 
+//            if ( ! parts.isEmpty() ) {
+//                house->setTransform(QTransform::fromScale(-1, 1), true );
+//                house->toggleFlipped();
+//            }
+
             map->addItem( house );
             allHouses << house;
         }
@@ -393,10 +402,11 @@ Map * Serializer::loadMap (const QString & filename, EditorMainWindow * editor) 
         }
 
         else if ( type == "navgrid" ) {
-            qDebug() << "Serializer::loadMap: ignoring navigation grid";
+            // ignore
+            //qDebug() << "Serializer::loadMap: ignoring navigation grid";
         }
         else if ( type == "end" ) {
-            qDebug() << "Serializer::loadMap: ignoring navigation grid";
+            // ignore
         }
     }
 

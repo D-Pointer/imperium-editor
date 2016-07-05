@@ -195,9 +195,12 @@ void Map::mousePressEvent (QGraphicsSceneMouseEvent *event) {
     case kAddHouse:
         qDebug() << "Map::mousePressEvent: add house";
         int houseId = qrand() % 5;
-        int angle = qrand() % 365;
+        int angle = 0; //qrand() % 365;
         house = new House( event->scenePos(), houseId );
         house->setRotation( angle );
+
+        // offset the house a bit
+        house->setPos( house->pos() - house->boundingRect().center() );
         addItem( house );
         allHouses << house;
 

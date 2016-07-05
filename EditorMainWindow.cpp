@@ -3,6 +3,7 @@
 #include <QActionGroup>
 #include <QFileDialog>
 #include <QStatusBar>
+#include <QGuiApplication>
 #include <QDebug>
 
 #include "EditorMainWindow.hpp"
@@ -176,6 +177,9 @@ void EditorMainWindow::newMap () {
     if ( ! m_server->isStarted() ) {
         m_server->start( 45001 );
     }
+
+    // no title yet
+    ((QGuiApplication *)QGuiApplication::instance())->setApplicationDisplayName( "untitled" );
 }
 
 
@@ -226,6 +230,7 @@ void EditorMainWindow::openMap () {
     }
 
     statusBar()->showMessage( QString("Loaded map: ") + map->m_name, 3000 );
+    ((QGuiApplication *)QGuiApplication::instance())->setApplicationDisplayName( map->m_name );
 }
 
 
@@ -245,6 +250,7 @@ void EditorMainWindow::saveMap () {
 
         Serializer().saveMap( map, this );
         statusBar()->showMessage( QString("Saved map: ") + map->m_name, 3000 );
+        ((QGuiApplication *)QGuiApplication::instance())->setApplicationDisplayName( map->m_name );
     }
 }
 
@@ -522,12 +528,11 @@ void EditorMainWindow::flipMapHorizontally () {
     }
 
     foreach (House * house, allHouses ) {
-        qDebug() << "start" << house->pos();
         house->setPos( map->getWidth() - house->pos().x(), house->pos().y() );
-        qDebug() << "end" << house->pos();
 
         // flip x
-        house->setTransform(QTransform::fromScale(-1, 1), true );
+        //house->setTransform(QTransform::fromScale(-1, 1), true );
+        //house->toggleFlipped();
     }
 }
 

@@ -6,14 +6,13 @@
 #include "Selection.hpp"
 
 void EditorMainWindow::selectedHouseChanged (House * house) {
-    qDebug() << "EditorMainWindow::selectedHouseChanged";
     if ( house ) {
         ui->m_stack->setCurrentIndex( EditorMainWindow::HousePage );
         ui->m_house_rotation->setEnabled( true );
         ui->m_house_rotation->setValue( (int)house->rotation() );
+        ui->m_house_rotation_label->setNum( (int)house->rotation() );
         ui->m_house_type->setCurrentIndex( house->getType() );
     }
-    qDebug() << "EditorMainWindow::selectedHouseChanged: current index:" << ui->m_stack->currentIndex();
 }
 
 
@@ -26,6 +25,7 @@ void EditorMainWindow::houseRotated() {
     }
 
     selected->setRotation( ui->m_house_rotation->value() );
+    ui->m_house_rotation_label->setNum( ui->m_house_rotation->value() );
 }
 
 

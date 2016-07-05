@@ -1,3 +1,4 @@
+#include <QComboBox>
 #include <QDebug>
 
 #include "Validator.hpp"
@@ -42,7 +43,7 @@ bool Validator::validateMetaData (EditorMainWindow * editor, QString &result) {
 
 
 bool Validator::validateUnits (EditorMainWindow * editor, QString &result) {
-    if ( editor->ui->m_mapType == kMultiplayer ) {
+    if ( editor->ui->m_mapType->currentIndex() == kMultiplayer ) {
         return true;
     }
 
