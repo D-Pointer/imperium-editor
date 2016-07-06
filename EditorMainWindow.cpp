@@ -669,6 +669,8 @@ void EditorMainWindow::takeNewMapIntoUse () {
     }
 
     ui->m_reinforcementCount->setNum( allReinforcementPoints.size() );
+    ui->m_start_position_count->setNum( allStartPositions.size() );
+
     updateUnitStats();
 }
 
